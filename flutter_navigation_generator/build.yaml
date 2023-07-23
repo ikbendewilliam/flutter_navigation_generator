@@ -1,0 +1,14 @@
+builders:
+  flutter_route_builder:
+    import: "package:flutter_navigation_generator/builder.dart"
+    builder_factories: ["flutterRouteBuilder"]
+    build_extensions: { ".dart": [".navigator.json"] }
+    auto_apply: dependents
+    runs_before: ["flutter_navigation_generator|flutter_navigator_builder"]
+    build_to: cache
+  flutter_navigator_builder:
+    import: "package:flutter_navigation_generator/builder.dart"
+    builder_factories: ["flutterNavigatorBuilder"]
+    build_extensions: { ".dart": [".navigator.dart"] }
+    auto_apply: dependents
+    build_to: source
