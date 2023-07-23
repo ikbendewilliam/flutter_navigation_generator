@@ -1,7 +1,7 @@
 import 'package:code_builder/code_builder.dart';
 import 'package:flutter_navigation_generator/src/models/importable_type.dart';
 import 'package:flutter_navigation_generator/src/models/route_config.dart';
-import 'package:flutter_navigation_generator/src/utils.dart';
+import 'package:flutter_navigation_generator/src/utils/utils.dart';
 
 class ImportBuilder {
   final Set<RouteConfig> routes;

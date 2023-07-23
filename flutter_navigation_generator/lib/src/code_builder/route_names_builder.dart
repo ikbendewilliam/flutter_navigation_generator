@@ -1,5 +1,5 @@
 import 'package:code_builder/code_builder.dart';
-import 'package:flutter_navigation_generator/src/case_utils.dart';
+import 'package:flutter_navigation_generator/src/utils/case_utils.dart';
 import 'package:flutter_navigation_generator/src/models/route_config.dart';
 import 'package:flutter_navigation_generator_annotations/flutter_navigation_generator_annotations.dart';
 

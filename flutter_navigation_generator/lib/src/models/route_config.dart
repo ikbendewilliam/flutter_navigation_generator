@@ -18,9 +18,9 @@ class RouteConfig {
   final Map<String, dynamic> defaultValues;
 
   RouteConfig({
-    required this.routeName,
-    required this.constructorName,
     required this.routeWidget,
+    this.routeName = '',
+    this.constructorName = '',
     this.pageType,
     this.isFullscreenDialog = false,
     this.generatePageRoute = true,
@@ -28,8 +28,8 @@ class RouteConfig {
     this.routeNameIsDefinedByAnnotation = false,
     this.returnType,
     this.navigationType = NavigationType.push,
-    required this.parameters,
-    required this.defaultValues,
+    this.parameters = const [],
+    this.defaultValues = const {},
   });
 
   Map<String, dynamic> toMap() {
