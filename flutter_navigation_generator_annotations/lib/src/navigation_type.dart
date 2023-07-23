@@ -2,7 +2,7 @@
 enum NavigationType {
   /// Push the given route onto the navigator, and then
   /// remove all the previous routes
-  pushAndReplaceAll('pushNamedAndReplaceAll'),
+  pushAndReplaceAll('pushNamedAndRemoveUntil'),
 
   /// Replace the current route of the navigator by pushing
   /// the given route and then disposing the previous route

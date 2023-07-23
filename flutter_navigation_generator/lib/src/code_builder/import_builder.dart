@@ -20,6 +20,7 @@ class ImportBuilder {
     imports.addAll(routes
         .map((route) => [
               typeRefer(route.routeWidget, targetFile: targetFile).url,
+              typeRefer(route.pageType, targetFile: targetFile).url,
               typeRefer(route.returnType, targetFile: targetFile).url,
               ...route.parameters.map((e) => typeRefer(e, targetFile: targetFile).url),
             ])

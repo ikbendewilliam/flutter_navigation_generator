@@ -1,8 +1,8 @@
 import 'package:code_builder/code_builder.dart';
-import 'package:flutter_navigation_generator/src/utils/case_utils.dart';
 import 'package:flutter_navigation_generator/src/extensions/navigation_type_extension.dart';
 import 'package:flutter_navigation_generator/src/models/importable_type.dart';
 import 'package:flutter_navigation_generator/src/models/route_config.dart';
+import 'package:flutter_navigation_generator/src/utils/case_utils.dart';
 import 'package:flutter_navigation_generator/src/utils/utils.dart';
 import 'package:flutter_navigation_generator_annotations/flutter_navigation_generator_annotations.dart';
 
@@ -84,6 +84,9 @@ class RouteBuilder {
         ).call(
           [
             Reference('RouteNames.${CaseUtil(route.routeName).camelCase}'),
+            if (route.navigationType == NavigationType.pushAndReplaceAll) ...[
+              const Reference('(_) => false'),
+            ],
           ],
           {
             'arguments': Reference('${route.parameters.asMap().map((_, p) => MapEntry("'${p.argumentName}'", p.argumentName))}'),
@@ -116,17 +119,20 @@ class RouteBuilder {
     return _generateMethod(
       route: route,
       namePrefix: namePrefix,
-      body: TypeReference((b) => b
-        ..symbol = bodyCall
-        ..types.add(route.returnType == null ? const Reference('dynamic') : typeRefer(route.returnType!))).call(
-        [
-          Reference(
+      body: TypeReference(
+        (b) => b
+          ..symbol = bodyCall
+          ..types.add(route.returnType == null ? const Reference('dynamic') : typeRefer(route.returnType!)),
+      ).call(
+        [],
+        {
+          'widget': Reference(
             route.constructorName == route.routeWidget.className || route.constructorName.isEmpty
                 ? route.routeWidget.className
                 : '${route.routeWidget.className}.${route.constructorName}',
             typeRefer(route.routeWidget).url,
           ).call([], route.parameters.asMap().map((_, p) => MapEntry(p.argumentName, Reference(p.argumentName)))),
-        ],
+        },
       ).code,
     );
   }

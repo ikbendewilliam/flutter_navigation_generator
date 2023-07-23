@@ -44,12 +44,17 @@ class RouteResolver {
     final routeNameValue = flutterRoute.peek('routeName')?.stringValue;
     final routeName = routeNameValue ?? CaseUtil(classElement.name).kebabCase;
     final returnType = flutterRoute.peek('returnType')?.typeValue;
+    final pageType = flutterRoute.peek('pageType')?.typeValue;
     final navigationType = NavigationType.values.firstWhere((element) => element.index == flutterRoute.peek('navigationType')?.peek('index')?.intValue);
     final constructor = _resolveConstructorMethod(classElement, routeName);
 
     ImportableType? importableReturnType;
     if (returnType != null) {
       importableReturnType = _typeResolver.resolveType(returnType, forceNullable: true);
+    }
+    ImportableType? importablePageType;
+    if (pageType != null) {
+      importablePageType = _typeResolver.resolveType(pageType, forceNullable: true);
     }
     final constructorParameters = constructor.parameters
         .map((p) => _typeResolver.resolveType(
@@ -69,6 +74,7 @@ class RouteResolver {
       parameters: constructorParameters,
       defaultValues: constructorDefaultValues,
       routeName: routeName,
+      pageType: importablePageType,
       routeNameIsDefinedByAnnotation: routeNameValue != null,
       navigationType: navigationType,
       isFullscreenDialog: flutterRoute.peek('isFullscreenDialog')?.boolValue ?? false,

@@ -3,6 +3,7 @@ import 'package:flutter_navigation_generator/src/models/importable_type.dart';
 import 'package:flutter_navigation_generator/src/models/route_config.dart';
 import 'package:flutter_navigation_generator/src/utils/case_utils.dart';
 import 'package:flutter_navigation_generator/src/utils/utils.dart';
+import 'package:flutter_navigation_generator_annotations/flutter_navigation_generator_annotations.dart';
 
 class OnGenerateRouteBuilder {
   final Set<RouteConfig> routes;
@@ -39,6 +40,7 @@ class OnGenerateRouteBuilder {
   }
 
   Method generate() {
+    final pageRoutes = routes.where((r) => r.generatePageRoute && r.navigationType != NavigationType.bottomSheet && r.navigationType != NavigationType.dialog);
     return Method(
       (m) => m
         ..name = 'onGenerateRoute'
@@ -51,7 +53,9 @@ class OnGenerateRouteBuilder {
           ),
         )
         ..body = Block.of([
-          Code('switch (settings.name) {${routes.map(_generateRoute).join('')}}'),
+          if (pageRoutes.isNotEmpty) ...[
+            Code('switch (settings.name) {${pageRoutes.map(_generateRoute).join('')}}'),
+          ],
           const Code('return null;'),
         ]),
     );

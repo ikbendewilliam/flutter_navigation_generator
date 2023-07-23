@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-07-23 17:36:06</td>
+            <td class="headerValue">2023-07-23 22:54:18</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -112,7 +112,7 @@
 <a name="50"><span class="lineNum">      50 </span><span class="lineNoCov">          0 :   print(&quot;$pre\n$message\n${''.padRight(72, '-')} \n&quot;);</span></a>
 <a name="51"><span class="lineNum">      51 </span>            : }</a>
 <a name="52"><span class="lineNum">      52 </span>            : </a>
-<a name="53"><span class="lineNum">      53 </span><span class="lineCov">          1 : Reference typeRefer(</span></a>
+<a name="53"><span class="lineNum">      53 </span><span class="lineCov">          2 : Reference typeRefer(</span></a>
 <a name="54"><span class="lineNum">      54 </span>            :   ImportableType? type, {</a>
 <a name="55"><span class="lineNum">      55 </span>            :   Uri? targetFile,</a>
 <a name="56"><span class="lineNum">      56 </span>            :   bool withNullabilitySuffix = true,</a>
@@ -121,15 +121,15 @@
 <a name="59"><span class="lineNum">      59 </span>            : }) {</a>
 <a name="60"><span class="lineNum">      60 </span>            :   final TypeReference typeReference;</a>
 <a name="61"><span class="lineNum">      61 </span>            :   if (type == null) {</a>
-<a name="62"><span class="lineNum">      62 </span><span class="lineCov">          3 :     typeReference = TypeReference((r) =&gt; r..symbol = 'void');</span></a>
+<a name="62"><span class="lineNum">      62 </span><span class="lineCov">          6 :     typeReference = TypeReference((r) =&gt; r..symbol = 'void');</span></a>
 <a name="63"><span class="lineNum">      63 </span>            :   } else {</a>
-<a name="64"><span class="lineNum">      64 </span><span class="lineCov">          2 :     final relativeImport = targetFile == null ? ImportableTypeResolver.resolveAssetImport(type.import) : ImportableTypeResolver.relative(type.import, targetFile);</span></a>
-<a name="65"><span class="lineNum">      65 </span><span class="lineCov">          2 :     typeReference = TypeReference((reference) {</span></a>
+<a name="64"><span class="lineNum">      64 </span><span class="lineCov">          4 :     final relativeImport = targetFile == null ? ImportableTypeResolver.resolveAssetImport(type.import) : ImportableTypeResolver.relative(type.import, targetFile);</span></a>
+<a name="65"><span class="lineNum">      65 </span><span class="lineCov">          4 :     typeReference = TypeReference((reference) {</span></a>
 <a name="66"><span class="lineNum">      66 </span>            :       reference</a>
-<a name="67"><span class="lineNum">      67 </span><span class="lineCov">          2 :         ..symbol = type.className</span></a>
-<a name="68"><span class="lineNum">      68 </span><span class="lineCov">          1 :         ..url = relativeImport</span></a>
-<a name="69"><span class="lineNum">      69 </span><span class="lineCov">          2 :         ..isNullable = withNullabilitySuffix &amp;&amp; (forceNullable || type.isNullable);</span></a>
-<a name="70"><span class="lineNum">      70 </span><span class="lineCov">          2 :       if (type.typeArguments.isNotEmpty) {</span></a>
+<a name="67"><span class="lineNum">      67 </span><span class="lineCov">          4 :         ..symbol = type.className</span></a>
+<a name="68"><span class="lineNum">      68 </span><span class="lineCov">          2 :         ..url = relativeImport</span></a>
+<a name="69"><span class="lineNum">      69 </span><span class="lineCov">          4 :         ..isNullable = withNullabilitySuffix &amp;&amp; (forceNullable || type.isNullable);</span></a>
+<a name="70"><span class="lineNum">      70 </span><span class="lineCov">          4 :       if (type.typeArguments.isNotEmpty) {</span></a>
 <a name="71"><span class="lineNum">      71 </span><span class="lineNoCov">          0 :         reference.types.addAll(</span></a>
 <a name="72"><span class="lineNum">      72 </span><span class="lineNoCov">          0 :           type.typeArguments.map((e) =&gt; typeRefer(</span></a>
 <a name="73"><span class="lineNum">      73 </span>            :                 e,</a>

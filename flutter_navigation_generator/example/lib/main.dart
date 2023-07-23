@@ -1,5 +1,6 @@
+import 'package:example/example.dart';
+import 'package:example/example.navigator.dart';
 import 'package:example/fade_route.dart';
-import 'package:example/navigator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_navigation_generator_annotations/flutter_navigation_generator_annotations.dart';
 
@@ -27,46 +28,73 @@ class MyApp extends StatelessWidget {
   }
 }
 
+@flutterRoute
 @FlutterRoute(
-  returnType: bool,
-  pageType: FadeInRoute,
+  routeName: 'MyHomePagePopAll',
+  navigationType: NavigationType.pushAndReplaceAll,
 )
-class MyHomePage extends StatelessWidget {
-  const MyHomePage({super.key, required this.title});
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({
+    super.key,
+    this.title,
+  });
 
-  final String title;
+  @FlutterRouteConstructor(
+    routeName: 'MyHomePagePopAll',
+  )
+  const MyHomePage.popAll({super.key, this.title = 'Popped all pages'});
+
+  final String? title;
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  bool? _result;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(title),
-      ),
+      appBar: widget.title == null
+          ? null
+          : AppBar(
+              backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+              title: Text(widget.title!),
+            ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
+          children: [
             Text(
-              '0',
-              style: Theme.of(context).textTheme.headlineMedium,
+              'Result from page 2: $_result',
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                _result = await mainNavigator.goToSecondPage();
+                setState(() {});
+              },
+              child: const Text("Go to page 2"),
+            ),
+            ElevatedButton(
+              onPressed: () => mainNavigator.showSheetRecursiveNavigationBottomSheet(),
+              child: const Text("Show a bottom sheet with its own navigator"),
+            ),
+            ElevatedButton(
+              onPressed: () => mainNavigator.showDialogExampleDialog(),
+              child: const Text("Show a full screen dialog"),
             ),
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: mainNavigator.goToSecondPage,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
       ),
     );
   }
 }
 
-@flutterRoute
+@FlutterRoute(
+  returnType: bool,
+  pageType: FadeInRoute,
+)
 class SecondPage extends StatelessWidget {
   const SecondPage({super.key});
 
@@ -77,21 +105,90 @@ class SecondPage extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text('second page'),
       ),
-      body: const Center(
+      body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
+          children: [
+            const Text(
               'Second page :raised_hands:',
+            ),
+            ElevatedButton(
+              onPressed: () => mainNavigator.goBackWithResult(result: true),
+              child: const Text("I return true"),
+            ),
+            ElevatedButton(
+              onPressed: mainNavigator.goBack,
+              child: const Text("I return nothing"),
             ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: mainNavigator.goBack,
-        tooltip: 'Increment',
-        child: const Icon(Icons.arrow_back),
+    );
+  }
+}
+
+@FlutterRoute(
+  navigationType: NavigationType.bottomSheet,
+)
+class RecursiveNavigationBottomSheet extends StatelessWidget {
+  final myNavigator = MainNavigator();
+  final int layers;
+
+  RecursiveNavigationBottomSheet({
+    this.layers = 1,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return BottomSheet(
+      onClosing: mainNavigator.goBack,
+      builder: (context) => Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            'layer $layers',
+          ),
+          const Text(
+            'I am a bottom sheet with my own navigator',
+          ),
+          Wrap(
+            children: [
+              ElevatedButton(
+                onPressed: () => myNavigator.goToMyHomePagePopAll(),
+                child: const Text("Pop all and show home page"),
+              ),
+              ElevatedButton(
+                onPressed: () => myNavigator.goToSecondPage(),
+                child: const Text("Go to second page"),
+              ),
+              ElevatedButton(
+                onPressed: () => myNavigator.showSheetRecursiveNavigationBottomSheet(layers: layers + 1),
+                child: const Text("Open another bottom sheet"),
+              ),
+            ],
+          ),
+          Expanded(
+            child: Navigator(
+              key: myNavigator.navigatorKey,
+              onGenerateRoute: myNavigator.onGenerateRoute,
+              initialRoute: RouteNames.myHomePage,
+            ),
+          ),
+        ],
       ),
+    );
+  }
+}
+
+@flutterDialog
+class ExampleDialog extends StatelessWidget {
+  const ExampleDialog({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Dialog(
+      child: Center(child: Text('Hi')),
     );
   }
 }
