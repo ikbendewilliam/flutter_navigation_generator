@@ -2,23 +2,27 @@
 enum NavigationType {
   /// Push the given route onto the navigator, and then
   /// remove all the previous routes
-  pushAndReplaceAll,
+  pushAndReplaceAll('pushNamedAndReplaceAll'),
 
   /// Replace the current route of the navigator by pushing
   /// the given route and then disposing the previous route
   /// once the new route has finished animating in.
-  pushReplacement,
+  pushReplacement('pushReplacementNamed'),
 
   /// Pop the current route off the navigator and
   /// push a named route in its place.
-  popAndPush,
+  popAndPush('popAndPushNamed'),
 
   /// Push the new route
-  push,
+  push('pushNamed'),
 
   /// Create a dialog
   dialog,
 
   /// Create a bottom sheet
-  bottomSheet,
+  bottomSheet;
+
+  final String? navigatorMethod;
+
+  const NavigationType([this.navigatorMethod]);
 }

@@ -22,4 +22,18 @@ mixin BaseNavigator {
   Future<void> goToSecondPage() async => navigatorKey.currentState?.pushNamed('/second');
 
   void goBack() => navigatorKey.currentState?.pop();
+
+  void popUntil(String name) => navigatorKey.currentState?.popUntil(
+        (route) => route.settings.name == name,
+      );
+
+  void showCustomDialog(Widget widget) async => showDialog(
+        context: navigatorKey.currentContext!,
+        builder: (_) => widget,
+      );
+
+  void acshowBottomSheet(Widget widget) async => showModalBottomSheet(
+        context: navigatorKey.currentContext!,
+        builder: (_) => widget,
+      );
 }

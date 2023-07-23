@@ -4,7 +4,15 @@ import 'package:flutter_navigation_generator/src/models/route_config.dart';
 import 'package:flutter_navigation_generator_annotations/flutter_navigation_generator_annotations.dart';
 
 class RouteNamesBuilder {
-  static Spec buildRouteNames(Set<RouteConfig> routes, List<String> removeSuffixes) {
+  final Set<RouteConfig> routes;
+  final List<String> removeSuffixes;
+
+  RouteNamesBuilder({
+    required this.routes,
+    required this.removeSuffixes,
+  });
+
+  Spec generate() {
     final pageRoutes = routes.where((route) => route.navigationType != NavigationType.dialog && route.navigationType != NavigationType.bottomSheet);
     final routesMap = pageRoutes.toList().asMap().map((_, value) => MapEntry(value.routeName, value.routeNameIsDefinedByAnnotation));
     return Class(

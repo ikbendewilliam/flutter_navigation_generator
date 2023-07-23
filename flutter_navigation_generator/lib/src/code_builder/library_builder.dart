@@ -24,17 +24,24 @@ class LibraryGenerator {
     return Library(
       (b) => b
         ..directives.addAll(
-          ImportBuilder(routes: routes, pageType: pageType, targetFile: targetFile).generate(),
+          ImportBuilder(
+            routes: routes,
+            pageType: pageType,
+            targetFile: targetFile,
+          ).generate(),
         )
         ..body.addAll(
           [
-            NavigatorBuilder.buildNavigator(
+            NavigatorBuilder(
               className: className,
               routes: routes,
               pageType: pageType,
               targetFile: targetFile,
-            ),
-            RouteNamesBuilder.buildRouteNames(routes, removeSuffixes),
+            ).generate(),
+            RouteNamesBuilder(
+              routes: routes,
+              removeSuffixes: removeSuffixes,
+            ).generate(),
           ],
         ),
     );
