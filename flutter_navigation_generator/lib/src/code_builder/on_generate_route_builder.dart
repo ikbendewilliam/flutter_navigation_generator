@@ -26,21 +26,26 @@ class OnGenerateRouteBuilder {
   }
 
   String _generateRoute(RouteConfig route) {
-    final constructor = route.constructorName == route.routeWidget.className || route.constructorName.isEmpty
+    final constructor = route.constructorName == route.routeWidget.className ||
+            route.constructorName.isEmpty
         ? route.routeWidget.className
         : '${route.routeWidget.className}.${route.constructorName}';
-    final constructorCall = '$constructor(${route.parameters.asMap().map((_, p) {
-          final nullableSuffix = p.isNullable ? '?' : '';
-          return MapEntry(
-            p.argumentName,
-            "(settings.arguments as Map<String, dynamic>$nullableSuffix)$nullableSuffix['${p.argumentName}'] as ${typeRefer(p).symbol}$nullableSuffix",
-          );
-        }).entries.map((e) => '${e.key}: ${e.value},').join('')})';
+    final constructorCall =
+        '$constructor(${route.parameters.asMap().map((_, p) {
+              final nullableSuffix = p.isNullable ? '?' : '';
+              return MapEntry(
+                p.argumentName,
+                "(settings.arguments as Map<String, dynamic>$nullableSuffix)$nullableSuffix['${p.argumentName}'] as ${typeRefer(p).symbol}$nullableSuffix",
+              );
+            }).entries.map((e) => '${e.key}: ${e.value},').join('')})';
     return 'case RouteNames.${CaseUtil(route.routeName).camelCase}: return ${_withPageType(route, constructorCall)};';
   }
 
   Method generate() {
-    final pageRoutes = routes.where((r) => r.generatePageRoute && r.navigationType != NavigationType.bottomSheet && r.navigationType != NavigationType.dialog);
+    final pageRoutes = routes.where((r) =>
+        r.generatePageRoute &&
+        r.navigationType != NavigationType.bottomSheet &&
+        r.navigationType != NavigationType.dialog);
     return Method(
       (m) => m
         ..name = 'onGenerateRoute'
@@ -54,7 +59,8 @@ class OnGenerateRouteBuilder {
         )
         ..body = Block.of([
           if (pageRoutes.isNotEmpty) ...[
-            Code('switch (settings.name) {${pageRoutes.map(_generateRoute).join('')}}'),
+            Code(
+                'switch (settings.name) {${pageRoutes.map(_generateRoute).join('')}}'),
           ],
           const Code('return null;'),
         ]),

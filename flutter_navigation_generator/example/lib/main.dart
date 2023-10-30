@@ -77,7 +77,8 @@ class _MyHomePageState extends State<MyHomePage> {
               child: const Text("Go to page 2"),
             ),
             ElevatedButton(
-              onPressed: () => mainNavigator.showSheetRecursiveNavigationBottomSheet(),
+              onPressed: () =>
+                  mainNavigator.showSheetRecursiveNavigationBottomSheet(),
               child: const Text("Show a bottom sheet with its own navigator"),
             ),
             ElevatedButton(
@@ -94,6 +95,10 @@ class _MyHomePageState extends State<MyHomePage> {
 @FlutterRoute(
   returnType: bool,
   pageType: FadeInRoute,
+)
+@FlutterRoute(
+  navigationType: NavigationType.popAndPush,
+  routeName: 'PopAndSecondPage',
 )
 class SecondPage extends StatelessWidget {
   const SecondPage({super.key});
@@ -163,7 +168,9 @@ class RecursiveNavigationBottomSheet extends StatelessWidget {
                 child: const Text("Go to second page"),
               ),
               ElevatedButton(
-                onPressed: () => myNavigator.showSheetRecursiveNavigationBottomSheet(layers: layers + 1),
+                onPressed: () =>
+                    myNavigator.showSheetRecursiveNavigationBottomSheet(
+                        layers: layers + 1),
                 child: const Text("Open another bottom sheet"),
               ),
             ],

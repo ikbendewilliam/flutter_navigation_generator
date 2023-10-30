@@ -8,53 +8,73 @@ import 'package:flutter_navigation_generator/src/utils/case_utils.dart';
 import 'package:flutter_navigation_generator_annotations/flutter_navigation_generator_annotations.dart';
 import 'package:source_gen/source_gen.dart';
 
-const TypeChecker _flutterRouteAnnotationChecker = TypeChecker.fromRuntime(FlutterRoute);
-const TypeChecker _constructorAnnotationChecker = TypeChecker.fromRuntime(FlutterRouteConstructor);
+const TypeChecker _flutterRouteAnnotationChecker =
+    TypeChecker.fromRuntime(FlutterRoute);
+const TypeChecker _constructorAnnotationChecker =
+    TypeChecker.fromRuntime(FlutterRouteConstructor);
 
 class RouteResolver {
   final ImportableTypeResolverImpl _typeResolver;
 
-  RouteResolver(List<LibraryElement> libs) : _typeResolver = ImportableTypeResolverImpl(libs);
+  RouteResolver(List<LibraryElement> libs)
+      : _typeResolver = ImportableTypeResolverImpl(libs);
 
   List<RouteConfig> resolve(ClassElement classElement) {
-    final flutterRouteAnnotations = _flutterRouteAnnotationChecker.annotationsOf(classElement, throwOnUnresolved: false);
-    return flutterRouteAnnotations.map((annotation) => _resolveRoute(classElement, annotation)).toList();
+    final flutterRouteAnnotations = _flutterRouteAnnotationChecker
+        .annotationsOf(classElement, throwOnUnresolved: false);
+    return flutterRouteAnnotations
+        .map((annotation) => _resolveRoute(classElement, annotation))
+        .toList();
   }
 
-  ExecutableElement _resolveConstructorMethod(ClassElement classElement, String routeName) {
+  ExecutableElement _resolveConstructorMethod(
+      ClassElement classElement, String routeName) {
     final possibleFactories = <ExecutableElement>[
       ...classElement.methods.where((method) => method.isStatic),
       ...classElement.constructors,
     ];
 
-    final possibleFactoriesWithAnnotations =
-        possibleFactories.asMap().map((key, value) => MapEntry(value, _constructorAnnotationChecker.annotationsOf(value).map(ConstantReader.new)));
+    final possibleFactoriesWithAnnotations = possibleFactories.asMap().map(
+        (key, value) => MapEntry(
+            value,
+            _constructorAnnotationChecker
+                .annotationsOf(value)
+                .map(ConstantReader.new)));
 
     ExecutableElement? constructor;
-    constructor =
-        possibleFactoriesWithAnnotations.entries.firstWhereOrNull((element) => element.value.any((annotation) => annotation.peek('routeName')?.stringValue == routeName))?.key;
-    constructor ??=
-        possibleFactoriesWithAnnotations.entries.firstWhereOrNull((element) => element.value.any((annotation) => annotation.peek('routeName')?.stringValue == null))?.key;
+    constructor = possibleFactoriesWithAnnotations.entries
+        .firstWhereOrNull((element) => element.value.any((annotation) =>
+            annotation.peek('routeName')?.stringValue == routeName))
+        ?.key;
+    constructor ??= possibleFactoriesWithAnnotations.entries
+        .firstWhereOrNull((element) => element.value.any(
+            (annotation) => annotation.peek('routeName')?.stringValue == null))
+        ?.key;
     return constructor ?? classElement.constructors.first;
   }
 
-  RouteConfig _resolveRoute(ClassElement classElement, DartObject flutterRouteAnnotation) {
+  RouteConfig _resolveRoute(
+      ClassElement classElement, DartObject flutterRouteAnnotation) {
     final flutterRoute = ConstantReader(flutterRouteAnnotation);
 
     final routeNameValue = flutterRoute.peek('routeName')?.stringValue;
     final routeName = routeNameValue ?? CaseUtil(classElement.name).kebabCase;
     final returnType = flutterRoute.peek('returnType')?.typeValue;
     final pageType = flutterRoute.peek('pageType')?.typeValue;
-    final navigationType = NavigationType.values.firstWhere((element) => element.index == flutterRoute.peek('navigationType')?.peek('index')?.intValue);
+    final navigationType = NavigationType.values.firstWhere((element) =>
+        element.index ==
+        flutterRoute.peek('navigationType')?.peek('index')?.intValue);
     final constructor = _resolveConstructorMethod(classElement, routeName);
 
     ImportableType? importableReturnType;
     if (returnType != null) {
-      importableReturnType = _typeResolver.resolveType(returnType, forceNullable: true);
+      importableReturnType =
+          _typeResolver.resolveType(returnType, forceNullable: true);
     }
     ImportableType? importablePageType;
     if (pageType != null) {
-      importablePageType = _typeResolver.resolveType(pageType, forceNullable: true);
+      importablePageType =
+          _typeResolver.resolveType(pageType, forceNullable: true);
     }
     final constructorParameters = constructor.parameters
         .map((p) => _typeResolver.resolveType(
@@ -63,7 +83,10 @@ class RouteResolver {
               name: p.name,
             ))
         .toList();
-    final constructorDefaultValues = ((constructor.parameters.asMap().map<String, dynamic>((_, p) => MapEntry<String, dynamic>(p.name, p.defaultValueCode)))
+    final constructorDefaultValues = ((constructor.parameters
+            .asMap()
+            .map<String, dynamic>((_, p) =>
+                MapEntry<String, dynamic>(p.name, p.defaultValueCode)))
           ..removeWhere((key, dynamic value) => value == null))
         .cast<String, String>();
 
@@ -77,9 +100,13 @@ class RouteResolver {
       pageType: importablePageType,
       routeNameIsDefinedByAnnotation: routeNameValue != null,
       navigationType: navigationType,
-      isFullscreenDialog: flutterRoute.peek('isFullscreenDialog')?.boolValue ?? false,
+      isFullscreenDialog:
+          flutterRoute.peek('isFullscreenDialog')?.boolValue ?? false,
       generateMethod: flutterRoute.peek('generateMethod')?.boolValue ?? true,
-      generatePageRoute: (flutterRoute.peek('generatePageRoute')?.boolValue ?? true) && navigationType != NavigationType.dialog && navigationType != NavigationType.bottomSheet,
+      generatePageRoute:
+          (flutterRoute.peek('generatePageRoute')?.boolValue ?? true) &&
+              navigationType != NavigationType.dialog &&
+              navigationType != NavigationType.bottomSheet,
     );
   }
 }

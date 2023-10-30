@@ -14,7 +14,8 @@ abstract class ImportableTypeResolver {
     bool forceNullable = false,
   });
 
-  ImportableType resolveFunctionType(FunctionType function, [ExecutableElement? executableElement]);
+  ImportableType resolveFunctionType(FunctionType function,
+      [ExecutableElement? executableElement]);
 
   static String? relative(String? path, Uri? to) {
     if (path == null || to == null) {
@@ -22,11 +23,16 @@ abstract class ImportableTypeResolver {
     }
     var fileUri = Uri.parse(path);
     var libName = to.pathSegments.first;
-    if ((to.scheme == 'package' && fileUri.scheme == 'package' && fileUri.pathSegments.first == libName) || (to.scheme == 'asset' && fileUri.scheme != 'package')) {
+    if ((to.scheme == 'package' &&
+            fileUri.scheme == 'package' &&
+            fileUri.pathSegments.first == libName) ||
+        (to.scheme == 'asset' && fileUri.scheme != 'package')) {
       if (fileUri.path == to.path) {
         return fileUri.pathSegments.last;
       } else {
-        return p.posix.relative(fileUri.path, from: to.path).replaceFirst('../', '');
+        return p.posix
+            .relative(fileUri.path, from: to.path)
+            .replaceFirst('../', '');
       }
     } else {
       return path;
@@ -58,7 +64,8 @@ class ImportableTypeResolverImpl extends ImportableTypeResolver {
     }
 
     for (var lib in libs) {
-      if (!_isCoreDartType(lib) && lib.exportNamespace.definedNames.values.contains(element)) {
+      if (!_isCoreDartType(lib) &&
+          lib.exportNamespace.definedNames.values.contains(element)) {
         return lib.identifier;
       }
     }
@@ -70,8 +77,10 @@ class ImportableTypeResolverImpl extends ImportableTypeResolver {
   }
 
   @override
-  ImportableType resolveFunctionType(FunctionType function, [ExecutableElement? executableElement]) {
-    final functionElement = executableElement ?? function.element ?? function.alias?.element;
+  ImportableType resolveFunctionType(FunctionType function,
+      [ExecutableElement? executableElement]) {
+    final functionElement =
+        executableElement ?? function.element ?? function.alias?.element;
     if (functionElement == null) {
       throw 'Can not resolve function type \nTry using an alias e.g typedef MyFunction = ${function.getDisplayString(withNullability: false)};';
     }
@@ -101,7 +110,8 @@ class ImportableTypeResolverImpl extends ImportableTypeResolver {
           importableTypes.add(const ImportableType(className: 'dynamic'));
         } else {
           importableTypes.add(ImportableType(
-            className: type.element?.name?.replaceAll('?', '') ?? type.getDisplayString(withNullability: false),
+            className: type.element?.name?.replaceAll('?', '') ??
+                type.getDisplayString(withNullability: false),
             import: resolveImport(type.element),
             isNullable: type.nullabilitySuffix == NullabilitySuffix.question,
             typeArguments: _resolveTypeArguments(type),
@@ -120,9 +130,11 @@ class ImportableTypeResolverImpl extends ImportableTypeResolver {
     bool forceNullable = false,
   }) {
     return ImportableType(
-      className: type.element?.name ?? type.getDisplayString(withNullability: false),
+      className:
+          type.element?.name ?? type.getDisplayString(withNullability: false),
       name: name,
-      isNullable: forceNullable || type.nullabilitySuffix == NullabilitySuffix.question,
+      isNullable:
+          forceNullable || type.nullabilitySuffix == NullabilitySuffix.question,
       import: resolveImport(type.element),
       isRequired: isRequired,
       typeArguments: _resolveTypeArguments(type),
