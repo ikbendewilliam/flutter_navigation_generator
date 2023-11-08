@@ -9,20 +9,27 @@ void main() {
       final directives = ImportBuilder(
         routes: {},
       ).generate();
-      expect(directives.any((element) => element.url == 'package:flutter/material.dart'), true);
+      expect(
+          directives
+              .any((element) => element.url == 'package:flutter/material.dart'),
+          true);
       expect(directives.length, 1);
     });
 
     test('imports for routeWidget', () {
       const testImport = 'package:test/test.dart';
       final config = RouteConfig(
-        routeWidget: const ImportableType(className: 'test', import: testImport),
+        routeWidget:
+            const ImportableType(className: 'test', import: testImport),
       );
       final directives = ImportBuilder(
         routes: {config},
       ).generate();
       expect(directives.any((element) => element.url == testImport), true);
-      expect(directives.any((element) => element.url == 'package:flutter/material.dart'), true);
+      expect(
+          directives
+              .any((element) => element.url == 'package:flutter/material.dart'),
+          true);
       expect(directives.length, 2);
     });
 
@@ -30,13 +37,18 @@ void main() {
       const testImport = 'package:test/test.dart';
       final config = RouteConfig(
         routeWidget: const ImportableType(className: 'test'),
-        parameters: [const ImportableType(className: 'test2', import: testImport)],
+        parameters: [
+          const ImportableType(className: 'test2', import: testImport)
+        ],
       );
       final directives = ImportBuilder(
         routes: {config},
       ).generate();
       expect(directives.any((element) => element.url == testImport), true);
-      expect(directives.any((element) => element.url == 'package:flutter/material.dart'), true);
+      expect(
+          directives
+              .any((element) => element.url == 'package:flutter/material.dart'),
+          true);
       expect(directives.length, 2);
     });
   });

@@ -15,5 +15,6 @@ Builder flutterRouteBuilder(BuilderOptions options) {
 
 /// A builder that generates the navigator class.
 Builder flutterNavigatorBuilder(BuilderOptions options) {
-  return LibraryBuilder(FlutterNavigatorGenerator(), generatedExtension: '.navigator.dart');
+  return LibraryBuilder(FlutterNavigatorGenerator(),
+      generatedExtension: '.navigator.dart');
 }

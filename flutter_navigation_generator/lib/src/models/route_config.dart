@@ -56,15 +56,23 @@ class RouteConfig {
       constructorName: map['constructorName'] ?? '',
       routeName: map['routeName'] ?? '',
       routeWidget: ImportableType.fromMap(map['routeWidget']),
-      returnType: map['returnType'] != null ? ImportableType.fromMap(map['returnType']) : null,
-      pageType: map['pageType'] != null ? ImportableType.fromMap(map['pageType']) : null,
+      returnType: map['returnType'] != null
+          ? ImportableType.fromMap(map['returnType'])
+          : null,
+      pageType: map['pageType'] != null
+          ? ImportableType.fromMap(map['pageType'])
+          : null,
       navigationType: NavigationType.values[map['navigationType']],
-      parameters: List<ImportableType>.from(map['parameters']?.map((dynamic x) => ImportableType.fromMap(x as Map<String, dynamic>)) as Iterable),
-      defaultValues: map['defaultValues'] as Map<String, dynamic>? ?? <String, dynamic>{},
+      parameters: List<ImportableType>.from(map['parameters']?.map(
+              (dynamic x) => ImportableType.fromMap(x as Map<String, dynamic>))
+          as Iterable),
+      defaultValues:
+          map['defaultValues'] as Map<String, dynamic>? ?? <String, dynamic>{},
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory RouteConfig.fromJson(String source) => RouteConfig.fromMap(json.decode(source));
+  factory RouteConfig.fromJson(String source) =>
+      RouteConfig.fromMap(json.decode(source));
 }

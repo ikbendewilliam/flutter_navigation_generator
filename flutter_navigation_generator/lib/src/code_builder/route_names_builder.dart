@@ -13,8 +13,11 @@ class RouteNamesBuilder {
   });
 
   Spec generate() {
-    final pageRoutes = routes.where((route) => route.navigationType != NavigationType.dialog && route.navigationType != NavigationType.bottomSheet);
-    final routesMap = pageRoutes.toList().asMap().map((_, value) => MapEntry(value.routeName, value.routeNameIsDefinedByAnnotation));
+    final pageRoutes = routes.where((route) =>
+        route.navigationType != NavigationType.dialog &&
+        route.navigationType != NavigationType.bottomSheet);
+    final routesMap = pageRoutes.toList().asMap().map((_, value) =>
+        MapEntry(value.routeName, value.routeNameIsDefinedByAnnotation));
     return Class(
       (b) => b
         ..name = 'RouteNames'
@@ -26,8 +29,8 @@ class RouteNamesBuilder {
                   ..name = CaseUtil(entry.key).camelCase
                   ..static = true
                   ..modifier = FieldModifier.constant
-                  ..assignment =
-                      Code("'${entry.key.startsWith('/') ? '' : '/'}${entry.value ? entry.key : CaseUtil(entry.key, removeSuffixes: removeSuffixes).textWithoutSuffix}'"),
+                  ..assignment = Code(
+                      "'${entry.key.startsWith('/') ? '' : '/'}${entry.value ? entry.key : CaseUtil(entry.key, removeSuffixes: removeSuffixes).textWithoutSuffix}'"),
               );
             },
           ),

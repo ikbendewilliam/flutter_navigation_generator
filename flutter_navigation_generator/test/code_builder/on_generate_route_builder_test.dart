@@ -20,7 +20,8 @@ void main() {
       expect(content.requiredParameters.first.type?.symbol, 'RouteSettings');
       expect(content.requiredParameters.length, 1);
       expect(content.body is Block, true);
-      expect((content.body as Block).statements.first.toString(), 'return null;');
+      expect(
+          (content.body as Block).statements.first.toString(), 'return null;');
       expect((content.body as Block).statements.length, 1);
     });
 
@@ -180,7 +181,8 @@ void main() {
               className: 'TestPage',
             ),
             parameters: [
-              const ImportableType(className: 'bool', name: 'testBool', isNullable: true),
+              const ImportableType(
+                  className: 'bool', name: 'testBool', isNullable: true),
               const ImportableType(className: 'int', name: 'testInt'),
             ],
           ),
@@ -206,7 +208,8 @@ void main() {
               className: 'TestPage',
             ),
             parameters: [
-              const ImportableType(className: 'bool', name: 'testBool', isNullable: true),
+              const ImportableType(
+                  className: 'bool', name: 'testBool', isNullable: true),
               const ImportableType(className: 'int', name: 'testInt'),
             ],
             defaultValues: {
@@ -243,7 +246,8 @@ void main() {
       ).generate();
 
       expect(content.body is Block, true);
-      expect((content.body as Block).statements.first.toString(), 'return null;');
+      expect(
+          (content.body as Block).statements.first.toString(), 'return null;');
       expect((content.body as Block).statements.length, 1);
     });
     test('1 test route with dialog', () {
@@ -262,7 +266,8 @@ void main() {
       ).generate();
 
       expect(content.body is Block, true);
-      expect((content.body as Block).statements.first.toString(), 'return null;');
+      expect(
+          (content.body as Block).statements.first.toString(), 'return null;');
       expect((content.body as Block).statements.length, 1);
     });
 
@@ -282,7 +287,8 @@ void main() {
       ).generate();
 
       expect(content.body is Block, true);
-      expect((content.body as Block).statements.first.toString(), 'return null;');
+      expect(
+          (content.body as Block).statements.first.toString(), 'return null;');
       expect((content.body as Block).statements.length, 1);
     });
   });

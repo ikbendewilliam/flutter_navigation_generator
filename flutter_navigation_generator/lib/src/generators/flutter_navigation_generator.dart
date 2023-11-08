@@ -21,6 +21,8 @@ class FlutterRouteGenerator implements Generator {
           ),
     ))
         .expand((element) => element);
-    return routesInStep.isNotEmpty ? jsonEncode(routesInStep.map((e) => e.toMap()).toList()) : null;
+    return routesInStep.isNotEmpty
+        ? jsonEncode(routesInStep.map((e) => e.toMap()).toList())
+        : null;
   }
 }

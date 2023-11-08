@@ -11,8 +11,10 @@ class FadeInRoute<T> extends PageRouteBuilder<T> {
     super.fullscreenDialog,
     super.transitionDuration = const Duration(milliseconds: 300),
   }) : super(
-          pageBuilder: (context, animation, secondaryAnimation) => builder(context),
-          transitionsBuilder: (context, animation, secondaryAnimation, child) => FadeTransition(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              builder(context),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+              FadeTransition(
             opacity: animation,
             child: child,
           ),

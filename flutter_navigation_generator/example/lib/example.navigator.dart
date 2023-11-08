@@ -45,6 +45,14 @@ mixin BaseNavigator {
           settings: settings,
           fullscreenDialog: false,
         );
+      case RouteNames.popAndSecondPage:
+        return MaterialPageRoute<void>(
+          builder: (_) => SecondPage(
+            key: (settings.arguments as Map<String, dynamic>?)?['key'] as Key?,
+          ),
+          settings: settings,
+          fullscreenDialog: false,
+        );
     }
     return null;
   }
@@ -74,6 +82,11 @@ mixin BaseNavigator {
     return (result as bool?);
   }
 
+  void goToPopAndSecondPage({_i1.Key? key}) =>
+      navigatorKey.currentState?.popAndPushNamed<dynamic, dynamic>(
+        RouteNames.popAndSecondPage,
+        arguments: {'key': key},
+      );
   Future<void> showDialogExampleDialog({_i1.Key? key}) async =>
       showCustomDialog<dynamic>(widget: _i2.ExampleDialog(key: key));
   Future<void> showSheetRecursiveNavigationBottomSheet({
@@ -109,4 +122,6 @@ class RouteNames {
   static const myHomePagePopAll = '/MyHomePagePopAll';
 
   static const secondPage = '/second';
+
+  static const popAndSecondPage = '/PopAndSecond';
 }
