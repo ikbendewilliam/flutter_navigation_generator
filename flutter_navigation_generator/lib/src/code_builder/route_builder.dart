@@ -86,7 +86,12 @@ class RouteBuilder {
             ..types.addAll(
               [
                 const Reference('dynamic'),
-                if (route.navigationType == NavigationType.popAndPush) ...[
+                if (route.navigationType == NavigationType.pushReplacement ||
+                    route.navigationType == NavigationType.popAndPush ||
+                    route.navigationType ==
+                        NavigationType.restorablePushReplacement ||
+                    route.navigationType ==
+                        NavigationType.restorablePopAndPush) ...[
                   const Reference('dynamic'),
                 ],
               ],
@@ -94,7 +99,9 @@ class RouteBuilder {
         ).call(
           [
             Reference('RouteNames.${CaseUtil(route.routeName).camelCase}'),
-            if (route.navigationType == NavigationType.pushAndReplaceAll) ...[
+            if (route.navigationType == NavigationType.pushAndReplaceAll ||
+                route.navigationType ==
+                    NavigationType.restorablePushAndReplaceAll) ...[
               const Reference('(_) => false'),
             ],
           ],

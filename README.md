@@ -71,7 +71,7 @@ myNavigator.goToSecondPage();
 
 - `routeName`: The name of the route. Default: `[className]` (converted to kebab-case, as [recommended by Google for urls](<https://developers.google.com/search/docs/crawling-indexing/url-structure#:~:text=Consider%20using%20hyphens%20to%20separate,(%20_%20)%20in%20your%20URLs.>))
 - `returnType`: The return type of the route. Default: `void`
-- `navigationType`: The type of navigation. Default: `NavigationType.push`, valid options are: `pushAndReplaceAll`, `pushReplacement`, `popAndPush`, `push` and `dialog` to specify a dialog and `bottomSheet` to specify a bottom sheet
+- `navigationType`: The type of navigation. Default: `NavigationType.push`, valid options are: `pushAndReplaceAll`, `pushReplacement`, `popAndPush`, `push`, `restorablePushAndReplaceAll`, `restorablePushReplacement`, `restorablePopAndPush`, `restorablePush` and `dialog` to specify a dialog and `bottomSheet` to specify a bottom sheet 
 - `generateMethod`: If a method should be generated for the route. Default: `true` (More info in separate method/page section below)
 - `generatePage`: If a page should be generated for the route. Default: `true` (More info in separate method/page section below)
 - `isFullscreenDialog`: If the route should be launched fullscreen. Default: `false` (`true`` for `dialog` and `bottomSheet` navigation types)
