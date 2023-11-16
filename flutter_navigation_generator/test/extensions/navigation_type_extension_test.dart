@@ -5,10 +5,14 @@ import 'package:test/test.dart';
 void main() {
   test('NavigationTypeExtension', () {
     expect(NavigationType.push.isAsync, true);
+    expect(NavigationType.restorablePush.isAsync, true);
     expect(NavigationType.bottomSheet.isAsync, true);
     expect(NavigationType.dialog.isAsync, true);
     expect(NavigationType.popAndPush.isAsync, false);
-    expect(NavigationType.pushAndReplaceAll.isAsync, false);
     expect(NavigationType.pushReplacement.isAsync, false);
+    expect(NavigationType.pushAndReplaceAll.isAsync, false);
+    expect(NavigationType.restorablePopAndPush.isAsync, false);
+    expect(NavigationType.restorablePushReplacement.isAsync, false);
+    expect(NavigationType.restorablePushAndReplaceAll.isAsync, false);
   });
 }
