@@ -17,10 +17,10 @@ class OnGenerateRouteBuilder {
   });
 
   String _withPageType(RouteConfig route, String screen) {
-    final pageClass = pageType != null
-        ? typeRefer(pageType).symbol
-        : route.pageType != null
-            ? typeRefer(route.pageType).symbol
+    final pageClass = route.pageType != null
+        ? typeRefer(route.pageType).symbol
+        : pageType != null
+            ? typeRefer(pageType).symbol
             : 'MaterialPageRoute';
     return '$pageClass<${typeRefer(route.returnType).symbol}>(builder: (_) => $screen, settings: settings, fullscreenDialog: ${route.isFullscreenDialog},)';
   }
