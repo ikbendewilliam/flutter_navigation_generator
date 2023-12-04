@@ -1,3 +1,7 @@
+## 1.0.3 (2023-12-04)
+
+- Fixed issue with FlutterNavigator PageType overriding FlutterRoute PageType
+
 ## 1.0.2 (2023-11-14)
 
 - Added restorablePush, restorablePopAndPush, restorablePushReplacement and restorablePushAndReplaceAll methods
