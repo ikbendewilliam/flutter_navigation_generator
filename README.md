@@ -27,7 +27,7 @@ Create a navigator file and annotate it with `@flutterNavigator`:
 
 ```dart
 @flutterNavigator
-class MainNavigator extends BaseNavigator {}
+class MainNavigator with BaseNavigator {}
 ```
 
 Then annotate your pages with `@flutterRoute`:
@@ -48,7 +48,7 @@ final myNavigator = MainNavigator();
 ...
 
 MaterialApp(
-  key: myNavigator.navigatorKey,
+  navigatorKey: myNavigator.navigatorKey,
   onGenerateRoute: myNavigator.onGenerateRoute,
   initialRoute: RouteNames.myHomePage,
 ),
