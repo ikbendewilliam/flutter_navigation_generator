@@ -16,13 +16,15 @@ mixin BaseNavigator {
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
   Route<dynamic>? onGenerateRoute(RouteSettings settings) {
+    final arguments = settings.arguments is Map
+        ? (settings.arguments as Map).cast<String, dynamic>()
+        : null;
     switch (settings.name) {
       case RouteNames.myHomePage:
         return MaterialPageRoute<void>(
           builder: (_) => MyHomePage(
-            key: (settings.arguments as Map<String, dynamic>?)?['key'] as Key?,
-            title: (settings.arguments as Map<String, dynamic>?)?['title']
-                as String?,
+            key: arguments?['key'] as Key?,
+            title: arguments?['title'] as String?,
           ),
           settings: settings,
           fullscreenDialog: false,
@@ -30,9 +32,8 @@ mixin BaseNavigator {
       case RouteNames.myHomePagePopAll:
         return MaterialPageRoute<void>(
           builder: (_) => MyHomePage.popAll(
-            key: (settings.arguments as Map<String, dynamic>?)?['key'] as Key?,
-            title: (settings.arguments as Map<String, dynamic>?)?['title']
-                as String?,
+            key: arguments?['key'] as Key?,
+            title: arguments?['title'] as String?,
           ),
           settings: settings,
           fullscreenDialog: false,
@@ -40,7 +41,7 @@ mixin BaseNavigator {
       case RouteNames.secondPage:
         return FadeInRoute<bool>(
           builder: (_) => SecondPage(
-            key: (settings.arguments as Map<String, dynamic>?)?['key'] as Key?,
+            key: arguments?['key'] as Key?,
           ),
           settings: settings,
           fullscreenDialog: false,
@@ -48,7 +49,7 @@ mixin BaseNavigator {
       case RouteNames.popAndSecondPage:
         return MaterialPageRoute<void>(
           builder: (_) => SecondPage(
-            key: (settings.arguments as Map<String, dynamic>?)?['key'] as Key?,
+            key: arguments?['key'] as Key?,
           ),
           settings: settings,
           fullscreenDialog: false,

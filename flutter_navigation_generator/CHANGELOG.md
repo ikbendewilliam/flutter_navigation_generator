@@ -1,3 +1,7 @@
+## 1.0.4 (2024-03-06)
+
+- Fixed issue with settings.arguments error in restoration
+
 ## 1.0.3 (2023-12-04)
 
 - Fixed issue with FlutterNavigator PageType overriding FlutterRoute PageType
