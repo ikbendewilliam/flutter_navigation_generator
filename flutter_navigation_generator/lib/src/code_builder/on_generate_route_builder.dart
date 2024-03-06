@@ -32,10 +32,10 @@ class OnGenerateRouteBuilder {
         : '${route.routeWidget.className}.${route.constructorName}';
     final constructorCall =
         '$constructor(${route.parameters.asMap().map((_, p) {
-              final nullableSuffix = p.isNullable ? '?' : '';
+              final nullableSuffix = p.isNullable ? '?' : '!';
               return MapEntry(
                 p.argumentName,
-                "(settings.arguments as Map<String, dynamic>$nullableSuffix)$nullableSuffix['${p.argumentName}'] as ${typeRefer(p).symbol}$nullableSuffix",
+                "arguments$nullableSuffix['${p.argumentName}'] as ${typeRefer(p).symbol}$nullableSuffix",
               );
             }).entries.map((e) => '${e.key}: ${e.value},').join('')})';
     return 'case RouteNames.${CaseUtil(route.routeName).camelCase}: return ${_withPageType(route, constructorCall)};';
@@ -59,6 +59,8 @@ class OnGenerateRouteBuilder {
         )
         ..body = Block.of([
           if (pageRoutes.isNotEmpty) ...[
+            const Code(
+                'final arguments = settings.arguments is Map ? (settings.arguments as Map).cast<String, dynamic>() : null;'),
             Code(
                 'switch (settings.name) {${pageRoutes.map(_generateRoute).join('')}}'),
           ],
