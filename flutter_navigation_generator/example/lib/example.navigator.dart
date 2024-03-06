@@ -54,6 +54,15 @@ mixin BaseNavigator {
           settings: settings,
           fullscreenDialog: false,
         );
+      case RouteNames.exampleScreenWithRequiredArgument:
+        return MaterialPageRoute<void>(
+          builder: (_) => ExampleScreenWithRequiredArgument(
+            text: arguments!['text'] as String,
+            key: arguments?['key'] as Key?,
+          ),
+          settings: settings,
+          fullscreenDialog: false,
+        );
     }
     return null;
   }
@@ -88,8 +97,23 @@ mixin BaseNavigator {
         RouteNames.popAndSecondPage,
         arguments: {'key': key},
       );
-  Future<void> showDialogExampleDialog({_i1.Key? key}) async =>
-      showCustomDialog<dynamic>(widget: _i2.ExampleDialog(key: key));
+  Future<void> goToExampleScreenWithRequiredArgument({
+    required String text,
+    _i1.Key? key,
+  }) async =>
+      navigatorKey.currentState?.pushNamed<dynamic>(
+        RouteNames.exampleScreenWithRequiredArgument,
+        arguments: {'text': text, 'key': key},
+      );
+  Future<void> showDialogExampleDialog({
+    required String text,
+    _i1.Key? key,
+  }) async =>
+      showCustomDialog<dynamic>(
+          widget: _i2.ExampleDialog(
+        text: text,
+        key: key,
+      ));
   Future<void> showSheetRecursiveNavigationBottomSheet({
     int layers = 1,
     _i1.Key? key,
@@ -125,4 +149,7 @@ class RouteNames {
   static const secondPage = '/second';
 
   static const popAndSecondPage = '/PopAndSecond';
+
+  static const exampleScreenWithRequiredArgument =
+      '/example-screen-with-required-argument';
 }

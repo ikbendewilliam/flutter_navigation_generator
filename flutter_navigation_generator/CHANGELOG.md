@@ -1,4 +1,4 @@
-## 1.0.4 (2024-03-06)
+## 1.0.4+1 (2024-03-06)
 
 - Fixed issue with settings.arguments error in restoration
 

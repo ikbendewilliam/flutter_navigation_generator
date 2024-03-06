@@ -32,10 +32,11 @@ class OnGenerateRouteBuilder {
         : '${route.routeWidget.className}.${route.constructorName}';
     final constructorCall =
         '$constructor(${route.parameters.asMap().map((_, p) {
-              final nullableSuffix = p.isNullable ? '?' : '!';
+              final nullableSuffixFirst = p.isNullable ? '?' : '!';
+              final nullableSuffixSecond = p.isNullable ? '?' : '';
               return MapEntry(
                 p.argumentName,
-                "arguments$nullableSuffix['${p.argumentName}'] as ${typeRefer(p).symbol}$nullableSuffix",
+                "arguments$nullableSuffixFirst['${p.argumentName}'] as ${typeRefer(p).symbol}$nullableSuffixSecond",
               );
             }).entries.map((e) => '${e.key}: ${e.value},').join('')})';
     return 'case RouteNames.${CaseUtil(route.routeName).camelCase}: return ${_withPageType(route, constructorCall)};';

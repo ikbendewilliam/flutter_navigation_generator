@@ -82,7 +82,8 @@ class _MyHomePageState extends State<MyHomePage> {
               child: const Text("Show a bottom sheet with its own navigator"),
             ),
             ElevatedButton(
-              onPressed: () => mainNavigator.showDialogExampleDialog(),
+              onPressed: () =>
+                  mainNavigator.showDialogExampleDialog(text: 'hi there'),
               child: const Text("Show a full screen dialog"),
             ),
           ],
@@ -190,12 +191,40 @@ class RecursiveNavigationBottomSheet extends StatelessWidget {
 
 @flutterDialog
 class ExampleDialog extends StatelessWidget {
-  const ExampleDialog({super.key});
+  final String text;
+
+  const ExampleDialog({
+    required this.text,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return const Dialog(
-      child: Center(child: Text('Hi')),
+    return Dialog(
+      child: Center(
+        child: Text(
+          text,
+        ),
+      ),
+    );
+  }
+}
+
+@flutterRoute
+class ExampleScreenWithRequiredArgument extends StatelessWidget {
+  final String text;
+
+  const ExampleScreenWithRequiredArgument({
+    required this.text,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Text(
+        text,
+      ),
     );
   }
 }
