@@ -1,3 +1,4 @@
+import 'package:example/custom_model.dart';
 import 'package:example/example.dart';
 import 'package:example/example.navigator.dart';
 import 'package:example/fade_route.dart';
@@ -77,13 +78,15 @@ class _MyHomePageState extends State<MyHomePage> {
               child: const Text("Go to page 2"),
             ),
             ElevatedButton(
-              onPressed: () =>
-                  mainNavigator.showSheetRecursiveNavigationBottomSheet(),
+              onPressed: () => mainNavigator.goToExampleScreenWithRequiredArgument(data: CustomModel('John', 25)),
+              child: const Text("Go to ExampleScreenWithRequiredArgument"),
+            ),
+            ElevatedButton(
+              onPressed: () => mainNavigator.showSheetRecursiveNavigationBottomSheet(),
               child: const Text("Show a bottom sheet with its own navigator"),
             ),
             ElevatedButton(
-              onPressed: () =>
-                  mainNavigator.showDialogExampleDialog(text: 'hi there'),
+              onPressed: () => mainNavigator.showDialogExampleDialog(text: 'hi there'),
               child: const Text("Show a full screen dialog"),
             ),
           ],
@@ -169,9 +172,7 @@ class RecursiveNavigationBottomSheet extends StatelessWidget {
                 child: const Text("Go to second page"),
               ),
               ElevatedButton(
-                onPressed: () =>
-                    myNavigator.showSheetRecursiveNavigationBottomSheet(
-                        layers: layers + 1),
+                onPressed: () => myNavigator.showSheetRecursiveNavigationBottomSheet(layers: layers + 1),
                 child: const Text("Open another bottom sheet"),
               ),
             ],
@@ -212,18 +213,25 @@ class ExampleDialog extends StatelessWidget {
 
 @flutterRoute
 class ExampleScreenWithRequiredArgument extends StatelessWidget {
-  final String text;
+  final CustomModel data;
 
   const ExampleScreenWithRequiredArgument({
-    required this.text,
+    required this.data,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Text(
-        text,
+      child: Row(
+        children: [
+          Text(
+            data.name,
+          ),
+          Text(
+            data.age.toString(),
+          ),
+        ],
       ),
     );
   }

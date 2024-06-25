@@ -1,3 +1,7 @@
+## 1.1.0+experimental (2024-06-25)
+
+- Added support for web parameters
+
 ## 1.0.4+1 (2024-03-06)
 
 - Fixed issue with settings.arguments error in restoration

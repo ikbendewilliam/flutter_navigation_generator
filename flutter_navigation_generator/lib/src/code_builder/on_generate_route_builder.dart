@@ -26,27 +26,24 @@ class OnGenerateRouteBuilder {
   }
 
   String _generateRoute(RouteConfig route) {
-    final constructor = route.constructorName == route.routeWidget.className ||
-            route.constructorName.isEmpty
+    final constructor = route.constructorName == route.routeWidget.className || route.constructorName.isEmpty
         ? route.routeWidget.className
         : '${route.routeWidget.className}.${route.constructorName}';
-    final constructorCall =
-        '$constructor(${route.parameters.asMap().map((_, p) {
-              final nullableSuffixFirst = p.isNullable ? '?' : '!';
-              final nullableSuffixSecond = p.isNullable ? '?' : '';
-              return MapEntry(
-                p.argumentName,
-                "arguments$nullableSuffixFirst['${p.argumentName}'] as ${typeRefer(p).symbol}$nullableSuffixSecond",
-              );
-            }).entries.map((e) => '${e.key}: ${e.value},').join('')})';
+    final constructorCall = '$constructor(${route.parameters.asMap().map((_, p) {
+          final nullableSuffix = p.isNullable ? '?' : '';
+          final convertFromString = _convertFromString(p, 'arguments[\'${p.argumentName}\']');
+          return MapEntry(
+            p.argumentName,
+            (p.className == 'Key' || p.className == 'String')
+                ? "arguments['${p.argumentName}'] as ${typeRefer(p).symbol}$nullableSuffix"
+                : "arguments['${p.argumentName}'] is String ? $convertFromString : arguments['${p.argumentName}'] as ${typeRefer(p).symbol}$nullableSuffix",
+          );
+        }).entries.map((e) => '${e.key}: ${e.value},').join('')})';
     return 'case RouteNames.${CaseUtil(route.routeName).camelCase}: return ${_withPageType(route, constructorCall)};';
   }
 
   Method generate() {
-    final pageRoutes = routes.where((r) =>
-        r.generatePageRoute &&
-        r.navigationType != NavigationType.bottomSheet &&
-        r.navigationType != NavigationType.dialog);
+    final pageRoutes = routes.where((r) => r.generatePageRoute && r.navigationType != NavigationType.bottomSheet && r.navigationType != NavigationType.dialog);
     return Method(
       (m) => m
         ..name = 'onGenerateRoute'
@@ -60,13 +57,28 @@ class OnGenerateRouteBuilder {
         )
         ..body = Block.of([
           if (pageRoutes.isNotEmpty) ...[
-            const Code(
-                'final arguments = settings.arguments is Map ? (settings.arguments as Map).cast<String, dynamic>() : null;'),
-            Code(
-                'switch (settings.name) {${pageRoutes.map(_generateRoute).join('')}}'),
+            const Code('''final arguments = settings.arguments is Map ? (settings.arguments as Map).cast<String, dynamic>() : <String, dynamic>{};
+    final settingsUri = Uri.parse(settings.name ?? '');
+    settingsUri.queryParameters.forEach((key, value) {
+      arguments[key] ??= value;
+    });'''),
+            Code('switch (settingsUri.path) {${pageRoutes.map(_generateRoute).join('')}}'),
           ],
           const Code('return null;'),
         ]),
     );
+  }
+
+  String _convertFromString(ImportableType p, String s) {
+    return switch (p.className) {
+      'int' => 'int.parse($s)',
+      'double' => 'double.parse($s)',
+      'bool' => "$s == 'true'",
+      'num' => 'num.parse($s)',
+      'String' || 'dynamic' => s,
+      'Map' => 'jsonDecode(utf8.decode(base64Decode($s)))',
+      'List' => 'jsonDecode(utf8.decode(base64Decode($s)))',
+      _ => '${p.className}.fromJson(jsonDecode(utf8.decode(base64Decode($s))))',
+    };
   }
 }
