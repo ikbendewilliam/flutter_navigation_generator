@@ -3,7 +3,15 @@ import 'package:flutter_navigation_generator_annotations/flutter_navigation_gene
 /// Marks a class as a Flutter route, a pageRoute and method will be generated
 class FlutterRoute {
   /// Override the default name of the route
+  ///
+  /// optionally use `:name` to declare a parameter in the route for web.
+  /// Defaults to use query parameters. Name must match the variable name
+  /// included in the constructor
   final String? routeName;
+
+  /// Override the method to open the route
+  /// defaults to goTo[RouteName]
+  final String? methodName;
 
   /// Set the type returned by the goTo method.
   final Type? returnType;
@@ -46,6 +54,7 @@ class FlutterRoute {
   const FlutterRoute({
     this.navigationType = NavigationType.push,
     this.routeName,
+    this.methodName,
     this.pageType,
     this.returnType,
     this.isFullscreenDialog = false,

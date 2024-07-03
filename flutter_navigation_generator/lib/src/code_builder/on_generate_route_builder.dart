@@ -1,4 +1,5 @@
 import 'package:code_builder/code_builder.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter_navigation_generator/src/models/importable_type.dart';
 import 'package:flutter_navigation_generator/src/models/route_config.dart';
 import 'package:flutter_navigation_generator/src/utils/case_utils.dart';
@@ -39,11 +40,17 @@ class OnGenerateRouteBuilder {
                 : "arguments['${p.argumentName}'] is String ? $convertFromString : arguments['${p.argumentName}'] as ${typeRefer(p).symbol}$nullableSuffix",
           );
         }).entries.map((e) => '${e.key}: ${e.value},').join('')})';
-    return 'case RouteNames.${CaseUtil(route.routeName).camelCase}: return ${_withPageType(route, constructorCall)};';
+    return 'return ${_withPageType(route, constructorCall)};';
   }
 
   Method generate() {
-    final pageRoutes = routes.where((r) => r.generatePageRoute && r.navigationType != NavigationType.bottomSheet && r.navigationType != NavigationType.dialog);
+    final pageRoutes = routes.where((r) => r.generatePageRoute && r.navigationType != NavigationType.bottomSheet && r.navigationType != NavigationType.dialog).toList();
+    for (final pageRoute in pageRoutes.toList()) {
+      final pageRoute2 = pageRoutes.firstWhere((element) => element.routeName == pageRoute.routeName);
+      if (pageRoute != pageRoute2) {
+        pageRoutes.remove(pageRoute);
+      }
+    }
     return Method(
       (m) => m
         ..name = 'onGenerateRoute'
@@ -62,7 +69,46 @@ class OnGenerateRouteBuilder {
     settingsUri.queryParameters.forEach((key, value) {
       arguments[key] ??= value;
     });'''),
-            Code('switch (settingsUri.path) {${pageRoutes.map(_generateRoute).join('')}}'),
+            Code(
+                'switch (settingsUri.path) {${pageRoutes.where((route) => !route.routeNameContainsParameters).map((route) => 'case RouteNames.${CaseUtil(route.routeName).camelCase}: ${_generateRoute(route)}').join('')}}'),
+          ],
+          if (pageRoutes.any((element) => element.routeNameContainsParameters)) ...[
+            const Code('final pathSegments = settingsUri.pathSegments;'),
+            ...pageRoutes
+                .where((pageRoute) => pageRoute.routeNameContainsParameters)
+                .groupListsBy((pageRoute) => pageRoute.routeName.pathSegments.length)
+                .entries
+                .sorted((a, b) => -a.key.compareTo(b.key))
+                .map((group) {
+              final pathSegments = group.key;
+              var code = 'if (pathSegments.length == $pathSegments) {';
+              final pageRoutesMap = group.value.asMap().map((key, value) => MapEntry(value, value.routeName.parametersFromRouteName.length));
+              final pageRoutes = pageRoutesMap.entries.sorted((a, b) => a.value.compareTo(b.value)).map((e) => e.key).toList();
+              for (final pageRoute in pageRoutes) {
+                final pathSegments = pageRoute.routeName.pathSegments;
+                final hasRigidSegments = pathSegments.any((element) => !element.startsWith(':'));
+                if (hasRigidSegments) {
+                  code += 'if (';
+                  code += pathSegments
+                      .asMap()
+                      .entries
+                      .where((pathSegment) => !pathSegment.value.startsWith(':'))
+                      .map((pathSegment) => 'pathSegments[${pathSegment.key}] == \'${pathSegment.value}\'')
+                      .join(' && ');
+                  code += ') {';
+                }
+                code += pathSegments
+                    .asMap()
+                    .entries
+                    .where((pathSegment) => pathSegment.value.startsWith(':'))
+                    .map((pathSegment) => 'arguments[\'${pathSegments[pathSegment.key].substring(1)}\'] = pathSegments[${pathSegment.key}];')
+                    .join('\n');
+                code += _generateRoute(pageRoute);
+                if (hasRigidSegments) code += '}';
+              }
+
+              return Code('$code}');
+            }),
           ],
           const Code('return null;'),
         ]),

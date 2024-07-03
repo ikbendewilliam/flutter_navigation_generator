@@ -37,25 +37,8 @@ mixin BaseNavigator {
           settings: settings,
           fullscreenDialog: false,
         );
-      case RouteNames.myHomePagePopAll:
-        return MaterialPageRoute<void>(
-          builder: (_) => MyHomePage.popAll(
-            key: arguments['key'] as Key?,
-            title: arguments['title'] as String?,
-          ),
-          settings: settings,
-          fullscreenDialog: false,
-        );
       case RouteNames.secondPage:
         return FadeInRoute<bool>(
-          builder: (_) => SecondPage(
-            key: arguments['key'] as Key?,
-          ),
-          settings: settings,
-          fullscreenDialog: false,
-        );
-      case RouteNames.popAndSecondPage:
-        return MaterialPageRoute<void>(
           builder: (_) => SecondPage(
             key: arguments['key'] as Key?,
           ),
@@ -75,6 +58,55 @@ mixin BaseNavigator {
           fullscreenDialog: false,
         );
     }
+    final pathSegments = settingsUri.pathSegments;
+    if (pathSegments.length == 4) {
+      if (pathSegments[0] == 'home' && pathSegments[2] == 'example') {
+        arguments['id'] = pathSegments[1];
+        arguments['age'] = pathSegments[3];
+        return MaterialPageRoute<void>(
+          builder: (_) => RouteNameWithArguments2(
+            id: arguments['id'] as String,
+            name: arguments['name'] as String?,
+            age: arguments['age'] is String
+                ? int.parse(arguments['age'])
+                : arguments['age'] as int?,
+            key: arguments['key'] as Key?,
+          ),
+          settings: settings,
+          fullscreenDialog: false,
+        );
+      }
+      if (pathSegments[0] == 'home') {
+        arguments['id'] = pathSegments[1];
+        arguments['name'] = pathSegments[2];
+        arguments['nonExistingName'] = pathSegments[3];
+        return MaterialPageRoute<void>(
+          builder: (_) => RouteNameWithArguments(
+            id: arguments['id'] as String,
+            name: arguments['name'] as String?,
+            age: arguments['age'] is String
+                ? int.parse(arguments['age'])
+                : arguments['age'] as int?,
+            key: arguments['key'] as Key?,
+          ),
+          settings: settings,
+          fullscreenDialog: false,
+        );
+      }
+    }
+    if (pathSegments.length == 2) {
+      if (pathSegments[0] == 'my-home-page-pop-all') {
+        arguments['title'] = pathSegments[1];
+        return MaterialPageRoute<void>(
+          builder: (_) => MyHomePage(
+            key: arguments['key'] as Key?,
+            title: arguments['title'] as String?,
+          ),
+          settings: settings,
+          fullscreenDialog: false,
+        );
+      }
+    }
     return null;
   }
 
@@ -85,40 +117,67 @@ mixin BaseNavigator {
       navigatorKey.currentState?.pushNamed<dynamic>(
         Uri(
           path: RouteNames.myHomePage,
-          queryParameters: {'title': title.toString()},
+          queryParameters: {'title': title},
         ).toString(),
         arguments: {'key': key, 'title': title},
       );
-  void goToMyHomePagePopAll({
+  void goToHomePageWithPathParameter({
     _i1.Key? key,
-    String? title = 'Poppedallpages',
+    String? title,
   }) =>
       navigatorKey.currentState?.pushNamedAndRemoveUntil<dynamic>(
-        Uri(
-          path: RouteNames.myHomePagePopAll,
-          queryParameters: {'title': title.toString()},
-        ).toString(),
+        RouteNames.myHomePagePopAllTitle(title: title),
         (_) => false,
         arguments: {'key': key, 'title': title},
       );
   Future<bool?> goToSecondPage({_i1.Key? key}) async {
     final dynamic result = await navigatorKey.currentState?.pushNamed<dynamic>(
-      Uri(
-        path: RouteNames.secondPage,
-        queryParameters: {},
-      ).toString(),
+      RouteNames.secondPage,
       arguments: {'key': key},
     );
     return (result as bool?);
   }
 
-  void goToPopAndSecondPage({_i1.Key? key}) =>
-      navigatorKey.currentState?.popAndPushNamed<dynamic, dynamic>(
+  Future<bool?> popAndGoToSecondPage({_i1.Key? key}) async {
+    final dynamic result =
+        await navigatorKey.currentState?.popAndPushNamed<dynamic, dynamic>(
+      RouteNames.secondPage,
+      arguments: {'key': key},
+    );
+    return (result as bool?);
+  }
+
+  Future<void> customName({
+    required String id,
+    String? name,
+    int? age,
+    _i1.Key? key,
+  }) async =>
+      navigatorKey.currentState?.pushNamed<dynamic>(
         Uri(
-          path: RouteNames.popAndSecondPage,
-          queryParameters: {},
+          path: RouteNames.homeIdNameNonExistingName(
+            id: id,
+            name: name,
+          ),
+          queryParameters: {'age': age?.toString()},
         ).toString(),
-        arguments: {'key': key},
+        arguments: {'id': id, 'name': name, 'age': age, 'key': key},
+      );
+  Future<void> goToRouteNameWithArguments2({
+    required String id,
+    String? name,
+    int? age,
+    _i1.Key? key,
+  }) async =>
+      navigatorKey.currentState?.pushNamed<dynamic>(
+        Uri(
+          path: RouteNames.homeIdExampleAge(
+            id: id,
+            age: age?.toString(),
+          ),
+          queryParameters: {'name': name},
+        ).toString(),
+        arguments: {'id': id, 'name': name, 'age': age, 'key': key},
       );
   Future<void> goToExampleScreenWithRequiredArgument({
     required _i2.CustomModel data,
@@ -170,14 +229,32 @@ mixin BaseNavigator {
 }
 
 class RouteNames {
+  /// /my-home
   static const myHomePage = '/my-home';
 
-  static const myHomePagePopAll = '/MyHomePagePopAll';
-
+  /// /second
   static const secondPage = '/second';
 
-  static const popAndSecondPage = '/PopAndSecond';
-
+  /// /example-screen-with-required-argument
   static const exampleScreenWithRequiredArgument =
       '/example-screen-with-required-argument';
+
+  /// /my-home-page-pop-all/:title
+  static String myHomePagePopAllTitle({String? title}) =>
+      '/my-home-page-pop-all/$title';
+
+  /// /home/:id/:name/:nonExistingName
+  static String homeIdNameNonExistingName({
+    required String id,
+    String? name,
+    String? nonExistingName,
+  }) =>
+      '/home/$id/$name/$nonExistingName';
+
+  /// /home/:id/example/:age
+  static String homeIdExampleAge({
+    required String id,
+    String? age,
+  }) =>
+      '/home/$id/example/$age';
 }

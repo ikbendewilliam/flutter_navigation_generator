@@ -1,6 +1,7 @@
 ## 1.1.0+experimental (2024-06-25)
 
-- Added support for web parameters
+- Added support for web parameters as query parameters and url path parameters
+- Added support for methodName
 
 ## 1.0.4+1 (2024-03-06)
 

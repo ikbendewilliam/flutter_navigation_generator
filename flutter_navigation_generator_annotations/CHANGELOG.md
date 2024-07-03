@@ -1,3 +1,7 @@
+## 1.1.0-experimental (2024-07-03)
+
+- Added methodName and updated routeName to include web parameters
+
 ## 1.0.1 (2023-11-14)
 
 - Added restorablePush, restorablePopAndPush, restorablePushReplacement and restorablePushAndReplaceAll methods

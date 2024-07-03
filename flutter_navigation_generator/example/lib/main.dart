@@ -31,7 +31,8 @@ class MyApp extends StatelessWidget {
 
 @flutterRoute
 @FlutterRoute(
-  routeName: 'MyHomePagePopAll',
+  methodName: 'goToHomePageWithPathParameter',
+  routeName: 'my-home-page-pop-all/:title',
   navigationType: NavigationType.pushAndReplaceAll,
 )
 class MyHomePage extends StatefulWidget {
@@ -82,6 +83,14 @@ class _MyHomePageState extends State<MyHomePage> {
               child: const Text("Go to ExampleScreenWithRequiredArgument"),
             ),
             ElevatedButton(
+              onPressed: () => mainNavigator.customName(id: '1', name: 'John', age: 12),
+              child: const Text("Go to RouteNameWithArguments"),
+            ),
+            ElevatedButton(
+              onPressed: () => mainNavigator.goToRouteNameWithArguments2(id: '3', name: 'Will', age: 43),
+              child: const Text("Go to RouteNameWithArguments2"),
+            ),
+            ElevatedButton(
               onPressed: () => mainNavigator.showSheetRecursiveNavigationBottomSheet(),
               child: const Text("Show a bottom sheet with its own navigator"),
             ),
@@ -101,8 +110,11 @@ class _MyHomePageState extends State<MyHomePage> {
   pageType: FadeInRoute,
 )
 @FlutterRoute(
+  // If you don't specify another routeName, make sure the returnType and pagetype are the same
   navigationType: NavigationType.popAndPush,
-  routeName: 'PopAndSecondPage',
+  returnType: bool,
+  pageType: FadeInRoute,
+  methodName: 'popAndGoToSecondPage',
 )
 class SecondPage extends StatelessWidget {
   const SecondPage({super.key});
@@ -128,6 +140,105 @@ class SecondPage extends StatelessWidget {
             ElevatedButton(
               onPressed: mainNavigator.goBack,
               child: const Text("I return nothing"),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+@FlutterRoute(
+  routeName: 'home/:id/:name/:nonExistingName',
+  methodName: 'customName',
+)
+class RouteNameWithArguments extends StatelessWidget {
+  final String id;
+  final String? name;
+  final int? age;
+
+  const RouteNameWithArguments({
+    required this.id,
+    this.name,
+    this.age,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: const Text('RouteNameWithArguments'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text(
+              'RouteNameWithArguments:',
+            ),
+            Text(
+              'id: $id',
+            ),
+            Text(
+              'name: $name',
+            ),
+            Text(
+              'age: $age',
+            ),
+            ElevatedButton(
+              onPressed: mainNavigator.goBack,
+              child: const Text("Back"),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+@FlutterRoute(
+  routeName: '/home/:id/example/:age',
+)
+class RouteNameWithArguments2 extends StatelessWidget {
+  final String id;
+  final String? name;
+  final int? age;
+
+  const RouteNameWithArguments2({
+    required this.id,
+    this.name,
+    this.age,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: const Text('RouteNameWithArguments2'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text(
+              'RouteNameWithArguments2:',
+            ),
+            Text(
+              'id: $id',
+            ),
+            Text(
+              'name: $name',
+            ),
+            Text(
+              'age: $age',
+            ),
+            ElevatedButton(
+              onPressed: mainNavigator.goBack,
+              child: const Text("Back"),
             ),
           ],
         ),
@@ -164,7 +275,7 @@ class RecursiveNavigationBottomSheet extends StatelessWidget {
           Wrap(
             children: [
               ElevatedButton(
-                onPressed: () => myNavigator.goToMyHomePagePopAll(),
+                onPressed: () => myNavigator.goToHomePageWithPathParameter(),
                 child: const Text("Pop all and show home page"),
               ),
               ElevatedButton(

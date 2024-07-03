@@ -1,4 +1,5 @@
 import 'package:code_builder/code_builder.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter_navigation_generator/src/extensions/navigation_type_extension.dart';
 import 'package:flutter_navigation_generator/src/models/importable_type.dart';
 import 'package:flutter_navigation_generator/src/models/route_config.dart';
@@ -48,9 +49,15 @@ class RouteBuilder {
     bool isLambda = true,
     bool isAsync = true,
   }) {
+    final String name;
+    if (route.methodNameIsDefinedByAnnotation) {
+      name = route.methodName;
+    } else {
+      name = '$namePrefix${CaseUtil(route.methodName.replaceAll(RegExp(':[a-zA-Z0-9]*'), '')).upperCamelCase}';
+    }
     return Method(
       (b) => b
-        ..name = '$namePrefix${CaseUtil(route.routeName).upperCamelCase}'
+        ..name = name
         ..lambda = isLambda
         ..modifier = isAsync ? MethodModifier.async : null
         ..optionalParameters.addAll(
@@ -84,9 +91,43 @@ class RouteBuilder {
     ].contains(className));
   }
 
+  String _generateParameterValue(ImportableType argument) {
+    final name = argument.argumentName;
+    var value = '';
+    if (argument.className == 'String') return name;
+    if (_isAcceptableType(argument.className)) {
+      value += '$name${argument.isNullable ? '?' : ''}.toString()';
+    } else {
+      if (argument.isNullable) value += '$name == null ? null : ';
+      value += 'base64Encode(utf8.encode(jsonEncode($name)))';
+    }
+    return value;
+  }
+
   Iterable<Method> _generatePageRoutes(List<RouteConfig> routes) {
     return routes.map(
       (route) {
+        Expression path;
+        final parameters = route.routeName.parametersFromRouteName;
+        if (route.routeNameContainsParameters) {
+          path = Reference('RouteNames.${CaseUtil(route.routeName).camelCase}').call(
+              [],
+              (parameters.asMap().map((_, parameter) {
+                final argument = route.parameters.firstWhereOrNull((element) => element.name == parameter);
+                if (argument == null) return MapEntry(parameter, null);
+                return MapEntry(parameter, Reference(_generateParameterValue(argument)));
+              })
+                    ..removeWhere((key, value) => value == null))
+                  .cast());
+        } else {
+          path = Reference('RouteNames.${CaseUtil(route.routeName).camelCase}');
+        }
+        final queryParameters =
+            route.parameters.where((element) => element.className != 'Key' && !parameters.contains(element.argumentName)).toList().asMap().map((_, p) => MapEntry(
+                  "'${p.argumentName}'",
+                  _generateParameterValue(p),
+                ));
+
         final bodyCall = TypeReference(
           (b) => b
             ..symbol = 'navigatorKey.currentState?.${route.navigationType.navigatorMethod}'
@@ -103,19 +144,18 @@ class RouteBuilder {
             ),
         ).call(
           [
-            const Reference(
-              'Uri',
-              'dart:core',
-            ).call(
-              [],
-              {
-                'path': Reference('RouteNames.${CaseUtil(route.routeName).camelCase}'),
-                'queryParameters': Reference('${route.parameters.where((element) => element.className != 'Key').toList().asMap().map((_, p) => MapEntry(
-                      "'${p.argumentName}'",
-                      _isAcceptableType(p.className) ? '${p.argumentName}.toString()' : 'base64Encode(utf8.encode(jsonEncode(${p.argumentName})))',
-                    ))}'),
-              },
-            ).property('toString()'),
+            queryParameters.isEmpty
+                ? path
+                : const Reference(
+                    'Uri',
+                    'dart:core',
+                  ).call(
+                    [],
+                    {
+                      'path': path,
+                      'queryParameters': Reference('$queryParameters'),
+                    },
+                  ).property('toString()'),
             if (route.navigationType == NavigationType.pushAndReplaceAll || route.navigationType == NavigationType.restorablePushAndReplaceAll) ...[
               const Reference('(_) => false'),
             ],

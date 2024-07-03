@@ -44,8 +44,7 @@ void throwIf(bool condition, String message, {Element? element}) {
   }
 }
 
-void printBoxed(String message,
-    {String header = '--------------------------'}) {
+void printBoxed(String message, {String header = '--------------------------'}) {
   final pre = header;
   // ignore: avoid_print
   print("$pre\n$message\n${''.padRight(72, '-')} \n");
@@ -62,15 +61,12 @@ Reference typeRefer(
   if (type == null) {
     typeReference = TypeReference((r) => r..symbol = 'void');
   } else {
-    final relativeImport = targetFile == null
-        ? ImportableTypeResolver.resolveAssetImport(type.import)
-        : ImportableTypeResolver.relative(type.import, targetFile);
+    final relativeImport = targetFile == null ? ImportableTypeResolver.resolveAssetImport(type.import) : ImportableTypeResolver.relative(type.import, targetFile);
     typeReference = TypeReference((reference) {
       reference
         ..symbol = type.className
         ..url = relativeImport
-        ..isNullable =
-            withNullabilitySuffix && (forceNullable || type.isNullable);
+        ..isNullable = withNullabilitySuffix && (forceNullable || type.isNullable);
       if (type.typeArguments.isNotEmpty) {
         reference.types.addAll(
           type.typeArguments.map((e) => typeRefer(
@@ -88,4 +84,10 @@ Reference typeRefer(
       ..symbol = 'Future'
       ..types.add(typeReference),
   );
+}
+
+extension StringExtension on String {
+  List<String> get pathSegments => Uri.parse(this).pathSegments.toList();
+
+  List<String> get parametersFromRouteName => pathSegments.where((element) => element.startsWith(':')).map((e) => e.substring(1)).toList();
 }
