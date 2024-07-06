@@ -11,6 +11,7 @@ import 'package:example/custom_model.dart' as _i2;
 import 'package:example/main.dart' as _i3;
 import 'package:flutter/material.dart' as _i1;
 import 'package:flutter/material.dart';
+import 'package:flutter_navigation_generator_animations/flutter_navigation_generator_animations.dart';
 
 import 'custom_model.dart';
 import 'fade_route.dart';
@@ -29,7 +30,7 @@ mixin BaseNavigator {
     });
     switch (settingsUri.path) {
       case RouteNames.myHomePage:
-        return MaterialPageRoute<void>(
+        return NativeRouteAnimation<void>(
           builder: (_) => MyHomePage(
             key: arguments['key'] as Key?,
             title: arguments['title'] as String?,
@@ -46,7 +47,7 @@ mixin BaseNavigator {
           fullscreenDialog: false,
         );
       case RouteNames.exampleScreenWithRequiredArgument:
-        return MaterialPageRoute<void>(
+        return NativeRouteAnimation<void>(
           builder: (_) => ExampleScreenWithRequiredArgument(
             data: arguments['data'] is String
                 ? CustomModel.fromJson(
@@ -63,7 +64,7 @@ mixin BaseNavigator {
       if (pathSegments[0] == 'home' && pathSegments[2] == 'example') {
         arguments['id'] = pathSegments[1];
         arguments['age'] = pathSegments[3];
-        return MaterialPageRoute<void>(
+        return NativeRouteAnimation<void>(
           builder: (_) => RouteNameWithArguments2(
             id: arguments['id'] as String,
             name: arguments['name'] as String?,
@@ -80,7 +81,7 @@ mixin BaseNavigator {
         arguments['id'] = pathSegments[1];
         arguments['name'] = pathSegments[2];
         arguments['nonExistingName'] = pathSegments[3];
-        return MaterialPageRoute<void>(
+        return NativeRouteAnimation<void>(
           builder: (_) => RouteNameWithArguments(
             id: arguments['id'] as String,
             name: arguments['name'] as String?,
@@ -97,7 +98,7 @@ mixin BaseNavigator {
     if (pathSegments.length == 2) {
       if (pathSegments[0] == 'my-home-page-pop-all') {
         arguments['title'] = pathSegments[1];
-        return MaterialPageRoute<void>(
+        return NativeRouteAnimation<void>(
           builder: (_) => MyHomePage(
             key: arguments['key'] as Key?,
             title: arguments['title'] as String?,

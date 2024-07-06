@@ -8,6 +8,9 @@ class FlutterNavigator {
   /// Override the default page type [MaterialPageRoute] to
   /// use a custom page type so you can customize the
   /// transition. Must extend [PageRoute]
+  ///
+  /// Add `flutter_navigation_generator_animations`
+  /// to use [NativeRouteAnimation]
   final Type? pageType;
 
   /// Remove the suffixes from the class name in

@@ -11,6 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.2
+  flutter_navigation_generator_animations: ^1.1.0 
   flutter_navigation_generator_annotations: ^1.0.0 
 
 dev_dependencies:
@@ -23,6 +24,8 @@ dev_dependencies:
 
 # Comment when publishing
 dependency_overrides: 
+  flutter_navigation_generator_animations:
+    path: ../../flutter_navigation_generator_animations
   flutter_navigation_generator_annotations:
     path: ../../flutter_navigation_generator_annotations
 
