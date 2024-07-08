@@ -60,12 +60,13 @@ mixin BaseNavigator {
         );
     }
     final pathSegments = settingsUri.pathSegments;
-    if (pathSegments.length == 4) {
-      if (pathSegments[0] == 'home' && pathSegments[2] == 'example') {
+    if (pathSegments.length == 5) {
+      if (pathSegments[0] == 'home' && pathSegments[4] == '') {
         arguments['id'] = pathSegments[1];
-        arguments['age'] = pathSegments[3];
+        arguments['name'] = pathSegments[2];
+        arguments['nonExistingName'] = pathSegments[3];
         return NativeRouteAnimation<void>(
-          builder: (_) => RouteNameWithArguments2(
+          builder: (_) => RouteNameWithArguments(
             id: arguments['id'] as String,
             name: arguments['name'] as String?,
             age: arguments['age'] is String
@@ -77,12 +78,13 @@ mixin BaseNavigator {
           fullscreenDialog: false,
         );
       }
-      if (pathSegments[0] == 'home') {
+    }
+    if (pathSegments.length == 4) {
+      if (pathSegments[0] == 'home' && pathSegments[2] == 'example') {
         arguments['id'] = pathSegments[1];
-        arguments['name'] = pathSegments[2];
-        arguments['nonExistingName'] = pathSegments[3];
+        arguments['age'] = pathSegments[3];
         return NativeRouteAnimation<void>(
-          builder: (_) => RouteNameWithArguments(
+          builder: (_) => RouteNameWithArguments2(
             id: arguments['id'] as String,
             name: arguments['name'] as String?,
             age: arguments['age'] is String
@@ -118,7 +120,7 @@ mixin BaseNavigator {
       navigatorKey.currentState?.pushNamed<dynamic>(
         Uri(
           path: RouteNames.myHomePage,
-          queryParameters: {'title': title},
+          queryParameters: {'title': title}..removeWhere((_, v) => v == null),
         ).toString(),
         arguments: {'key': key, 'title': title},
       );
@@ -160,7 +162,8 @@ mixin BaseNavigator {
             id: id,
             name: name,
           ),
-          queryParameters: {'age': age?.toString()},
+          queryParameters: {'age': age?.toString()}
+            ..removeWhere((_, v) => v == null),
         ).toString(),
         arguments: {'id': id, 'name': name, 'age': age, 'key': key},
       );
@@ -176,7 +179,7 @@ mixin BaseNavigator {
             id: id,
             age: age?.toString(),
           ),
-          queryParameters: {'name': name},
+          queryParameters: {'name': name}..removeWhere((_, v) => v == null),
         ).toString(),
         arguments: {'id': id, 'name': name, 'age': age, 'key': key},
       );
@@ -230,8 +233,8 @@ mixin BaseNavigator {
 }
 
 class RouteNames {
-  /// /my-home
-  static const myHomePage = '/my-home';
+  /// /
+  static const myHomePage = '/';
 
   /// /second
   static const secondPage = '/second';
@@ -244,13 +247,13 @@ class RouteNames {
   static String myHomePagePopAllTitle({String? title}) =>
       '/my-home-page-pop-all/$title';
 
-  /// /home/:id/:name/:nonExistingName
+  /// /home/:id/:name/:nonExistingName/
   static String homeIdNameNonExistingName({
     required String id,
     String? name,
     String? nonExistingName,
   }) =>
-      '/home/$id/$name/$nonExistingName';
+      '/home/$id/$name/$nonExistingName/';
 
   /// /home/:id/example/:age
   static String homeIdExampleAge({

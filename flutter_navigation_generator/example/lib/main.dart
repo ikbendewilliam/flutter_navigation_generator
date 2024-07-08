@@ -29,7 +29,9 @@ class MyApp extends StatelessWidget {
   }
 }
 
-@flutterRoute
+@FlutterRoute(
+  routeName: '/',
+)
 @FlutterRoute(
   methodName: 'goToHomePageWithPathParameter',
   routeName: 'my-home-page-pop-all/:title',
@@ -79,29 +81,23 @@ class _MyHomePageState extends State<MyHomePage> {
               child: const Text("Go to page 2 (with fade animation)"),
             ),
             ElevatedButton(
-              onPressed: () =>
-                  mainNavigator.goToExampleScreenWithRequiredArgument(
-                      data: CustomModel('John', 25)),
+              onPressed: () => mainNavigator.goToExampleScreenWithRequiredArgument(data: CustomModel('John', 25)),
               child: const Text("Go to ExampleScreenWithRequiredArgument"),
             ),
             ElevatedButton(
-              onPressed: () =>
-                  mainNavigator.customName(id: '1', name: 'John', age: 12),
+              onPressed: () => mainNavigator.customName(id: '1', name: 'John', age: 12),
               child: const Text("Go to RouteNameWithArguments"),
             ),
             ElevatedButton(
-              onPressed: () => mainNavigator.goToRouteNameWithArguments2(
-                  id: '3', name: 'Will', age: 43),
+              onPressed: () => mainNavigator.goToRouteNameWithArguments2(id: '3', name: 'Will', age: 43),
               child: const Text("Go to RouteNameWithArguments2"),
             ),
             ElevatedButton(
-              onPressed: () =>
-                  mainNavigator.showSheetRecursiveNavigationBottomSheet(),
+              onPressed: () => mainNavigator.showSheetRecursiveNavigationBottomSheet(),
               child: const Text("Show a bottom sheet with its own navigator"),
             ),
             ElevatedButton(
-              onPressed: () =>
-                  mainNavigator.showDialogExampleDialog(text: 'hi there'),
+              onPressed: () => mainNavigator.showDialogExampleDialog(text: 'hi there'),
               child: const Text("Show a full screen dialog"),
             ),
           ],
@@ -155,7 +151,7 @@ class SecondPage extends StatelessWidget {
 }
 
 @FlutterRoute(
-  routeName: 'home/:id/:name/:nonExistingName',
+  routeName: 'home/:id/:name/:nonExistingName/',
   methodName: 'customName',
 )
 class RouteNameWithArguments extends StatelessWidget {
@@ -289,9 +285,7 @@ class RecursiveNavigationBottomSheet extends StatelessWidget {
                 child: const Text("Go to second page"),
               ),
               ElevatedButton(
-                onPressed: () =>
-                    myNavigator.showSheetRecursiveNavigationBottomSheet(
-                        layers: layers + 1),
+                onPressed: () => myNavigator.showSheetRecursiveNavigationBottomSheet(layers: layers + 1),
                 child: const Text("Open another bottom sheet"),
               ),
             ],
