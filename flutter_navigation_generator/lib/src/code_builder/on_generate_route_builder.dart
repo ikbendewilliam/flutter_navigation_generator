@@ -113,7 +113,7 @@ class OnGenerateRouteBuilder {
             }),
           ],
           if (unknownRoute != null) ...[
-            Code('return ${_withPageType(null, typeRefer(unknownRoute!).symbol!)};'),
+            Code('return ${_withPageType(null, '${typeRefer(unknownRoute!).symbol!}()')};'),
           ] else ...[
             const Code('return null;'),
           ],

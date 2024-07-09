@@ -4,6 +4,8 @@
 // FlutterNavigatorGenerator
 // **************************************************************************
 
+// ignore_for_file: prefer_const_constructors
+
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:convert';
 
@@ -119,7 +121,7 @@ mixin BaseNavigator {
       }
     }
     return NativeRouteAnimation<void>(
-      builder: (_) => Error404,
+      builder: (_) => Error404(),
       settings: settings,
       fullscreenDialog: false,
     );

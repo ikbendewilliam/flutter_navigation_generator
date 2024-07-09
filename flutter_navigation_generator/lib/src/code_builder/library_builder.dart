@@ -25,6 +25,7 @@ class LibraryGenerator {
   Library generate() {
     return Library(
       (b) => b
+        ..ignoreForFile.addAll(['prefer_const_constructors'])
         ..directives.addAll(
           ImportBuilder(
             routes: routes,

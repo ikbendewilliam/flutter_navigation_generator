@@ -90,6 +90,70 @@ void main() {
       }
     });
 
+    test('test route with return & unknownRoute', () {
+      final content = OnGenerateRouteBuilder(
+        unknownRoute: const ImportableType(
+          className: 'Route404',
+        ),
+        routes: {
+          RouteConfig(
+            routeName: 'test_without_return',
+            routeWidget: const ImportableType(
+              className: 'TestPageWithoutReturn',
+            ),
+          ),
+          RouteConfig(
+            routeName: 'test_with_return',
+            routeWidget: const ImportableType(
+              className: 'TestPageWithReturn',
+            ),
+            returnType: const ImportableType(
+              className: 'ReturnType',
+            ),
+          ),
+        },
+      ).generate();
+
+      expect(content.body is Block, true);
+      final bodyStatements = (content.body as Block).statements.map((f) => f.toString()).toList();
+      final expectedStatements = [
+        "final arguments = settings.arguments is Map ? (settings.arguments as Map).cast<String, dynamic>() : <String, dynamic>{};\n    final settingsUri = Uri.parse(settings.name ?? '');\n    settingsUri.queryParameters.forEach((key, value) {\n      arguments[key] ??= value;\n    });",
+        "switch (settingsUri.path) {case RouteNames.testWithoutReturn: return MaterialPageRoute<void>(builder: (_) => TestPageWithoutReturn(), settings: settings, fullscreenDialog: false,);case RouteNames.testWithReturn: return MaterialPageRoute<ReturnType>(builder: (_) => TestPageWithReturn(), settings: settings, fullscreenDialog: false,);}",
+        "return MaterialPageRoute<void>(builder: (_) => Route404(), settings: settings, fullscreenDialog: false,);",
+      ];
+      if (printActuals) print(jsonEncode(bodyStatements));
+      expect(bodyStatements.length, expectedStatements.length);
+      for (var i = 0; i < bodyStatements.length; i++) {
+        expect(bodyStatements[i].toString(), expectedStatements[i]);
+      }
+    });
+
+    test('test routename starting with a number', () {
+      final content = OnGenerateRouteBuilder(
+        routes: {
+          RouteConfig(
+            routeName: '404',
+            routeWidget: const ImportableType(
+              className: 'Route404',
+            ),
+          ),
+        },
+      ).generate();
+
+      expect(content.body is Block, true);
+      final bodyStatements = (content.body as Block).statements.map((f) => f.toString()).toList();
+      final expectedStatements = [
+        "final arguments = settings.arguments is Map ? (settings.arguments as Map).cast<String, dynamic>() : <String, dynamic>{};\n    final settingsUri = Uri.parse(settings.name ?? '');\n    settingsUri.queryParameters.forEach((key, value) {\n      arguments[key] ??= value;\n    });",
+        "switch (settingsUri.path) {case RouteNames.r404: return MaterialPageRoute<void>(builder: (_) => Route404(), settings: settings, fullscreenDialog: false,);}",
+        "return null;",
+      ];
+      if (printActuals) print(jsonEncode(bodyStatements));
+      expect(bodyStatements.length, expectedStatements.length);
+      for (var i = 0; i < bodyStatements.length; i++) {
+        expect(bodyStatements[i].toString(), expectedStatements[i]);
+      }
+    });
+
     test('1 test route with constructorName', () {
       final content = OnGenerateRouteBuilder(
         routes: {
