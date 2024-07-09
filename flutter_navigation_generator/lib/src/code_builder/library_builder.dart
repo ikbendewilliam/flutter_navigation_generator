@@ -10,6 +10,7 @@ class LibraryGenerator {
   final String className;
   final Uri? targetFile;
   final ImportableType? pageType;
+  final ImportableType? unknownRoute;
   final List<String> removeSuffixes;
 
   LibraryGenerator({
@@ -17,6 +18,7 @@ class LibraryGenerator {
     required this.className,
     this.targetFile,
     this.pageType,
+    this.unknownRoute,
     this.removeSuffixes = const [],
   });
 
@@ -37,6 +39,7 @@ class LibraryGenerator {
               routes: routes,
               pageType: pageType,
               targetFile: targetFile,
+              unknownRoute: unknownRoute,
             ).generate(),
             RouteNamesBuilder(
               routes: routes,

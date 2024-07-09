@@ -26,6 +26,6 @@ dev_dependencies:
   flutter_lints: ^2.0.0
 
 # Comment before publishing
-# dependency_overrides:
-#   flutter_navigation_generator_annotations: 
-#     path: ../flutter_navigation_generator_annotations
+dependency_overrides:
+  flutter_navigation_generator_annotations: 
+    path: ../flutter_navigation_generator_annotations

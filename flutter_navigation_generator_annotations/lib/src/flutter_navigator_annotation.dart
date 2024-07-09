@@ -13,6 +13,9 @@ class FlutterNavigator {
   /// to use [NativeRouteAnimation]
   final Type? pageType;
 
+  /// Set a screen to be used when no route is found
+  final Type? unknownRoute;
+
   /// Remove the suffixes from the class name in
   /// the routename. Does not effect custom route names
   final List<String> removeSuffixes;
@@ -20,6 +23,7 @@ class FlutterNavigator {
   const FlutterNavigator({
     this.navigatorClassName,
     this.pageType,
+    this.unknownRoute,
     this.removeSuffixes = const ['Page', 'Screen', 'View', 'Widget'],
   });
 }

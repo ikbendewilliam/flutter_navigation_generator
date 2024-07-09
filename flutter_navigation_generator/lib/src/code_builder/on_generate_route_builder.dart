@@ -2,28 +2,30 @@ import 'package:code_builder/code_builder.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter_navigation_generator/src/models/importable_type.dart';
 import 'package:flutter_navigation_generator/src/models/route_config.dart';
-import 'package:flutter_navigation_generator/src/utils/case_utils.dart';
+import 'package:flutter_navigation_generator/src/utils/route_config_extension.dart';
 import 'package:flutter_navigation_generator/src/utils/utils.dart';
 import 'package:flutter_navigation_generator_annotations/flutter_navigation_generator_annotations.dart';
 
 class OnGenerateRouteBuilder {
   final Set<RouteConfig> routes;
   final ImportableType? pageType;
+  final ImportableType? unknownRoute;
   final Uri? targetFile;
 
   OnGenerateRouteBuilder({
     required this.routes,
-    required this.pageType,
-    required this.targetFile,
+    this.pageType,
+    this.unknownRoute,
+    this.targetFile,
   });
 
-  String _withPageType(RouteConfig route, String screen) {
-    final pageClass = route.pageType != null
-        ? typeRefer(route.pageType).symbol
+  String _withPageType(RouteConfig? route, String screen) {
+    final pageClass = route?.pageType != null
+        ? typeRefer(route!.pageType).symbol
         : pageType != null
             ? typeRefer(pageType).symbol
             : 'MaterialPageRoute';
-    return '$pageClass<${typeRefer(route.returnType).symbol}>(builder: (_) => $screen, settings: settings, fullscreenDialog: ${route.isFullscreenDialog},)';
+    return '$pageClass<${typeRefer(route?.returnType).symbol}>(builder: (_) => $screen, settings: settings, fullscreenDialog: ${route?.isFullscreenDialog == true},)';
   }
 
   String _generateRoute(RouteConfig route) {
@@ -70,7 +72,7 @@ class OnGenerateRouteBuilder {
       arguments[key] ??= value;
     });'''),
             Code(
-                'switch (settingsUri.path) {${pageRoutes.where((route) => !route.routeNameContainsParameters).map((route) => 'case RouteNames.${CaseUtil(route.routeName, alternativeText: route.methodName).camelCase}: ${_generateRoute(route)}').join('')}}'),
+                'switch (settingsUri.path) {${pageRoutes.where((route) => !route.routeNameContainsParameters).map((route) => 'case RouteNames.${route.asRouteName}: ${_generateRoute(route)}').join('')}}'),
           ],
           if (pageRoutes.any((element) => element.routeNameContainsParameters)) ...[
             const Code('final pathSegments = settingsUri.pathSegments;'),
@@ -110,7 +112,11 @@ class OnGenerateRouteBuilder {
               return Code('$code}');
             }),
           ],
-          const Code('return null;'),
+          if (unknownRoute != null) ...[
+            Code('return ${_withPageType(null, typeRefer(unknownRoute!).symbol!)};'),
+          ] else ...[
+            const Code('return null;'),
+          ],
         ]),
     );
   }

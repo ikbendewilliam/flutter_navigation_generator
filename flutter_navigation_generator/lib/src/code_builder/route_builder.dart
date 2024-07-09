@@ -4,6 +4,7 @@ import 'package:flutter_navigation_generator/src/extensions/navigation_type_exte
 import 'package:flutter_navigation_generator/src/models/importable_type.dart';
 import 'package:flutter_navigation_generator/src/models/route_config.dart';
 import 'package:flutter_navigation_generator/src/utils/case_utils.dart';
+import 'package:flutter_navigation_generator/src/utils/route_config_extension.dart';
 import 'package:flutter_navigation_generator/src/utils/utils.dart';
 import 'package:flutter_navigation_generator_annotations/flutter_navigation_generator_annotations.dart';
 
@@ -110,7 +111,7 @@ class RouteBuilder {
         Expression path;
         final parameters = route.routeName.parametersFromRouteName;
         if (route.routeNameContainsParameters) {
-          path = Reference('RouteNames.${CaseUtil(route.routeName, alternativeText: route.methodName).camelCase}').call(
+          path = Reference('RouteNames.${route.asRouteName}').call(
               [],
               (parameters.asMap().map((_, parameter) {
                 final argument = route.parameters.firstWhereOrNull((element) => element.name == parameter);
@@ -120,7 +121,7 @@ class RouteBuilder {
                     ..removeWhere((key, value) => value == null))
                   .cast());
         } else {
-          path = Reference('RouteNames.${CaseUtil(route.routeName, alternativeText: route.methodName).camelCase}');
+          path = Reference('RouteNames.${route.asRouteName}');
         }
         final queryParameters =
             route.parameters.where((element) => element.className != 'Key' && !parameters.contains(element.argumentName)).toList().asMap().map((_, p) => MapEntry(

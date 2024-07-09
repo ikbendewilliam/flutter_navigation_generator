@@ -17,8 +17,6 @@ void main() {
     test('Empty routes', () {
       final content = OnGenerateRouteBuilder(
         routes: {},
-        pageType: null,
-        targetFile: null,
       ).generate();
 
       expect(content.name, 'onGenerateRoute');
@@ -41,8 +39,6 @@ void main() {
             ),
           ),
         },
-        pageType: null,
-        targetFile: null,
       ).generate();
 
       expect(content.body is Block, true);
@@ -78,8 +74,6 @@ void main() {
             ),
           ),
         },
-        pageType: null,
-        targetFile: null,
       ).generate();
 
       expect(content.body is Block, true);
@@ -107,8 +101,6 @@ void main() {
             constructorName: 'constructorName',
           ),
         },
-        pageType: null,
-        targetFile: null,
       ).generate();
 
       expect(content.body is Block, true);
@@ -135,8 +127,6 @@ void main() {
               ),
               isFullscreenDialog: true),
         },
-        pageType: null,
-        targetFile: null,
       ).generate();
 
       expect(content.body is Block, true);
@@ -166,8 +156,6 @@ void main() {
             ),
           ),
         },
-        pageType: null,
-        targetFile: null,
       ).generate();
 
       expect(content.body is Block, true);
@@ -197,7 +185,6 @@ void main() {
         pageType: const ImportableType(
           className: 'CustomPageType',
         ),
-        targetFile: null,
       ).generate();
 
       expect(content.body is Block, true);
@@ -228,8 +215,6 @@ void main() {
             ],
           ),
         },
-        pageType: null,
-        targetFile: null,
       ).generate();
 
       expect(content.body is Block, true);
@@ -260,8 +245,6 @@ void main() {
             ],
           ),
         },
-        pageType: null,
-        targetFile: null,
       ).generate();
 
       expect(content.body is Block, true);
@@ -295,8 +278,6 @@ void main() {
             ],
           ),
         },
-        pageType: null,
-        targetFile: null,
       ).generate();
 
       expect(content.body is Block, true);
@@ -327,8 +308,6 @@ void main() {
             ],
           ),
         },
-        pageType: null,
-        targetFile: null,
       ).generate();
 
       expect(content.body is Block, true);
@@ -365,8 +344,6 @@ void main() {
             },
           ),
         },
-        pageType: null,
-        targetFile: null,
       ).generate();
 
       expect(content.body is Block, true);
@@ -394,8 +371,6 @@ void main() {
             generatePageRoute: false,
           ),
         },
-        pageType: null,
-        targetFile: null,
       ).generate();
 
       expect(content.body is Block, true);
@@ -414,8 +389,6 @@ void main() {
             navigationType: NavigationType.dialog,
           ),
         },
-        pageType: null,
-        targetFile: null,
       ).generate();
 
       expect(content.body is Block, true);
@@ -434,8 +407,6 @@ void main() {
             navigationType: NavigationType.bottomSheet,
           ),
         },
-        pageType: null,
-        targetFile: null,
       ).generate();
 
       expect(content.body is Block, true);

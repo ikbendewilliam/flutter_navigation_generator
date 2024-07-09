@@ -58,6 +58,14 @@ mixin BaseNavigator {
           settings: settings,
           fullscreenDialog: false,
         );
+      case RouteNames.r404:
+        return NativeRouteAnimation<void>(
+          builder: (_) => Error404(
+            key: arguments['key'] as Key?,
+          ),
+          settings: settings,
+          fullscreenDialog: false,
+        );
     }
     final pathSegments = settingsUri.pathSegments;
     if (pathSegments.length == 5) {
@@ -110,7 +118,11 @@ mixin BaseNavigator {
         );
       }
     }
-    return null;
+    return NativeRouteAnimation<void>(
+      builder: (_) => Error404,
+      settings: settings,
+      fullscreenDialog: false,
+    );
   }
 
   Future<void> goToMyHomePage({
@@ -242,6 +254,9 @@ class RouteNames {
   /// /example-screen-with-required-argument
   static const exampleScreenWithRequiredArgument =
       '/example-screen-with-required-argument';
+
+  /// /404
+  static const r404 = '/404';
 
   /// /my-home-page-pop-all/:title
   static String myHomePagePopAllTitle({String? title}) =>

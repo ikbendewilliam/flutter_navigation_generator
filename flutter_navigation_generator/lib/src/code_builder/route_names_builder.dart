@@ -2,6 +2,7 @@ import 'package:code_builder/code_builder.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter_navigation_generator/src/models/route_config.dart';
 import 'package:flutter_navigation_generator/src/utils/case_utils.dart';
+import 'package:flutter_navigation_generator/src/utils/route_config_extension.dart';
 import 'package:flutter_navigation_generator/src/utils/utils.dart';
 import 'package:flutter_navigation_generator_annotations/flutter_navigation_generator_annotations.dart';
 
@@ -32,7 +33,7 @@ class RouteNamesBuilder {
                   "${pageRoute.routeName.startsWith('/') ? '' : '/'}${pageRoute.routeNameIsDefinedByAnnotation ? pageRoute.routeName : CaseUtil(pageRoute.routeName, removeSuffixes: removeSuffixes).textWithoutSuffix}";
               return Field(
                 (b) => b
-                  ..name = CaseUtil(pageRoute.routeName, alternativeText: pageRoute.methodName).camelCase
+                  ..name = pageRoute.asRouteName
                   ..static = true
                   ..docs.add('/// $url')
                   ..modifier = FieldModifier.constant
@@ -63,7 +64,7 @@ class RouteNamesBuilder {
                   "${pageRoute.routeName.startsWith('/') ? '' : '/'}${pageRoute.routeNameIsDefinedByAnnotation ? pageRoute.routeName : CaseUtil(pageRoute.routeName, removeSuffixes: removeSuffixes).textWithoutSuffix}";
               return Method(
                 (b) => b
-                  ..name = CaseUtil(pageRoute.routeName, alternativeText: pageRoute.methodName).camelCase
+                  ..name = pageRoute.asRouteName
                   ..static = true
                   ..returns = refer('String')
                   ..lambda = true

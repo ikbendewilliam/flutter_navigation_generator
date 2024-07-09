@@ -9,11 +9,13 @@ class NavigatorBuilder {
   final String className;
   final Uri? targetFile;
   final ImportableType? pageType;
+  final ImportableType? unknownRoute;
 
   NavigatorBuilder({
     required this.routes,
     required this.className,
     required this.targetFile,
+    required this.unknownRoute,
     required this.pageType,
   });
 
@@ -37,6 +39,7 @@ class NavigatorBuilder {
             routes: routes,
             pageType: pageType,
             targetFile: targetFile,
+            unknownRoute: unknownRoute,
           ).generate(),
         )
         ..methods.addAll(
