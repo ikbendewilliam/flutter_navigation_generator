@@ -2,6 +2,7 @@
 
 - Added methodName and updated routeName to include web parameters
 - Added unknownRoute to handle unknown routes
+- Added guards to prevent navigation under certain conditions
 
 ## 1.0.1 (2023-11-14)
 

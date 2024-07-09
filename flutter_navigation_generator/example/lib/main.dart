@@ -5,11 +5,14 @@ import 'package:example/fade_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_navigation_generator_annotations/flutter_navigation_generator_annotations.dart';
 
-void main() {
+Future<void> main() async {
+  await mainNavigator.updateGuards();
   runApp(const MyApp());
 }
 
 final mainNavigator = MainNavigator();
+
+var globalStateIsLoggedIn = false;
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -73,6 +76,27 @@ class _MyHomePageState extends State<MyHomePage> {
             Text(
               'Result from page 2: $_result',
             ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Checkbox(
+                  value: globalStateIsLoggedIn,
+                  onChanged: (value) {
+                    globalStateIsLoggedIn = value!;
+                    setState(() {});
+                    mainNavigator.updateGuard<LoginGuard>();
+                  },
+                ),
+                const Text(
+                  'Is user logged in?',
+                ),
+                const SizedBox(width: 8),
+                ElevatedButton(
+                  onPressed: () => mainNavigator.goToLoggedInPage(),
+                  child: const Text("Go to logged in page"),
+                ),
+              ],
+            ),
             ElevatedButton(
               onPressed: () async {
                 _result = await mainNavigator.goToSecondPage();
@@ -81,23 +105,29 @@ class _MyHomePageState extends State<MyHomePage> {
               child: const Text("Go to page 2 (with fade animation)"),
             ),
             ElevatedButton(
-              onPressed: () => mainNavigator.goToExampleScreenWithRequiredArgument(data: CustomModel('John', 25)),
+              onPressed: () =>
+                  mainNavigator.goToExampleScreenWithRequiredArgument(
+                      data: CustomModel('John', 25)),
               child: const Text("Go to ExampleScreenWithRequiredArgument"),
             ),
             ElevatedButton(
-              onPressed: () => mainNavigator.customName(id: '1', name: 'John', age: 12),
+              onPressed: () =>
+                  mainNavigator.customName(id: '1', name: 'John', age: 12),
               child: const Text("Go to RouteNameWithArguments"),
             ),
             ElevatedButton(
-              onPressed: () => mainNavigator.goToRouteNameWithArguments2(id: '3', name: 'Will', age: 43),
+              onPressed: () => mainNavigator.goToRouteNameWithArguments2(
+                  id: '3', name: 'Will', age: 43),
               child: const Text("Go to RouteNameWithArguments2"),
             ),
             ElevatedButton(
-              onPressed: () => mainNavigator.showSheetRecursiveNavigationBottomSheet(),
+              onPressed: () =>
+                  mainNavigator.showSheetRecursiveNavigationBottomSheet(),
               child: const Text("Show a bottom sheet with its own navigator"),
             ),
             ElevatedButton(
-              onPressed: () => mainNavigator.showDialogExampleDialog(text: 'hi there'),
+              onPressed: () =>
+                  mainNavigator.showDialogExampleDialog(text: 'hi there'),
               child: const Text("Show a full screen dialog"),
             ),
           ],
@@ -285,7 +315,9 @@ class RecursiveNavigationBottomSheet extends StatelessWidget {
                 child: const Text("Go to second page"),
               ),
               ElevatedButton(
-                onPressed: () => myNavigator.showSheetRecursiveNavigationBottomSheet(layers: layers + 1),
+                onPressed: () =>
+                    myNavigator.showSheetRecursiveNavigationBottomSheet(
+                        layers: layers + 1),
                 child: const Text("Open another bottom sheet"),
               ),
             ],
@@ -384,7 +416,8 @@ class Error404 extends StatelessWidget {
               'We couldn\'t find this page, sorry :(',
             ),
             ElevatedButton(
-              onPressed: () => mainNavigator.goToMyHomePage(title: 'returning from 404'),
+              onPressed: () =>
+                  mainNavigator.goToMyHomePage(title: 'returning from 404'),
               child: const Text("go home"),
             ),
           ],
@@ -392,4 +425,81 @@ class Error404 extends StatelessWidget {
       ),
     );
   }
+}
+
+@FlutterRoute(
+  generateMethod: false,
+)
+class ErrorNotLoggedIn extends StatelessWidget {
+  const ErrorNotLoggedIn({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: const Text('You are not logged in'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text(
+              'You are not logged in, sorry :(',
+            ),
+            ElevatedButton(
+              onPressed: () => mainNavigator.goToMyHomePage(
+                  title: 'returning from not logged in'),
+              child: const Text("go home"),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+@FlutterRoute(
+  guards: [
+    LoginGuard,
+  ],
+)
+class LoggedInPage extends StatelessWidget {
+  const LoggedInPage({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: const Text('You are logged in'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text(
+              'You are logged in, yay :)',
+            ),
+            ElevatedButton(
+              onPressed: () => mainNavigator.goToMyHomePage(
+                  title: 'returning from logged in'),
+              child: const Text("go home"),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class LoginGuard extends NavigatorGuard {
+  LoginGuard() : super(RouteNames.errorNotLoggedIn);
+
+  @override
+  Future<bool> getValue() async => globalStateIsLoggedIn;
 }

@@ -17,6 +17,7 @@ class RouteConfig {
   final ImportableType? pageType;
   final NavigationType navigationType;
   final List<ImportableType> parameters;
+  final List<ImportableType> guards;
   final Map<String, dynamic> defaultValues;
 
   bool get routeNameContainsParameters => routeName.contains(':');
@@ -35,6 +36,7 @@ class RouteConfig {
     this.returnType,
     this.navigationType = NavigationType.push,
     this.parameters = const [],
+    this.guards = const [],
     this.defaultValues = const {},
   });
 
@@ -53,6 +55,7 @@ class RouteConfig {
       'routeWidget': routeWidget.toMap(),
       'navigationType': navigationType.index,
       'parameters': parameters.map((x) => x.toMap()).toList(),
+      'guards': guards.map((x) => x.toMap()).toList(),
       'defaultValues': defaultValues,
     };
   }
@@ -78,6 +81,9 @@ class RouteConfig {
           : null,
       navigationType: NavigationType.values[map['navigationType']],
       parameters: List<ImportableType>.from(map['parameters']?.map(
+              (dynamic x) => ImportableType.fromMap(x as Map<String, dynamic>))
+          as Iterable),
+      guards: List<ImportableType>.from(map['guards']?.map(
               (dynamic x) => ImportableType.fromMap(x as Map<String, dynamic>))
           as Iterable),
       defaultValues:

@@ -14,6 +14,7 @@ import 'package:example/main.dart' as _i3;
 import 'package:flutter/material.dart' as _i1;
 import 'package:flutter/material.dart';
 import 'package:flutter_navigation_generator_animations/flutter_navigation_generator_animations.dart';
+import 'package:flutter_navigation_generator_annotations/flutter_navigation_generator_annotations.dart';
 
 import 'custom_model.dart';
 import 'fade_route.dart';
@@ -21,6 +22,8 @@ import 'main.dart';
 
 mixin BaseNavigator {
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
+  final Set<NavigatorGuard> guards = <NavigatorGuard>{LoginGuard()};
 
   Route<dynamic>? onGenerateRoute(RouteSettings settings) {
     final arguments = settings.arguments is Map
@@ -63,6 +66,29 @@ mixin BaseNavigator {
       case RouteNames.r404:
         return NativeRouteAnimation<void>(
           builder: (_) => Error404(
+            key: arguments['key'] as Key?,
+          ),
+          settings: settings,
+          fullscreenDialog: false,
+        );
+      case RouteNames.errorNotLoggedIn:
+        return NativeRouteAnimation<void>(
+          builder: (_) => ErrorNotLoggedIn(
+            key: arguments['key'] as Key?,
+          ),
+          settings: settings,
+          fullscreenDialog: false,
+        );
+      case RouteNames.loggedInPage:
+        final loginGuard = guards.whereType<LoginGuard>().first;
+        if (!loginGuard.value) {
+          return onGenerateRoute(RouteSettings(
+            arguments: settings.arguments,
+            name: loginGuard.alternativeRoute,
+          ));
+        }
+        return NativeRouteAnimation<void>(
+          builder: (_) => LoggedInPage(
             key: arguments['key'] as Key?,
           ),
           settings: settings,
@@ -127,6 +153,13 @@ mixin BaseNavigator {
     );
   }
 
+  /// Update a specific guard, useful for events (for example after login/logout)
+  Future<void> updateGuard<T extends NavigatorGuard>() =>
+      guards.whereType<T>().first.updateValue();
+
+  /// Update all guards, useful for web apps. Add to main file so it's called when navigating manually
+  Future<void> updateGuards<T extends NavigatorGuard>() =>
+      Future.wait(guards.map((e) => e.updateValue()));
   Future<void> goToMyHomePage({
     _i1.Key? key,
     String? title,
@@ -210,6 +243,11 @@ mixin BaseNavigator {
         ).toString(),
         arguments: {'data': data, 'key': key},
       );
+  Future<void> goToLoggedInPage({_i1.Key? key}) async =>
+      navigatorKey.currentState?.pushNamed<dynamic>(
+        RouteNames.loggedInPage,
+        arguments: {'key': key},
+      );
   Future<void> showDialogExampleDialog({
     required String text,
     _i1.Key? key,
@@ -259,6 +297,12 @@ class RouteNames {
 
   /// /404
   static const r404 = '/404';
+
+  /// /error-not-logged-in
+  static const errorNotLoggedIn = '/error-not-logged-in';
+
+  /// /logged-in
+  static const loggedInPage = '/logged-in';
 
   /// /my-home-page-pop-all/:title
   static String myHomePagePopAllTitle({String? title}) =>

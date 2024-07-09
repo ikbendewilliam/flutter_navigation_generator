@@ -1,4 +1,6 @@
 import 'package:code_builder/code_builder.dart';
+import 'package:flutter_navigation_generator/src/code_builder/guards_builder.dart';
+import 'package:flutter_navigation_generator/src/code_builder/guards_field_builder.dart';
 import 'package:flutter_navigation_generator/src/code_builder/on_generate_route_builder.dart';
 import 'package:flutter_navigation_generator/src/code_builder/route_builder.dart';
 import 'package:flutter_navigation_generator/src/models/importable_type.dart';
@@ -40,6 +42,15 @@ class NavigatorBuilder {
             pageType: pageType,
             targetFile: targetFile,
             unknownRoute: unknownRoute,
+          ).generate(),
+        )
+        ..methods.addAll(
+          GuardsBuilder().generate(),
+        )
+        ..fields.add(
+          GuardsFieldBuilder(
+            routes: routes,
+            targetFile: targetFile,
           ).generate(),
         )
         ..methods.addAll(

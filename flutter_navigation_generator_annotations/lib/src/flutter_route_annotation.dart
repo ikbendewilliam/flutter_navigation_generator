@@ -51,6 +51,13 @@ class FlutterRoute {
   /// named constructor and add the [@flutterRouteConstructor] annotation to the BaseWidget
   final bool generateMethod;
 
+  /// Guards to use for this route
+  ///
+  /// Guards are used to prevent navigation, they can be used to check if the user is logged in
+  ///
+  /// Guards must extend [NavigatorGuard]
+  final List<Type> guards;
+
   const FlutterRoute({
     this.navigationType = NavigationType.push,
     this.routeName,
@@ -60,6 +67,7 @@ class FlutterRoute {
     this.isFullscreenDialog = false,
     this.generatePageRoute = true,
     this.generateMethod = true,
+    this.guards = const [],
   });
 }
 

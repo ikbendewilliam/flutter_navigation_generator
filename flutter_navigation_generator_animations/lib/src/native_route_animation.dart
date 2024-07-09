@@ -19,7 +19,8 @@ class NativeRouteAnimation<T> extends PageRouteBuilder<T> {
     super.fullscreenDialog,
     super.transitionDuration,
   }) : super(
-          pageBuilder: (context, animation, secondaryAnimation) => builder(context),
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              builder(context),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             if (kIsWeb) return child;
             if (Platform.isIOS || Platform.isMacOS) {

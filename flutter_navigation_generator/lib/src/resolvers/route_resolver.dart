@@ -64,6 +64,14 @@ class RouteResolver {
         methodNameValue ?? CaseUtil(classElement.name).upperCamelCase;
     final returnType = flutterRoute.peek('returnType')?.typeValue;
     final pageType = flutterRoute.peek('pageType')?.typeValue;
+    final guards = flutterRoute
+            .peek('guards')
+            ?.listValue
+            .map((e) => e.toTypeValue())
+            .whereNotNull()
+            .map(_typeResolver.resolveType)
+            .toList() ??
+        [];
     final navigationType = NavigationType.values.firstWhere((element) =>
         element.index ==
         flutterRoute.peek('navigationType')?.peek('index')?.intValue);
@@ -98,6 +106,7 @@ class RouteResolver {
       returnType: importableReturnType,
       constructorName: constructor.name,
       parameters: constructorParameters,
+      guards: guards,
       defaultValues: constructorDefaultValues,
       routeName: routeName,
       methodName: methodName,
