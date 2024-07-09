@@ -1,4 +1,4 @@
-## 1.1.0+experimental (2024-07-03)
+## 1.1.0-experimental (2024-07-03)
 
 - Added methodName and updated routeName to include web parameters
 - Added unknownRoute to handle unknown routes

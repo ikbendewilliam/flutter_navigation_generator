@@ -1,6 +1,6 @@
 name: flutter_navigation_generator
 description: Generate your Flutter navigator by annotating your screen widgets
-version: 1.1.0+experimental.3
+version: 1.1.0-experimental-3
 homepage: https://github.com/ikbendewilliam/flutter_navigation_generator
 repository: https://github.com/ikbendewilliam/flutter_navigation_generator
 issue_tracker: https://github.com/ikbendewilliam/flutter_navigation_generator/issues
@@ -18,7 +18,7 @@ dependencies:
   glob: ^2.1.1
   path: ^1.8.2
   source_gen: ^1.2.6
-  flutter_navigation_generator_annotations: ^1.1.0+experimental.2
+  flutter_navigation_generator_annotations: ^1.1.0-experimental-2
 
 dev_dependencies:
   coverage: ^1.6.3
@@ -26,6 +26,6 @@ dev_dependencies:
   flutter_lints: ^2.0.0
 
 # Comment before publishing
-dependency_overrides:
-  flutter_navigation_generator_annotations: 
-    path: ../flutter_navigation_generator_annotations
+# dependency_overrides:
+#   flutter_navigation_generator_annotations: 
+#     path: ../flutter_navigation_generator_annotations

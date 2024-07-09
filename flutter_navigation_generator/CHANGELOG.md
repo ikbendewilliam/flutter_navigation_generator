@@ -1,4 +1,4 @@
-## 1.1.0+experimental (2024-06-25)
+## 1.1.0-experimental (2024-06-25)
 
 - Added support for web parameters as query parameters and url path parameters
 - Added support for methodName
