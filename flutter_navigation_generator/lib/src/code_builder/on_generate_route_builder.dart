@@ -3,6 +3,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter_navigation_generator/src/models/importable_type.dart';
 import 'package:flutter_navigation_generator/src/models/route_config.dart';
 import 'package:flutter_navigation_generator/src/utils/case_utils.dart';
+import 'package:flutter_navigation_generator/src/utils/importable_type_to_string.dart';
 import 'package:flutter_navigation_generator/src/utils/route_config_extension.dart';
 import 'package:flutter_navigation_generator/src/utils/utils.dart';
 import 'package:flutter_navigation_generator_annotations/flutter_navigation_generator_annotations.dart';
@@ -35,11 +36,11 @@ class OnGenerateRouteBuilder {
         : '${route.routeWidget.className}.${route.constructorName}';
     final constructorCall = '$constructor(${route.parameters.asMap().map((_, p) {
           final nullableSuffix = p.isNullable ? '?' : '';
-          final convertFromString = _convertFromString(p, 'arguments[\'${p.argumentName}\']');
+          final convertFromString = ImportableTypeToStringUtils.convertFromString(p, 'arguments[\'${p.argumentName}\']');
           return MapEntry(
             p.argumentName,
             (p.className == 'Key' || p.className == 'String')
-                ? "arguments['${p.argumentName}'] as ${typeRefer(p).symbol}$nullableSuffix"
+                ? "arguments['${p.argumentName}'] as ${p.className}$nullableSuffix"
                 : "arguments['${p.argumentName}'] is String ? $convertFromString : arguments['${p.argumentName}'] as ${p.className}${p.typeArguments.isNotEmpty ? '<${p.typeArguments.map((e) => e.className).join(',')}>' : ''}$nullableSuffix",
           );
         }).entries.map((e) => '${e.key}: ${e.value},').join('')})';
@@ -134,30 +135,5 @@ class OnGenerateRouteBuilder {
           ],
         ]),
     );
-  }
-
-  String _convertFromString(ImportableType p, String s) {
-    return switch (p.className) {
-      'int' => 'int.parse($s)',
-      'double' => 'double.parse($s)',
-      'bool' => "$s == 'true'",
-      'num' => 'num.parse($s)',
-      'String' || 'dynamic' => s,
-      'Map' => 'jsonDecode(utf8.decode(base64Decode($s)))',
-      'List' =>
-        '(jsonDecode(utf8.decode(base64Decode($s))) as List<dynamic>)${p.isNullable ? '?' : ''}.map((e) => ${_convertTypeArguments(p.typeArguments.first, p.typeArguments.lastOrNull, p.isNullable)}).toList()',
-      _ => '${typeRefer(p).symbol}.fromJson(jsonDecode(utf8.decode(base64Decode($s))))',
-    };
-  }
-
-  String _convertTypeArguments(ImportableType p, ImportableType? p2, bool isNullable) {
-    final suffix = isNullable ? '?' : '';
-    return switch (p.className) {
-      'int' || 'double' || 'bool' || 'num' || 'String' => 'e as ${p.className}$suffix',
-      'dynamic' => 'e',
-      'Map' => 'Map<${typeRefer(p).symbol}, ${typeRefer(p2).symbol}>.from(e as Map<String, dynamic>)',
-      'List' => '(e as List<dynamic>).map((e) => ${_convertTypeArguments(p.typeArguments.first, p.typeArguments.lastOrNull, p.isNullable)}).toList()',
-      _ => '${typeRefer(p).symbol}.fromJson(e as Map<String, dynamic>)',
-    };
   }
 }
