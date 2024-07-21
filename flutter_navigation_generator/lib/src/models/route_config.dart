@@ -17,7 +17,7 @@ class RouteConfig {
   final ImportableType? pageType;
   final NavigationType navigationType;
   final List<ImportableType> parameters;
-  final List<ImportableType> guards;
+  final List<ImportableType>? guards;
   final Map<String, dynamic> defaultValues;
 
   bool get routeNameContainsParameters => routeName.contains(':');
@@ -36,7 +36,7 @@ class RouteConfig {
     this.returnType,
     this.navigationType = NavigationType.push,
     this.parameters = const [],
-    this.guards = const [],
+    this.guards,
     this.defaultValues = const {},
   });
 
@@ -55,7 +55,7 @@ class RouteConfig {
       'routeWidget': routeWidget.toMap(),
       'navigationType': navigationType.index,
       'parameters': parameters.map((x) => x.toMap()).toList(),
-      'guards': guards.map((x) => x.toMap()).toList(),
+      'guards': guards?.map((x) => x.toMap()).toList(),
       'defaultValues': defaultValues,
     };
   }
@@ -68,31 +68,19 @@ class RouteConfig {
       constructorName: map['constructorName'] ?? '',
       routeName: map['routeName'] ?? '',
       methodName: map['methodName'] ?? '',
-      routeNameIsDefinedByAnnotation:
-          map['routeNameIsDefinedByAnnotation'] ?? '',
-      methodNameIsDefinedByAnnotation:
-          map['methodNameIsDefinedByAnnotation'] ?? '',
+      routeNameIsDefinedByAnnotation: map['routeNameIsDefinedByAnnotation'] ?? '',
+      methodNameIsDefinedByAnnotation: map['methodNameIsDefinedByAnnotation'] ?? '',
       routeWidget: ImportableType.fromMap(map['routeWidget']),
-      returnType: map['returnType'] != null
-          ? ImportableType.fromMap(map['returnType'])
-          : null,
-      pageType: map['pageType'] != null
-          ? ImportableType.fromMap(map['pageType'])
-          : null,
+      returnType: map['returnType'] != null ? ImportableType.fromMap(map['returnType']) : null,
+      pageType: map['pageType'] != null ? ImportableType.fromMap(map['pageType']) : null,
       navigationType: NavigationType.values[map['navigationType']],
-      parameters: List<ImportableType>.from(map['parameters']?.map(
-              (dynamic x) => ImportableType.fromMap(x as Map<String, dynamic>))
-          as Iterable),
-      guards: List<ImportableType>.from(map['guards']?.map(
-              (dynamic x) => ImportableType.fromMap(x as Map<String, dynamic>))
-          as Iterable),
-      defaultValues:
-          map['defaultValues'] as Map<String, dynamic>? ?? <String, dynamic>{},
+      parameters: List<ImportableType>.from(map['parameters']?.map((dynamic x) => ImportableType.fromMap(x as Map<String, dynamic>)) as Iterable),
+      guards: map['guards'] == null ? null : List<ImportableType>.from(map['guards'].map((dynamic x) => ImportableType.fromMap(x as Map<String, dynamic>)) as Iterable),
+      defaultValues: map['defaultValues'] as Map<String, dynamic>? ?? <String, dynamic>{},
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory RouteConfig.fromJson(String source) =>
-      RouteConfig.fromMap(json.decode(source));
+  factory RouteConfig.fromJson(String source) => RouteConfig.fromMap(json.decode(source));
 }

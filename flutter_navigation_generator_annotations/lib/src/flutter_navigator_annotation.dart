@@ -16,6 +16,13 @@ class FlutterNavigator {
   /// Set a screen to be used when no route is found
   final Type? unknownRoute;
 
+  /// Adds these guards to all routes where no guards
+  /// are specified. Useful for adding e.g. login guards
+  /// without having to add them to every route
+  ///
+  /// Guards must extend [NavigatorGuard]
+  final List<Type> defaultGuards;
+
   /// Remove the suffixes from the class name in
   /// the routename. Does not effect custom route names
   final List<String> removeSuffixes;
@@ -24,6 +31,7 @@ class FlutterNavigator {
     this.navigatorClassName,
     this.pageType,
     this.unknownRoute,
+    this.defaultGuards = const [],
     this.removeSuffixes = const ['Page', 'Screen', 'View', 'Widget'],
   });
 }

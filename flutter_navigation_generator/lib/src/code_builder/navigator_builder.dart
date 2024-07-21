@@ -12,6 +12,7 @@ class NavigatorBuilder {
   final Uri? targetFile;
   final ImportableType? pageType;
   final ImportableType? unknownRoute;
+  final List<ImportableType> defaultGuards;
 
   NavigatorBuilder({
     required this.routes,
@@ -19,6 +20,7 @@ class NavigatorBuilder {
     required this.targetFile,
     required this.unknownRoute,
     required this.pageType,
+    required this.defaultGuards,
   });
 
   Field buildNavigatorKey() {
@@ -42,6 +44,7 @@ class NavigatorBuilder {
             pageType: pageType,
             targetFile: targetFile,
             unknownRoute: unknownRoute,
+            defaultGuards: defaultGuards,
           ).generate(),
         )
         ..methods.addAll(
@@ -51,6 +54,7 @@ class NavigatorBuilder {
           GuardsFieldBuilder(
             routes: routes,
             targetFile: targetFile,
+            defaultGuards: defaultGuards,
           ).generate(),
         )
         ..methods.addAll(

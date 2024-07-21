@@ -25,8 +25,7 @@ void main() {
       expect(content.requiredParameters.first.type?.symbol, 'RouteSettings');
       expect(content.requiredParameters.length, 1);
       expect(content.body is Block, true);
-      expect(
-          (content.body as Block).statements.first.toString(), 'return null;');
+      expect((content.body as Block).statements.first.toString(), 'return null;');
       expect((content.body as Block).statements.length, 1);
     });
 
@@ -43,8 +42,7 @@ void main() {
       ).generate();
 
       expect(content.body is Block, true);
-      final bodyStatements =
-          (content.body as Block).statements.map((f) => f.toString()).toList();
+      final bodyStatements = (content.body as Block).statements.map((f) => f.toString()).toList();
       final expectedStatements = [
         "final arguments = settings.arguments is Map ? (settings.arguments as Map).cast<String, dynamic>() : <String, dynamic>{};\n    final settingsUri = Uri.parse(settings.name ?? '');\n    settingsUri.queryParameters.forEach((key, value) {\n      arguments[key] ??= value;\n    });",
         "switch (settingsUri.path) {case RouteNames.test: return MaterialPageRoute<void>(builder: (_) => TestPage(), settings: settings, fullscreenDialog: false,);}",
@@ -79,8 +77,7 @@ void main() {
       ).generate();
 
       expect(content.body is Block, true);
-      final bodyStatements =
-          (content.body as Block).statements.map((f) => f.toString()).toList();
+      final bodyStatements = (content.body as Block).statements.map((f) => f.toString()).toList();
       final expectedStatements = [
         "final arguments = settings.arguments is Map ? (settings.arguments as Map).cast<String, dynamic>() : <String, dynamic>{};\n    final settingsUri = Uri.parse(settings.name ?? '');\n    settingsUri.queryParameters.forEach((key, value) {\n      arguments[key] ??= value;\n    });",
         "switch (settingsUri.path) {case RouteNames.testWithoutReturn: return MaterialPageRoute<void>(builder: (_) => TestPageWithoutReturn(), settings: settings, fullscreenDialog: false,);case RouteNames.testWithReturn: return MaterialPageRoute<ReturnType>(builder: (_) => TestPageWithReturn(), settings: settings, fullscreenDialog: false,);}",
@@ -118,8 +115,7 @@ void main() {
       ).generate();
 
       expect(content.body is Block, true);
-      final bodyStatements =
-          (content.body as Block).statements.map((f) => f.toString()).toList();
+      final bodyStatements = (content.body as Block).statements.map((f) => f.toString()).toList();
       final expectedStatements = [
         "final arguments = settings.arguments is Map ? (settings.arguments as Map).cast<String, dynamic>() : <String, dynamic>{};\n    final settingsUri = Uri.parse(settings.name ?? '');\n    settingsUri.queryParameters.forEach((key, value) {\n      arguments[key] ??= value;\n    });",
         "switch (settingsUri.path) {case RouteNames.testWithoutReturn: return MaterialPageRoute<void>(builder: (_) => TestPageWithoutReturn(), settings: settings, fullscreenDialog: false,);case RouteNames.testWithReturn: return MaterialPageRoute<ReturnType>(builder: (_) => TestPageWithReturn(), settings: settings, fullscreenDialog: false,);}",
@@ -145,8 +141,7 @@ void main() {
       ).generate();
 
       expect(content.body is Block, true);
-      final bodyStatements =
-          (content.body as Block).statements.map((f) => f.toString()).toList();
+      final bodyStatements = (content.body as Block).statements.map((f) => f.toString()).toList();
       final expectedStatements = [
         "final arguments = settings.arguments is Map ? (settings.arguments as Map).cast<String, dynamic>() : <String, dynamic>{};\n    final settingsUri = Uri.parse(settings.name ?? '');\n    settingsUri.queryParameters.forEach((key, value) {\n      arguments[key] ??= value;\n    });",
         "switch (settingsUri.path) {case RouteNames.r404: return MaterialPageRoute<void>(builder: (_) => Route404(), settings: settings, fullscreenDialog: false,);}",
@@ -173,8 +168,7 @@ void main() {
       ).generate();
 
       expect(content.body is Block, true);
-      final bodyStatements =
-          (content.body as Block).statements.map((f) => f.toString()).toList();
+      final bodyStatements = (content.body as Block).statements.map((f) => f.toString()).toList();
       final expectedStatements = [
         "final arguments = settings.arguments is Map ? (settings.arguments as Map).cast<String, dynamic>() : <String, dynamic>{};\n    final settingsUri = Uri.parse(settings.name ?? '');\n    settingsUri.queryParameters.forEach((key, value) {\n      arguments[key] ??= value;\n    });",
         "switch (settingsUri.path) {case RouteNames.test: return MaterialPageRoute<void>(builder: (_) => TestPage.constructorName(), settings: settings, fullscreenDialog: false,);}",
@@ -200,8 +194,7 @@ void main() {
       ).generate();
 
       expect(content.body is Block, true);
-      final bodyStatements =
-          (content.body as Block).statements.map((f) => f.toString()).toList();
+      final bodyStatements = (content.body as Block).statements.map((f) => f.toString()).toList();
       final expectedStatements = [
         "final arguments = settings.arguments is Map ? (settings.arguments as Map).cast<String, dynamic>() : <String, dynamic>{};\n    final settingsUri = Uri.parse(settings.name ?? '');\n    settingsUri.queryParameters.forEach((key, value) {\n      arguments[key] ??= value;\n    });",
         "switch (settingsUri.path) {case RouteNames.test: return MaterialPageRoute<void>(builder: (_) => TestPage(), settings: settings, fullscreenDialog: true,);}",
@@ -230,8 +223,7 @@ void main() {
       ).generate();
 
       expect(content.body is Block, true);
-      final bodyStatements =
-          (content.body as Block).statements.map((f) => f.toString()).toList();
+      final bodyStatements = (content.body as Block).statements.map((f) => f.toString()).toList();
       final expectedStatements = [
         "final arguments = settings.arguments is Map ? (settings.arguments as Map).cast<String, dynamic>() : <String, dynamic>{};\n    final settingsUri = Uri.parse(settings.name ?? '');\n    settingsUri.queryParameters.forEach((key, value) {\n      arguments[key] ??= value;\n    });",
         "switch (settingsUri.path) {case RouteNames.test: return CustomPageType<void>(builder: (_) => TestPage(), settings: settings, fullscreenDialog: false,);}",
@@ -260,8 +252,7 @@ void main() {
       ).generate();
 
       expect(content.body is Block, true);
-      final bodyStatements =
-          (content.body as Block).statements.map((f) => f.toString()).toList();
+      final bodyStatements = (content.body as Block).statements.map((f) => f.toString()).toList();
       final expectedStatements = [
         "final arguments = settings.arguments is Map ? (settings.arguments as Map).cast<String, dynamic>() : <String, dynamic>{};\n    final settingsUri = Uri.parse(settings.name ?? '');\n    settingsUri.queryParameters.forEach((key, value) {\n      arguments[key] ??= value;\n    });",
         "switch (settingsUri.path) {case RouteNames.test: return CustomPageType<void>(builder: (_) => TestPage(), settings: settings, fullscreenDialog: false,);}",
@@ -283,8 +274,7 @@ void main() {
               className: 'TestPage',
             ),
             parameters: [
-              const ImportableType(
-                  className: 'bool', name: 'testBool', isNullable: true),
+              const ImportableType(className: 'bool', name: 'testBool', isNullable: true),
               const ImportableType(className: 'int', name: 'testInt'),
             ],
           ),
@@ -292,8 +282,7 @@ void main() {
       ).generate();
 
       expect(content.body is Block, true);
-      final bodyStatements =
-          (content.body as Block).statements.map((f) => f.toString()).toList();
+      final bodyStatements = (content.body as Block).statements.map((f) => f.toString()).toList();
       final expectedStatements = [
         "final arguments = settings.arguments is Map ? (settings.arguments as Map).cast<String, dynamic>() : <String, dynamic>{};\n    final settingsUri = Uri.parse(settings.name ?? '');\n    settingsUri.queryParameters.forEach((key, value) {\n      arguments[key] ??= value;\n    });",
         "switch (settingsUri.path) {case RouteNames.test: return MaterialPageRoute<void>(builder: (_) => TestPage(testBool: arguments['testBool'] is String ? arguments['testBool'] == 'true' : arguments['testBool'] as bool?,testInt: arguments['testInt'] is String ? int.parse(arguments['testInt']) : arguments['testInt'] as int,), settings: settings, fullscreenDialog: false,);}",
@@ -315,8 +304,7 @@ void main() {
               className: 'TestPage',
             ),
             parameters: [
-              const ImportableType(
-                  className: 'bool', name: 'testBool', isNullable: true),
+              const ImportableType(className: 'bool', name: 'testBool', isNullable: true),
               const ImportableType(className: 'int', name: 'testInt'),
             ],
           ),
@@ -324,8 +312,7 @@ void main() {
       ).generate();
 
       expect(content.body is Block, true);
-      final bodyStatements =
-          (content.body as Block).statements.map((f) => f.toString()).toList();
+      final bodyStatements = (content.body as Block).statements.map((f) => f.toString()).toList();
       final expectedStatements = [
         "final arguments = settings.arguments is Map ? (settings.arguments as Map).cast<String, dynamic>() : <String, dynamic>{};\n    final settingsUri = Uri.parse(settings.name ?? '');\n    settingsUri.queryParameters.forEach((key, value) {\n      arguments[key] ??= value;\n    });",
         "switch (settingsUri.path) {}",
@@ -350,8 +337,7 @@ void main() {
               className: 'TestPage',
             ),
             parameters: [
-              const ImportableType(
-                  className: 'bool', name: 'testBool', isNullable: true),
+              const ImportableType(className: 'bool', name: 'testBool', isNullable: true),
               const ImportableType(className: 'int', name: 'testInt'),
             ],
           ),
@@ -359,8 +345,7 @@ void main() {
       ).generate();
 
       expect(content.body is Block, true);
-      final bodyStatements =
-          (content.body as Block).statements.map((f) => f.toString()).toList();
+      final bodyStatements = (content.body as Block).statements.map((f) => f.toString()).toList();
       final expectedStatements = [
         "final arguments = settings.arguments is Map ? (settings.arguments as Map).cast<String, dynamic>() : <String, dynamic>{};\n    final settingsUri = Uri.parse(settings.name ?? '');\n    settingsUri.queryParameters.forEach((key, value) {\n      arguments[key] ??= value;\n    });",
         "switch (settingsUri.path) {case RouteNames.testPage: return MaterialPageRoute<void>(builder: (_) => TestPage(testBool: arguments['testBool'] is String ? arguments['testBool'] == 'true' : arguments['testBool'] as bool?,testInt: arguments['testInt'] is String ? int.parse(arguments['testInt']) : arguments['testInt'] as int,), settings: settings, fullscreenDialog: false,);}",
@@ -382,8 +367,7 @@ void main() {
               className: 'TestPage',
             ),
             parameters: [
-              const ImportableType(
-                  className: 'bool', name: 'testBool', isNullable: true),
+              const ImportableType(className: 'bool', name: 'testBool', isNullable: true),
               const ImportableType(className: 'int', name: 'testInt'),
             ],
           ),
@@ -391,8 +375,7 @@ void main() {
       ).generate();
 
       expect(content.body is Block, true);
-      final bodyStatements =
-          (content.body as Block).statements.map((f) => f.toString()).toList();
+      final bodyStatements = (content.body as Block).statements.map((f) => f.toString()).toList();
       final expectedStatements = [
         "final arguments = settings.arguments is Map ? (settings.arguments as Map).cast<String, dynamic>() : <String, dynamic>{};\n    final settingsUri = Uri.parse(settings.name ?? '');\n    settingsUri.queryParameters.forEach((key, value) {\n      arguments[key] ??= value;\n    });",
         "switch (settingsUri.path) {}",
@@ -416,8 +399,7 @@ void main() {
               className: 'TestPage',
             ),
             parameters: [
-              const ImportableType(
-                  className: 'bool', name: 'testBool', isNullable: true),
+              const ImportableType(className: 'bool', name: 'testBool', isNullable: true),
               const ImportableType(className: 'int', name: 'testInt'),
             ],
             defaultValues: {
@@ -429,8 +411,7 @@ void main() {
       ).generate();
 
       expect(content.body is Block, true);
-      final bodyStatements =
-          (content.body as Block).statements.map((f) => f.toString()).toList();
+      final bodyStatements = (content.body as Block).statements.map((f) => f.toString()).toList();
       final expectedStatements = [
         "final arguments = settings.arguments is Map ? (settings.arguments as Map).cast<String, dynamic>() : <String, dynamic>{};\n    final settingsUri = Uri.parse(settings.name ?? '');\n    settingsUri.queryParameters.forEach((key, value) {\n      arguments[key] ??= value;\n    });",
         "switch (settingsUri.path) {case RouteNames.test: return MaterialPageRoute<void>(builder: (_) => TestPage(testBool: arguments['testBool'] is String ? arguments['testBool'] == 'true' : arguments['testBool'] as bool?,testInt: arguments['testInt'] is String ? int.parse(arguments['testInt']) : arguments['testInt'] as int,), settings: settings, fullscreenDialog: false,);}",
@@ -457,8 +438,7 @@ void main() {
       ).generate();
 
       expect(content.body is Block, true);
-      expect(
-          (content.body as Block).statements.first.toString(), 'return null;');
+      expect((content.body as Block).statements.first.toString(), 'return null;');
       expect((content.body as Block).statements.length, 1);
     });
 
@@ -476,8 +456,7 @@ void main() {
       ).generate();
 
       expect(content.body is Block, true);
-      expect(
-          (content.body as Block).statements.first.toString(), 'return null;');
+      expect((content.body as Block).statements.first.toString(), 'return null;');
       expect((content.body as Block).statements.length, 1);
     });
 
@@ -495,9 +474,79 @@ void main() {
       ).generate();
 
       expect(content.body is Block, true);
-      expect(
-          (content.body as Block).statements.first.toString(), 'return null;');
+      expect((content.body as Block).statements.first.toString(), 'return null;');
       expect((content.body as Block).statements.length, 1);
+    });
+
+    test('guards', () {
+      final content = OnGenerateRouteBuilder(
+        routes: {
+          RouteConfig(
+            routeName: 'test',
+            routeWidget: const ImportableType(
+              className: 'TestPage',
+            ),
+            guards: const [
+              ImportableType(className: 'TestGuard'),
+            ],
+          ),
+          RouteConfig(
+            routeName: 'test2',
+            routeWidget: const ImportableType(
+              className: 'TestPage2',
+            ),
+          ),
+        },
+      ).generate();
+
+      expect(content.body is Block, true);
+      final bodyStatements = (content.body as Block).statements.map((f) => f.toString()).toList();
+      final expectedStatements = [
+        "final arguments = settings.arguments is Map ? (settings.arguments as Map).cast<String, dynamic>() : <String, dynamic>{};\n    final settingsUri = Uri.parse(settings.name ?? '');\n    settingsUri.queryParameters.forEach((key, value) {\n      arguments[key] ??= value;\n    });",
+        "switch (settingsUri.path) {case RouteNames.test: final testGuard = guards.whereType<TestGuard>().first;\nif (!testGuard.value) {\n  return onGenerateRoute(RouteSettings(\n    arguments: settings.arguments,\n    name: testGuard.alternativeRoute,\n  ));\n}\nreturn MaterialPageRoute<void>(builder: (_) => TestPage(), settings: settings, fullscreenDialog: false,);case RouteNames.test2: return MaterialPageRoute<void>(builder: (_) => TestPage2(), settings: settings, fullscreenDialog: false,);}",
+        "return null;",
+      ];
+      if (printActuals) print(jsonEncode(bodyStatements));
+      expect(bodyStatements.length, expectedStatements.length);
+      for (var i = 0; i < bodyStatements.length; i++) {
+        expect(bodyStatements[i].toString(), expectedStatements[i]);
+      }
+    });
+
+    test('defaultGuards', () {
+      final content = OnGenerateRouteBuilder(
+        routes: {
+          RouteConfig(
+            routeName: 'test',
+            routeWidget: const ImportableType(
+              className: 'TestPage',
+            ),
+          ),
+          RouteConfig(
+            routeName: 'test2',
+            routeWidget: const ImportableType(
+              className: 'TestPage2',
+            ),
+            guards: [],
+          ),
+        },
+        defaultGuards: [
+          const ImportableType(className: 'TestGuard'),
+        ],
+      ).generate();
+
+      expect(content.body is Block, true);
+      final bodyStatements = (content.body as Block).statements.map((f) => f.toString()).toList();
+      final expectedStatements = [
+        "final arguments = settings.arguments is Map ? (settings.arguments as Map).cast<String, dynamic>() : <String, dynamic>{};\n    final settingsUri = Uri.parse(settings.name ?? '');\n    settingsUri.queryParameters.forEach((key, value) {\n      arguments[key] ??= value;\n    });",
+        "switch (settingsUri.path) {case RouteNames.test: final testGuard = guards.whereType<TestGuard>().first;\nif (!testGuard.value) {\n  return onGenerateRoute(RouteSettings(\n    arguments: settings.arguments,\n    name: testGuard.alternativeRoute,\n  ));\n}\nreturn MaterialPageRoute<void>(builder: (_) => TestPage(), settings: settings, fullscreenDialog: false,);case RouteNames.test2: return MaterialPageRoute<void>(builder: (_) => TestPage2(), settings: settings, fullscreenDialog: false,);}",
+        "return null;",
+      ];
+      if (printActuals) print(jsonEncode(bodyStatements));
+      expect(bodyStatements.length, expectedStatements.length);
+      for (var i = 0; i < bodyStatements.length; i++) {
+        expect(bodyStatements[i].toString(), expectedStatements[i]);
+      }
     });
   });
 }

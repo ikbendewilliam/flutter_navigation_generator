@@ -12,6 +12,7 @@ class OnGenerateRouteBuilder {
   final Set<RouteConfig> routes;
   final ImportableType? pageType;
   final ImportableType? unknownRoute;
+  final List<ImportableType> defaultGuards;
   final Uri? targetFile;
 
   OnGenerateRouteBuilder({
@@ -19,6 +20,7 @@ class OnGenerateRouteBuilder {
     this.pageType,
     this.unknownRoute,
     this.targetFile,
+    this.defaultGuards = const [],
   });
 
   String _withPageType(RouteConfig? route, String screen) {
@@ -46,8 +48,8 @@ class OnGenerateRouteBuilder {
         }).entries.map((e) => '${e.key}: ${e.value},').join('')})';
 
     var guardsCode = '';
-    if (route.guards.isNotEmpty) {
-      for (final guard in route.guards) {
+    if ((route.guards ?? defaultGuards).isNotEmpty) {
+      for (final guard in route.guards ?? defaultGuards) {
         final insanceName = CaseUtil(guard.className).camelCase;
         guardsCode += 'final $insanceName = guards.whereType<${typeRefer(guard).symbol}>().first;\n';
         guardsCode += 'if (!$insanceName.value) {\n';
