@@ -160,7 +160,7 @@ mixin BaseNavigator {
       guards.whereType<T>().first.updateValue();
 
   /// Update all guards, useful for web apps. Add to main file so it's called when navigating manually
-  Future<void> updateGuards<T extends NavigatorGuard>() =>
+  Future<void> updateGuards() =>
       Future.wait(guards.map((e) => e.updateValue()));
   Future<void> goToMyHomePage({
     _i1.Key? key,
