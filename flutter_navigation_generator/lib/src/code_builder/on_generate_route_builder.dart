@@ -53,6 +53,7 @@ class OnGenerateRouteBuilder {
         final insanceName = CaseUtil(guard.className).camelCase;
         guardsCode += 'final $insanceName = guards.whereType<${typeRefer(guard).symbol}>().first;\n';
         guardsCode += 'if (!$insanceName.value) {\n';
+        guardsCode += '  guardedRouteSettings = settings;\n';
         guardsCode += '  return onGenerateRoute(RouteSettings(\n';
         guardsCode += '    arguments: settings.arguments,\n';
         guardsCode += '    name: $insanceName.alternativeRoute,\n';

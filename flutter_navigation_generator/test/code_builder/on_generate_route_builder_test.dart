@@ -503,7 +503,7 @@ void main() {
       final bodyStatements = (content.body as Block).statements.map((f) => f.toString()).toList();
       final expectedStatements = [
         "final arguments = settings.arguments is Map ? (settings.arguments as Map).cast<String, dynamic>() : <String, dynamic>{};\n    final settingsUri = Uri.parse(settings.name ?? '');\n    settingsUri.queryParameters.forEach((key, value) {\n      arguments[key] ??= value;\n    });",
-        "switch (settingsUri.path) {case RouteNames.test: final testGuard = guards.whereType<TestGuard>().first;\nif (!testGuard.value) {\n  return onGenerateRoute(RouteSettings(\n    arguments: settings.arguments,\n    name: testGuard.alternativeRoute,\n  ));\n}\nreturn MaterialPageRoute<void>(builder: (_) => TestPage(), settings: settings, fullscreenDialog: false,);case RouteNames.test2: return MaterialPageRoute<void>(builder: (_) => TestPage2(), settings: settings, fullscreenDialog: false,);}",
+        "switch (settingsUri.path) {case RouteNames.test: final testGuard = guards.whereType<TestGuard>().first;\nif (!testGuard.value) {\n  guardedRouteSettings = settings;\n  return onGenerateRoute(RouteSettings(\n    arguments: settings.arguments,\n    name: testGuard.alternativeRoute,\n  ));\n}\nreturn MaterialPageRoute<void>(builder: (_) => TestPage(), settings: settings, fullscreenDialog: false,);case RouteNames.test2: return MaterialPageRoute<void>(builder: (_) => TestPage2(), settings: settings, fullscreenDialog: false,);}",
         "return null;",
       ];
       if (printActuals) print(jsonEncode(bodyStatements));
@@ -539,7 +539,7 @@ void main() {
       final bodyStatements = (content.body as Block).statements.map((f) => f.toString()).toList();
       final expectedStatements = [
         "final arguments = settings.arguments is Map ? (settings.arguments as Map).cast<String, dynamic>() : <String, dynamic>{};\n    final settingsUri = Uri.parse(settings.name ?? '');\n    settingsUri.queryParameters.forEach((key, value) {\n      arguments[key] ??= value;\n    });",
-        "switch (settingsUri.path) {case RouteNames.test: final testGuard = guards.whereType<TestGuard>().first;\nif (!testGuard.value) {\n  return onGenerateRoute(RouteSettings(\n    arguments: settings.arguments,\n    name: testGuard.alternativeRoute,\n  ));\n}\nreturn MaterialPageRoute<void>(builder: (_) => TestPage(), settings: settings, fullscreenDialog: false,);case RouteNames.test2: return MaterialPageRoute<void>(builder: (_) => TestPage2(), settings: settings, fullscreenDialog: false,);}",
+        "switch (settingsUri.path) {case RouteNames.test: final testGuard = guards.whereType<TestGuard>().first;\nif (!testGuard.value) {\n  guardedRouteSettings = settings;\n  return onGenerateRoute(RouteSettings(\n    arguments: settings.arguments,\n    name: testGuard.alternativeRoute,\n  ));\n}\nreturn MaterialPageRoute<void>(builder: (_) => TestPage(), settings: settings, fullscreenDialog: false,);case RouteNames.test2: return MaterialPageRoute<void>(builder: (_) => TestPage2(), settings: settings, fullscreenDialog: false,);}",
         "return null;",
       ];
       if (printActuals) print(jsonEncode(bodyStatements));

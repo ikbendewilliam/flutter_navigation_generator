@@ -25,6 +25,8 @@ mixin BaseNavigator {
 
   final Set<NavigatorGuard> guards = <NavigatorGuard>{LoginGuard()};
 
+  RouteSettings? guardedRouteSettings;
+
   Route<dynamic>? onGenerateRoute(RouteSettings settings) {
     final arguments = settings.arguments is Map
         ? (settings.arguments as Map).cast<String, dynamic>()
@@ -84,6 +86,7 @@ mixin BaseNavigator {
       case RouteNames.loggedInPage:
         final loginGuard = guards.whereType<LoginGuard>().first;
         if (!loginGuard.value) {
+          guardedRouteSettings = settings;
           return onGenerateRoute(RouteSettings(
             arguments: settings.arguments,
             name: loginGuard.alternativeRoute,
@@ -162,6 +165,39 @@ mixin BaseNavigator {
   /// Update all guards, useful for web apps. Add to main file so it's called when navigating manually
   Future<void> updateGuards() =>
       Future.wait(guards.map((e) => e.updateValue()));
+
+  /// Continues navigation. A guard will reroute navigation to a page. Call this method to continue navigation after the guard has rerouted
+  ///
+  /// Example:
+  /// ```dart
+  /// Future<void> login(details) async {
+  ///  ...do login
+  ///  await navigator.updateGuard<LoginGuard>();
+  ///  if (navigator.canContinueNavigation) return navigator.continueNavigation();
+  ///  return navigator.goToHome();
+  /// }
+  /// ```
+  Future<void> continueNavigation() async {
+    final settings = guardedRouteSettings;
+    if (settings == null) return;
+    guardedRouteSettings = null;
+    return navigatorKey.currentState?.pushReplacementNamed<void, dynamic>(
+        settings.name!,
+        arguments: settings.arguments);
+  }
+
+  /// Whether we can continues navigation. A guard will reroute navigation to a page. Call this method to continue navigation after the guard has rerouted
+  ///
+  /// Example:
+  /// ```dart
+  /// Future<void> login(details) async {
+  ///  ...do login
+  ///  await navigator.updateGuard<LoginGuard>();
+  ///  if (navigator.canContinueNavigation) return navigator.continueNavigation();
+  ///  return navigator.goToHome();
+  /// }
+  /// ```
+  bool canContinueNavigation() => guardedRouteSettings != null;
   Future<void> goToMyHomePage({
     _i1.Key? key,
     String? title,

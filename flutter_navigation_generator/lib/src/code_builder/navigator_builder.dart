@@ -50,7 +50,7 @@ class NavigatorBuilder {
         ..methods.addAll(
           GuardsBuilder().generate(),
         )
-        ..fields.add(
+        ..fields.addAll(
           GuardsFieldBuilder(
             routes: routes,
             targetFile: targetFile,

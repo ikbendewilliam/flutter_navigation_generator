@@ -21,6 +21,9 @@ class FlutterNavigator {
   /// without having to add them to every route
   ///
   /// Guards must extend [NavigatorGuard]
+  ///
+  /// Note: Navigation can be continued by calling `navigator.continueNavigation()`
+  /// See the continueNavigation() method in the Navigator for more information
   final List<Type> defaultGuards;
 
   /// Remove the suffixes from the class name in

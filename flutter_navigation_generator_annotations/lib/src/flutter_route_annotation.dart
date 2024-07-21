@@ -56,6 +56,9 @@ class FlutterRoute {
   /// Guards are used to prevent navigation, they can be used to check if the user is logged in
   ///
   /// Guards must extend [NavigatorGuard]
+  ///
+  /// Note: Navigation can be continued by calling `navigator.continueNavigation()`
+  /// See the continueNavigation() method in the Navigator for more information
   final List<Type> guards;
 
   const FlutterRoute({

@@ -14,12 +14,20 @@ class GuardsFieldBuilder {
     required this.defaultGuards,
   });
 
-  Field generate() => Field(
-        (f) => f
-          ..name = 'guards'
-          ..type = refer('Set<NavigatorGuard>')
-          ..modifier = FieldModifier.final$
-          ..assignment = Code(
-              "<NavigatorGuard>{${routes.expand((r) => r.guards ?? defaultGuards).toSet().map((g) => '${typeRefer(g, targetFile: targetFile).symbol}()').toSet().toList().join(',')}}"),
-      );
+  List<Field> generate() => [
+        Field(
+          (f) => f
+            ..name = 'guards'
+            ..type = refer('Set<NavigatorGuard>')
+            ..modifier = FieldModifier.final$
+            ..assignment = Code(
+                "<NavigatorGuard>{${routes.expand((r) => r.guards ?? defaultGuards).toSet().map((g) => '${typeRefer(g, targetFile: targetFile).symbol}()').toSet().toList().join(',')}}"),
+        ),
+        Field(
+          (f) => f
+            ..name = 'guardedRouteSettings'
+            ..type = refer('RouteSettings?')
+            ..modifier = FieldModifier.var$,
+        ),
+      ];
 }
