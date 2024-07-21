@@ -9,11 +9,12 @@ void main() {
       final directives = ImportBuilder(
         routes: {},
       ).generate();
+      expect(directives.any((element) => element.url == 'dart:convert'), true);
       expect(
           directives
               .any((element) => element.url == 'package:flutter/material.dart'),
           true);
-      expect(directives.length, 1);
+      expect(directives.length, 2);
     });
 
     test('imports for routeWidget', () {
@@ -25,12 +26,13 @@ void main() {
       final directives = ImportBuilder(
         routes: {config},
       ).generate();
+      expect(directives.any((element) => element.url == 'dart:convert'), true);
       expect(directives.any((element) => element.url == testImport), true);
       expect(
           directives
               .any((element) => element.url == 'package:flutter/material.dart'),
           true);
-      expect(directives.length, 2);
+      expect(directives.length, 3);
     });
 
     test('imports for parameters', () {
@@ -44,12 +46,13 @@ void main() {
       final directives = ImportBuilder(
         routes: {config},
       ).generate();
+      expect(directives.any((element) => element.url == 'dart:convert'), true);
       expect(directives.any((element) => element.url == testImport), true);
       expect(
           directives
               .any((element) => element.url == 'package:flutter/material.dart'),
           true);
-      expect(directives.length, 2);
+      expect(directives.length, 3);
     });
   });
 }
