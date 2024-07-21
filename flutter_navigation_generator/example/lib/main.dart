@@ -105,9 +105,9 @@ class _MyHomePageState extends State<MyHomePage> {
               child: const Text("Go to page 2 (with fade animation)"),
             ),
             ElevatedButton(
-              onPressed: () =>
-                  mainNavigator.goToExampleScreenWithRequiredArgument(
-                      data: CustomModel('John', 25)),
+              onPressed: () => mainNavigator
+                  .goToExampleScreenWithRequiredArgument(
+                      data: [CustomModel('John', 25), CustomModel('Jeff', 27)]),
               child: const Text("Go to ExampleScreenWithRequiredArgument"),
             ),
             ElevatedButton(
@@ -358,7 +358,7 @@ class ExampleDialog extends StatelessWidget {
 
 @flutterRoute
 class ExampleScreenWithRequiredArgument extends StatelessWidget {
-  final CustomModel data;
+  final List<CustomModel> data;
 
   const ExampleScreenWithRequiredArgument({
     required this.data,
@@ -374,13 +374,19 @@ class ExampleScreenWithRequiredArgument extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              data.name,
+              'Got ${data.length} items:',
               style: const TextStyle(fontSize: 40),
             ),
-            Text(
-              data.age.toString(),
-              style: const TextStyle(fontSize: 40),
-            ),
+            for (final item in data) ...[
+              Text(
+                item.name,
+                style: const TextStyle(fontSize: 40),
+              ),
+              Text(
+                item.age.toString(),
+                style: const TextStyle(fontSize: 40),
+              ),
+            ],
             ElevatedButton(
               onPressed: mainNavigator.goBack,
               child: const Text("Back"),

@@ -43,7 +43,7 @@ class OnGenerateRouteBuilder {
                 p.argumentName,
                 (p.className == 'Key' || p.className == 'String')
                     ? "arguments['${p.argumentName}'] as ${typeRefer(p).symbol}$nullableSuffix"
-                    : "arguments['${p.argumentName}'] is String ? $convertFromString : arguments['${p.argumentName}'] as ${typeRefer(p).symbol}$nullableSuffix",
+                    : "arguments['${p.argumentName}'] is String ? $convertFromString : arguments['${p.argumentName}'] as ${p.className}${p.typeArguments.isNotEmpty ? '<${p.typeArguments.map((e) => e.className).join(',')}>' : ''}$nullableSuffix",
               );
             }).entries.map((e) => '${e.key}: ${e.value},').join('')})';
 
@@ -167,8 +167,26 @@ class OnGenerateRouteBuilder {
       'num' => 'num.parse($s)',
       'String' || 'dynamic' => s,
       'Map' => 'jsonDecode(utf8.decode(base64Decode($s)))',
-      'List' => 'jsonDecode(utf8.decode(base64Decode($s)))',
-      _ => '${p.className}.fromJson(jsonDecode(utf8.decode(base64Decode($s))))',
+      'List' =>
+        '(jsonDecode(utf8.decode(base64Decode($s))) as List<dynamic>)${p.isNullable ? '?' : ''}.map((e) => ${_convertTypeArguments(p.typeArguments.first, p.typeArguments.lastOrNull, p.isNullable)}).toList()',
+      _ =>
+        '${typeRefer(p).symbol}.fromJson(jsonDecode(utf8.decode(base64Decode($s))))',
+    };
+  }
+
+  String _convertTypeArguments(
+      ImportableType p, ImportableType? p2, bool isNullable) {
+    return switch (p.className) {
+      'int' => 'int.parse(e)',
+      'double' => 'double.parse(e)',
+      'bool' => "e == 'true'",
+      'num' => 'num.parse(e))',
+      'String' || 'dynamic' => 'e',
+      'Map' =>
+        'Map<${typeRefer(p).symbol}, ${typeRefer(p2).symbol}>.from(e as Map<String, dynamic>)',
+      'List' =>
+        '(e as List<dynamic>)${isNullable ? '?' : ''}.map((e) => ${_convertTypeArguments(p.typeArguments.first, p.typeArguments.lastOrNull, p.isNullable)}).toList()',
+      _ => '${typeRefer(p).symbol}.fromJson(e as Map<String, dynamic>)',
     };
   }
 }

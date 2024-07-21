@@ -55,9 +55,11 @@ mixin BaseNavigator {
         return NativeRouteAnimation<void>(
           builder: (_) => ExampleScreenWithRequiredArgument(
             data: arguments['data'] is String
-                ? CustomModel.fromJson(
-                    jsonDecode(utf8.decode(base64Decode(arguments['data']))))
-                : arguments['data'] as CustomModel,
+                ? (jsonDecode(utf8.decode(base64Decode(arguments['data'])))
+                        as List<dynamic>)
+                    .map((e) => CustomModel.fromJson(e as Map<String, dynamic>))
+                    .toList()
+                : arguments['data'] as List<CustomModel>,
             key: arguments['key'] as Key?,
           ),
           settings: settings,
@@ -231,7 +233,7 @@ mixin BaseNavigator {
         arguments: {'id': id, 'name': name, 'age': age, 'key': key},
       );
   Future<void> goToExampleScreenWithRequiredArgument({
-    required _i2.CustomModel data,
+    required List<_i2.CustomModel> data,
     _i1.Key? key,
   }) async =>
       navigatorKey.currentState?.pushNamed<dynamic>(
