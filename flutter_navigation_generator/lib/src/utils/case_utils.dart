@@ -1,18 +1,28 @@
 class CaseUtil {
   final RegExp _upperAlphaRegex = RegExp(r'[A-Z]');
-  final RegExp _symbolRegex = RegExp(r'[ ./_\-]');
+  final RegExp _symbolRegex = RegExp(r'[ ./_\-:]');
 
   late String originalText;
   late List<String> _words;
 
-  CaseUtil(String text, {List<String> removeSuffixes = const []}) {
+  CaseUtil(String text,
+      {String? alternativeText, List<String> removeSuffixes = const []}) {
     for (final removeSuffix in removeSuffixes) {
       if (text.toLowerCase().endsWith(removeSuffix.toLowerCase())) {
         text = text.substring(0, text.length - removeSuffix.length);
       }
+      if (alternativeText != null &&
+          alternativeText.toLowerCase().endsWith(removeSuffix.toLowerCase())) {
+        alternativeText = alternativeText.substring(
+            0, alternativeText.length - removeSuffix.length);
+      }
     }
     originalText = text;
     _words = _groupIntoWords(text);
+    if (_words.isEmpty) {
+      originalText = alternativeText ?? '';
+      _words = _groupIntoWords(alternativeText ?? '');
+    }
   }
 
   List<String> _groupIntoWords(String text) {
@@ -60,8 +70,7 @@ class CaseUtil {
 
   String _getCamelCase({String separator = ''}) {
     final words = _words.map(_upperCaseFirstLetter).toList();
-    words[0] = words[0].toLowerCase();
-
+    if (words.isNotEmpty) words[0] = words[0].toLowerCase();
     return words.join(separator);
   }
 
@@ -71,7 +80,7 @@ class CaseUtil {
   }
 
   String _getTextWithoutSuffix() {
-    final delimiters = [' ', '-', '_', '.', '/'];
+    final delimiters = [' ', '-', '_', '.', '/', ':'];
     if (delimiters.any(originalText.endsWith)) {
       return originalText.substring(0, originalText.length - 1);
     } else {
@@ -80,6 +89,7 @@ class CaseUtil {
   }
 
   static String _upperCaseFirstLetter(String word) {
+    if (word.isEmpty) return word;
     return '${word.substring(0, 1).toUpperCase()}${word.substring(1).toLowerCase()}';
   }
 }

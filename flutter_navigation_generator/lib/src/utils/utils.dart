@@ -89,3 +89,12 @@ Reference typeRefer(
       ..types.add(typeReference),
   );
 }
+
+extension StringExtension on String {
+  List<String> get pathSegments => Uri.parse(this).pathSegments.toList();
+
+  List<String> get parametersFromRouteName => pathSegments
+      .where((element) => element.startsWith(':'))
+      .map((e) => e.substring(1))
+      .toList();
+}

@@ -7,25 +7,39 @@ class ImportBuilder {
   final Set<RouteConfig> routes;
   final Uri? targetFile;
   final ImportableType? pageType;
+  final List<ImportableType> defaultGuards;
 
   ImportBuilder({
     required this.routes,
     this.targetFile,
     this.pageType,
+    this.defaultGuards = const [],
   });
 
   Iterable<Directive> generate() {
-    final imports = <String?>{'package:flutter/material.dart'};
+    final imports = <String?>{
+      'package:flutter/material.dart',
+      'dart:convert',
+      if (routes.any((route) => route.guards?.isNotEmpty == true) ||
+          defaultGuards.isNotEmpty)
+        'package:flutter_navigation_generator_annotations/flutter_navigation_generator_annotations.dart',
+    };
     imports.add(typeRefer(pageType, targetFile: targetFile).url);
-    imports.addAll(routes
-        .map((route) => [
-              typeRefer(route.routeWidget, targetFile: targetFile).url,
-              typeRefer(route.pageType, targetFile: targetFile).url,
-              typeRefer(route.returnType, targetFile: targetFile).url,
-              ...route.parameters
+    imports.addAll(
+        defaultGuards.map((e) => typeRefer(e, targetFile: targetFile).url));
+    imports.addAll(routes.expand(
+      (route) => [
+        typeRefer(route.routeWidget, targetFile: targetFile).url,
+        typeRefer(route.pageType, targetFile: targetFile).url,
+        typeRefer(route.returnType, targetFile: targetFile).url,
+        ...route.parameters.expand((e) => [
+              typeRefer(e, targetFile: targetFile).url,
+              ...e.typeArguments
                   .map((e) => typeRefer(e, targetFile: targetFile).url),
-            ])
-        .expand((element) => element));
+            ]),
+        ...?route.guards?.map((e) => typeRefer(e, targetFile: targetFile).url),
+      ],
+    ));
     return imports.whereType<String>().map(Directive.import);
   }
 }

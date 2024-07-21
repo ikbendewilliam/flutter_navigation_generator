@@ -10,24 +10,30 @@ class LibraryGenerator {
   final String className;
   final Uri? targetFile;
   final ImportableType? pageType;
+  final ImportableType? unknownRoute;
   final List<String> removeSuffixes;
+  final List<ImportableType> defaultGuards;
 
   LibraryGenerator({
     required this.routes,
     required this.className,
     this.targetFile,
     this.pageType,
+    this.unknownRoute,
     this.removeSuffixes = const [],
+    this.defaultGuards = const [],
   });
 
   Library generate() {
     return Library(
       (b) => b
+        ..ignoreForFile.addAll(['prefer_const_constructors'])
         ..directives.addAll(
           ImportBuilder(
             routes: routes,
             pageType: pageType,
             targetFile: targetFile,
+            defaultGuards: defaultGuards,
           ).generate(),
         )
         ..body.addAll(
@@ -37,6 +43,8 @@ class LibraryGenerator {
               routes: routes,
               pageType: pageType,
               targetFile: targetFile,
+              unknownRoute: unknownRoute,
+              defaultGuards: defaultGuards,
             ).generate(),
             RouteNamesBuilder(
               routes: routes,

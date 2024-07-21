@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
 import 'package:code_builder/code_builder.dart';
+import 'package:collection/collection.dart';
 import 'package:dart_style/dart_style.dart';
 import 'package:flutter_navigation_generator/src/code_builder/library_builder.dart';
 import 'package:flutter_navigation_generator/src/models/route_config.dart';
@@ -24,6 +25,7 @@ class FlutterNavigatorGenerator
     final navigatorClassName =
         annotation.peek('navigatorClassName')?.stringValue;
     final pageTypeAsDartType = annotation.peek('pageType')?.typeValue;
+    final unknownRouteAsDartType = annotation.peek('unknownRoute')?.typeValue;
     final removeSuffixes = annotation
             .peek('removeSuffixes')
             ?.listValue
@@ -31,9 +33,20 @@ class FlutterNavigatorGenerator
             .whereType<String>()
             .toList() ??
         [];
+    final defaultGuards = annotation
+            .peek('defaultGuards')
+            ?.listValue
+            .map((e) => e.toTypeValue())
+            .whereNotNull()
+            .map(typeResolver.resolveType)
+            .toList() ??
+        [];
     final pageType = pageTypeAsDartType == null
         ? null
         : typeResolver.resolveType(pageTypeAsDartType);
+    final unknownRoute = unknownRouteAsDartType == null
+        ? null
+        : typeResolver.resolveType(unknownRouteAsDartType);
     final jsonData = <Map>[];
 
     await for (final id in buildStep.findAssets(configFiles)) {
@@ -51,7 +64,9 @@ class FlutterNavigatorGenerator
       className: navigatorClassName ?? _navigatorClassNameDefault,
       targetFile: element.source?.uri,
       pageType: pageType,
+      unknownRoute: unknownRoute,
       removeSuffixes: removeSuffixes,
+      defaultGuards: defaultGuards,
     );
 
     final generatedLib = generator.generate();

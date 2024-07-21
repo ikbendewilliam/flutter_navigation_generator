@@ -1,5 +1,10 @@
 import 'package:example/example.navigator.dart';
+import 'package:example/main.dart';
+import 'package:flutter_navigation_generator_animations/flutter_navigation_generator_animations.dart';
 import 'package:flutter_navigation_generator_annotations/flutter_navigation_generator_annotations.dart';
 
-@flutterNavigator
+@FlutterNavigator(
+  pageType: NativeRouteAnimation,
+  unknownRoute: Error404,
+)
 class MainNavigator with BaseNavigator {}

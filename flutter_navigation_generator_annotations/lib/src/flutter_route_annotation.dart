@@ -3,7 +3,15 @@ import 'package:flutter_navigation_generator_annotations/flutter_navigation_gene
 /// Marks a class as a Flutter route, a pageRoute and method will be generated
 class FlutterRoute {
   /// Override the default name of the route
+  ///
+  /// optionally use `:name` to declare a parameter in the route for web.
+  /// Defaults to use query parameters. Name must match the variable name
+  /// included in the constructor
   final String? routeName;
+
+  /// Override the method to open the route
+  /// defaults to goTo[RouteName]
+  final String? methodName;
 
   /// Set the type returned by the goTo method.
   final Type? returnType;
@@ -43,14 +51,26 @@ class FlutterRoute {
   /// named constructor and add the [@flutterRouteConstructor] annotation to the BaseWidget
   final bool generateMethod;
 
+  /// Guards to use for this route
+  ///
+  /// Guards are used to prevent navigation, they can be used to check if the user is logged in
+  ///
+  /// Guards must extend [NavigatorGuard]
+  ///
+  /// Note: Navigation can be continued by calling `navigator.continueNavigation()`
+  /// See the continueNavigation() method in the Navigator for more information
+  final List<Type> guards;
+
   const FlutterRoute({
     this.navigationType = NavigationType.push,
     this.routeName,
+    this.methodName,
     this.pageType,
     this.returnType,
     this.isFullscreenDialog = false,
     this.generatePageRoute = true,
     this.generateMethod = true,
+    this.guards = const [],
   });
 }
 
