@@ -23,7 +23,10 @@ import 'main.dart';
 mixin BaseNavigator {
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-  final Set<NavigatorGuard> guards = <NavigatorGuard>{LoginGuard()};
+  final Set<NavigatorGuard> guards = <NavigatorGuard>{
+    ExampleDefaultGuard(),
+    LoginGuard()
+  };
 
   RouteSettings? guardedRouteSettings;
 
@@ -37,6 +40,15 @@ mixin BaseNavigator {
     });
     switch (settingsUri.path) {
       case RouteNames.myHomePage:
+        final exampleDefaultGuard =
+            guards.whereType<ExampleDefaultGuard>().first;
+        if (!exampleDefaultGuard.value) {
+          guardedRouteSettings = settings;
+          return onGenerateRoute(RouteSettings(
+            arguments: settings.arguments,
+            name: exampleDefaultGuard.alternativeRoute,
+          ));
+        }
         return NativeRouteAnimation<void>(
           builder: (_) => MyHomePage(
             key: arguments['key'] as Key?,
@@ -46,6 +58,15 @@ mixin BaseNavigator {
           fullscreenDialog: false,
         );
       case RouteNames.secondPage:
+        final exampleDefaultGuard =
+            guards.whereType<ExampleDefaultGuard>().first;
+        if (!exampleDefaultGuard.value) {
+          guardedRouteSettings = settings;
+          return onGenerateRoute(RouteSettings(
+            arguments: settings.arguments,
+            name: exampleDefaultGuard.alternativeRoute,
+          ));
+        }
         return FadeInRoute<bool>(
           builder: (_) => SecondPage(
             key: arguments['key'] as Key?,
@@ -54,6 +75,15 @@ mixin BaseNavigator {
           fullscreenDialog: false,
         );
       case RouteNames.exampleScreenWithRequiredArgument:
+        final exampleDefaultGuard =
+            guards.whereType<ExampleDefaultGuard>().first;
+        if (!exampleDefaultGuard.value) {
+          guardedRouteSettings = settings;
+          return onGenerateRoute(RouteSettings(
+            arguments: settings.arguments,
+            name: exampleDefaultGuard.alternativeRoute,
+          ));
+        }
         return NativeRouteAnimation<void>(
           builder: (_) => ExampleScreenWithRequiredArgument(
             data: arguments['data'] is String
@@ -68,6 +98,15 @@ mixin BaseNavigator {
           fullscreenDialog: false,
         );
       case RouteNames.r404:
+        final exampleDefaultGuard =
+            guards.whereType<ExampleDefaultGuard>().first;
+        if (!exampleDefaultGuard.value) {
+          guardedRouteSettings = settings;
+          return onGenerateRoute(RouteSettings(
+            arguments: settings.arguments,
+            name: exampleDefaultGuard.alternativeRoute,
+          ));
+        }
         return NativeRouteAnimation<void>(
           builder: (_) => Error404(
             key: arguments['key'] as Key?,
@@ -76,6 +115,15 @@ mixin BaseNavigator {
           fullscreenDialog: false,
         );
       case RouteNames.errorNotLoggedIn:
+        final exampleDefaultGuard =
+            guards.whereType<ExampleDefaultGuard>().first;
+        if (!exampleDefaultGuard.value) {
+          guardedRouteSettings = settings;
+          return onGenerateRoute(RouteSettings(
+            arguments: settings.arguments,
+            name: exampleDefaultGuard.alternativeRoute,
+          ));
+        }
         return NativeRouteAnimation<void>(
           builder: (_) => ErrorNotLoggedIn(
             key: arguments['key'] as Key?,
@@ -106,6 +154,15 @@ mixin BaseNavigator {
         arguments['id'] = pathSegments[1];
         arguments['name'] = pathSegments[2];
         arguments['nonExistingName'] = pathSegments[3];
+        final exampleDefaultGuard =
+            guards.whereType<ExampleDefaultGuard>().first;
+        if (!exampleDefaultGuard.value) {
+          guardedRouteSettings = settings;
+          return onGenerateRoute(RouteSettings(
+            arguments: settings.arguments,
+            name: exampleDefaultGuard.alternativeRoute,
+          ));
+        }
         return NativeRouteAnimation<void>(
           builder: (_) => RouteNameWithArguments(
             id: arguments['id'] as String,
@@ -124,6 +181,15 @@ mixin BaseNavigator {
       if (pathSegments[0] == 'home' && pathSegments[2] == 'example') {
         arguments['id'] = pathSegments[1];
         arguments['age'] = pathSegments[3];
+        final exampleDefaultGuard =
+            guards.whereType<ExampleDefaultGuard>().first;
+        if (!exampleDefaultGuard.value) {
+          guardedRouteSettings = settings;
+          return onGenerateRoute(RouteSettings(
+            arguments: settings.arguments,
+            name: exampleDefaultGuard.alternativeRoute,
+          ));
+        }
         return NativeRouteAnimation<void>(
           builder: (_) => RouteNameWithArguments2(
             id: arguments['id'] as String,
@@ -141,6 +207,15 @@ mixin BaseNavigator {
     if (pathSegments.length == 2) {
       if (pathSegments[0] == 'my-home-page-pop-all') {
         arguments['title'] = pathSegments[1];
+        final exampleDefaultGuard =
+            guards.whereType<ExampleDefaultGuard>().first;
+        if (!exampleDefaultGuard.value) {
+          guardedRouteSettings = settings;
+          return onGenerateRoute(RouteSettings(
+            arguments: settings.arguments,
+            name: exampleDefaultGuard.alternativeRoute,
+          ));
+        }
         return NativeRouteAnimation<void>(
           builder: (_) => MyHomePage(
             key: arguments['key'] as Key?,

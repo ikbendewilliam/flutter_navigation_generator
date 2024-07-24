@@ -1,3 +1,7 @@
+## 2.0.1 (2024-07-24)
+
+- Fixed an issue where `guards` require a value, meaning defaultGuards were never used
+
 ## 2.0.0 (2024-07-21)
 
 - Added methodName and updated routeName to include web parameters
