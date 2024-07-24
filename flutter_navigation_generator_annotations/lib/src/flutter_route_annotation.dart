@@ -59,7 +59,7 @@ class FlutterRoute {
   ///
   /// Note: Navigation can be continued by calling `navigator.continueNavigation()`
   /// See the continueNavigation() method in the Navigator for more information
-  final List<Type> guards;
+  final List<Type>? guards;
 
   const FlutterRoute({
     this.navigationType = NavigationType.push,
@@ -70,7 +70,7 @@ class FlutterRoute {
     this.isFullscreenDialog = false,
     this.generatePageRoute = true,
     this.generateMethod = true,
-    this.guards = const [],
+    this.guards,
   });
 }
 

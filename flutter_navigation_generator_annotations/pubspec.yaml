@@ -1,6 +1,6 @@
 name: flutter_navigation_generator_annotations
 description: Generate your Flutter navigator by annotating your screen 
-version: 2.0.0
+version: 2.0.1
 homepage: https://github.com/ikbendewilliam/flutter_navigation_generator
 repository: https://github.com/ikbendewilliam/flutter_navigation_generator
 issue_tracker: https://github.com/ikbendewilliam/flutter_navigation_generator/issues

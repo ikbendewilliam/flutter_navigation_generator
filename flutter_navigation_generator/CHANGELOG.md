@@ -1,3 +1,7 @@
+## 2.0.1 (2024-07-24)
+
+- Fixed an issue when you don't use `guards`, the import is not added, but the methods are causing an error
+
 ## 2.0.0 (2024-07-21)
 
 - Added support for web parameters as query parameters and url path parameters
