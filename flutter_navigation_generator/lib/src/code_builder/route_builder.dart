@@ -4,6 +4,7 @@ import 'package:flutter_navigation_generator/src/extensions/navigation_type_exte
 import 'package:flutter_navigation_generator/src/models/importable_type.dart';
 import 'package:flutter_navigation_generator/src/models/route_config.dart';
 import 'package:flutter_navigation_generator/src/utils/case_utils.dart';
+import 'package:flutter_navigation_generator/src/utils/importable_type_string_converter.dart';
 import 'package:flutter_navigation_generator/src/utils/route_config_extension.dart';
 import 'package:flutter_navigation_generator/src/utils/utils.dart';
 import 'package:flutter_navigation_generator_annotations/flutter_navigation_generator_annotations.dart';
@@ -85,29 +86,6 @@ class RouteBuilder {
     );
   }
 
-  bool _isAcceptableType(String className) {
-    return ([
-      'String',
-      'int',
-      'double',
-      'num',
-      'bool',
-    ].contains(className));
-  }
-
-  String _generateParameterValue(ImportableType argument) {
-    final name = argument.argumentName;
-    var value = '';
-    if (argument.className == 'String') return name;
-    if (_isAcceptableType(argument.className)) {
-      value += '$name${argument.isNullable ? '?' : ''}.toString()';
-    } else {
-      if (argument.isNullable) value += '$name == null ? null : ';
-      value += 'base64Encode(utf8.encode(jsonEncode($name)))';
-    }
-    return value;
-  }
-
   Iterable<Method> _generatePageRoutes(List<RouteConfig> routes) {
     return routes.map(
       (route) {
@@ -121,7 +99,9 @@ class RouteBuilder {
                     .firstWhereOrNull((element) => element.name == parameter);
                 if (argument == null) return MapEntry(parameter, null);
                 return MapEntry(
-                    parameter, Reference(_generateParameterValue(argument)));
+                    parameter,
+                    Reference(ImportableTypeStringConverter.convertToString(
+                        argument)));
               })
                     ..removeWhere((key, value) => value == null))
                   .cast());
@@ -136,7 +116,7 @@ class RouteBuilder {
             .asMap()
             .map((_, p) => MapEntry(
                   "'${p.argumentName}'",
-                  _generateParameterValue(p),
+                  ImportableTypeStringConverter.convertToString(p),
                 ));
 
         final queryParametersRemoveNull = route.parameters.any((element) =>

@@ -1,3 +1,7 @@
+## 2.0.2 (2024-07-24)
+
+- Added support for enum arguments
+
 ## 2.0.1 (2024-07-24)
 
 - Fixed an issue when you don't use `guards`, the import is not added, but the methods are causing an error

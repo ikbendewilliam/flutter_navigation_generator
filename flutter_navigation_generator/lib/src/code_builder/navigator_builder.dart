@@ -34,7 +34,8 @@ class NavigatorBuilder {
   }
 
   Spec generate() {
-    final hasGuards = routes.any((route) => route.guards?.isNotEmpty == true) || defaultGuards.isNotEmpty;
+    final hasGuards = routes.any((route) => route.guards?.isNotEmpty == true) ||
+        defaultGuards.isNotEmpty;
     return Mixin(
       (b) => b
         ..name = className

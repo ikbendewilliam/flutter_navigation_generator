@@ -9,8 +9,8 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:convert';
 
-import 'package:example/custom_model.dart' as _i2;
-import 'package:example/main.dart' as _i3;
+import 'package:example/custom_model.dart' as _i3;
+import 'package:example/main.dart' as _i2;
 import 'package:flutter/material.dart' as _i1;
 import 'package:flutter/material.dart';
 import 'package:flutter_navigation_generator_animations/flutter_navigation_generator_animations.dart';
@@ -149,8 +149,10 @@ mixin BaseNavigator {
         );
     }
     final pathSegments = settingsUri.pathSegments;
-    if (pathSegments.length == 5) {
-      if (pathSegments[0] == 'home' && pathSegments[4] == '') {
+    if (pathSegments.length == 6) {
+      if (pathSegments[0] == 'home' &&
+          pathSegments[4] == 'number1' &&
+          pathSegments[5] == '') {
         arguments['id'] = pathSegments[1];
         arguments['name'] = pathSegments[2];
         arguments['nonExistingName'] = pathSegments[3];
@@ -177,10 +179,11 @@ mixin BaseNavigator {
         );
       }
     }
-    if (pathSegments.length == 4) {
+    if (pathSegments.length == 5) {
       if (pathSegments[0] == 'home' && pathSegments[2] == 'example') {
         arguments['id'] = pathSegments[1];
-        arguments['age'] = pathSegments[3];
+        arguments['exampleEnum'] = pathSegments[3];
+        arguments['age'] = pathSegments[4];
         final exampleDefaultGuard =
             guards.whereType<ExampleDefaultGuard>().first;
         if (!exampleDefaultGuard.value) {
@@ -193,10 +196,31 @@ mixin BaseNavigator {
         return NativeRouteAnimation<void>(
           builder: (_) => RouteNameWithArguments2(
             id: arguments['id'] as String,
+            exampleEnum: arguments['exampleEnum'] is String
+                ? ExampleEnum.values[int.parse(arguments['exampleEnum'])]
+                : arguments['exampleEnum'] as ExampleEnum,
+            exampleEnum2: arguments['exampleEnum2'] is String
+                ? ExampleEnum.values[int.parse(arguments['exampleEnum2'])]
+                : arguments['exampleEnum2'] as ExampleEnum,
             name: arguments['name'] as String?,
             age: arguments['age'] is String
                 ? int.parse(arguments['age'])
                 : arguments['age'] as int?,
+            exampleEnum3: arguments['exampleEnum3'] is String
+                ? ExampleEnum.values[int.parse(arguments['exampleEnum3'])]
+                : arguments['exampleEnum3'] as ExampleEnum?,
+            exampleEnums4: arguments['exampleEnums4'] is String
+                ? (jsonDecode(utf8
+                            .decode(base64Decode(arguments['exampleEnums4'])))
+                        as List<dynamic>)
+                    .map((e) => ExampleEnum.values[e])
+                    .toList()
+                : arguments['exampleEnums4'] as List<ExampleEnum>?,
+            exampleEnumsMap5: arguments['exampleEnumsMap5'] is String
+                ? Map<String, ExampleEnum>.from(jsonDecode(utf8
+                        .decode(base64Decode(arguments['exampleEnumsMap5'])))
+                    .map((k, v) => MapEntry(k, ExampleEnum.values[v])))
+                : arguments['exampleEnumsMap5'] as Map<String, ExampleEnum>?,
             key: arguments['key'] as Key?,
           ),
           settings: settings,
@@ -318,7 +342,7 @@ mixin BaseNavigator {
   }) async =>
       navigatorKey.currentState?.pushNamed<dynamic>(
         Uri(
-          path: RouteNames.homeIdNameNonExistingName(
+          path: RouteNames.homeIdNameNonExistingNameNumber1(
             id: id,
             name: name,
           ),
@@ -329,22 +353,46 @@ mixin BaseNavigator {
       );
   Future<void> goToRouteNameWithArguments2({
     required String id,
+    required _i2.ExampleEnum exampleEnum,
+    required _i2.ExampleEnum exampleEnum2,
     String? name,
     int? age,
+    _i2.ExampleEnum? exampleEnum3,
+    List<_i2.ExampleEnum>? exampleEnums4,
+    Map<String, _i2.ExampleEnum>? exampleEnumsMap5,
     _i1.Key? key,
   }) async =>
       navigatorKey.currentState?.pushNamed<dynamic>(
         Uri(
-          path: RouteNames.homeIdExampleAge(
+          path: RouteNames.homeIdExampleExampleEnumAge(
             id: id,
+            exampleEnum: exampleEnum.index.toString(),
             age: age?.toString(),
           ),
-          queryParameters: {'name': name}..removeWhere((_, v) => v == null),
+          queryParameters: {
+            'exampleEnum2': exampleEnum2.index.toString(),
+            'name': name,
+            'exampleEnum3': exampleEnum3?.index.toString(),
+            'exampleEnums4': base64Encode(utf8.encode(
+                jsonEncode(exampleEnums4?.map((e) => e.index).toList()))),
+            'exampleEnumsMap5': base64Encode(utf8.encode(jsonEncode(
+                exampleEnumsMap5?.map((k, v) => MapEntry(k, v.index)))))
+          }..removeWhere((_, v) => v == null),
         ).toString(),
-        arguments: {'id': id, 'name': name, 'age': age, 'key': key},
+        arguments: {
+          'id': id,
+          'exampleEnum': exampleEnum,
+          'exampleEnum2': exampleEnum2,
+          'name': name,
+          'age': age,
+          'exampleEnum3': exampleEnum3,
+          'exampleEnums4': exampleEnums4,
+          'exampleEnumsMap5': exampleEnumsMap5,
+          'key': key
+        },
       );
   Future<void> goToExampleScreenWithRequiredArgument({
-    required List<_i2.CustomModel> data,
+    required List<_i3.CustomModel> data,
     _i1.Key? key,
   }) async =>
       navigatorKey.currentState?.pushNamed<dynamic>(
@@ -366,7 +414,7 @@ mixin BaseNavigator {
     _i1.Key? key,
   }) async =>
       showCustomDialog<dynamic>(
-          widget: _i3.ExampleDialog(
+          widget: _i2.ExampleDialog(
         text: text,
         key: key,
       ));
@@ -375,7 +423,7 @@ mixin BaseNavigator {
     _i1.Key? key,
   }) async =>
       showBottomSheet<dynamic>(
-          widget: _i3.RecursiveNavigationBottomSheet(
+          widget: _i2.RecursiveNavigationBottomSheet(
         layers: layers,
         key: key,
       ));
@@ -421,18 +469,19 @@ class RouteNames {
   static String myHomePagePopAllTitle({String? title}) =>
       '/my-home-page-pop-all/$title';
 
-  /// /home/:id/:name/:nonExistingName/
-  static String homeIdNameNonExistingName({
+  /// /home/:id/:name/:nonExistingName/number1/
+  static String homeIdNameNonExistingNameNumber1({
     required String id,
     String? name,
     String? nonExistingName,
   }) =>
-      '/home/$id/$name/$nonExistingName/';
+      '/home/$id/$name/$nonExistingName/number1/';
 
-  /// /home/:id/example/:age
-  static String homeIdExampleAge({
+  /// /home/:id/example/:exampleEnum/:age
+  static String homeIdExampleExampleEnumAge({
     required String id,
+    required String exampleEnum,
     String? age,
   }) =>
-      '/home/$id/example/$age';
+      '/home/$id/example/$exampleEnum/$age';
 }

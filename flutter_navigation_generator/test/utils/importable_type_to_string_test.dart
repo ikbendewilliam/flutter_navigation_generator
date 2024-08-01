@@ -1,11 +1,11 @@
 import 'package:collection/collection.dart';
 import 'package:flutter_navigation_generator/src/models/importable_type.dart';
-import 'package:flutter_navigation_generator/src/utils/importable_type_to_string.dart';
+import 'package:flutter_navigation_generator/src/utils/importable_type_string_converter.dart';
 import 'package:test/test.dart';
 
 void main() {
   String convertType(String className) =>
-      ImportableTypeToStringUtils.convertFromString(
+      ImportableTypeStringConverter.convertFromString(
           ImportableType(className: className), 's');
   final mapRegex = RegExp(
       '[^<>]*<([^<>]*|[^<>]*<(?:[^<>]*|[^<>]*<(?:[^<>]*|[^<>]*<(?:[^<>]*|[^<>]*<(?:[^<>]*)(?:, ?(?:[^<>]*))?>)(?:, ?(?:[^<>]*|[^<>]*<(?:[^<>]*)(?:, ?(?:[^<>]*))?>))?>)(?:, ?(?:[^<>]*|[^<>]*<(?:[^<>]*|[^<>]*<(?:[^<>]*)(?:, ?(?:[^<>]*))?>)(?:, ?(?:[^<>]*|[^<>]*<(?:[^<>]*)(?:, ?(?:[^<>]*))?>))?>))?>)(?:, ?(?:[^<>]*|[^<>]*<(?:[^<>]*|[^<>]*<(?:[^<>]*|[^<>]*<(?:[^<>]*)(?:, ?(?:[^<>]*))?>)(?:, ?(?:[^<>]*|[^<>]*<(?:[^<>]*)(?:, ?(?:[^<>]*))?>))?>)(?:, ?(?:[^<>]*|[^<>]*<(?:[^<>]*|[^<>]*<(?:[^<>]*)(?:, ?(?:[^<>]*))?>)(?:, ?(?:[^<>]*|[^<>]*<(?:[^<>]*)(?:, ?(?:[^<>]*))?>))?>))?>))?>), ?([^<>]*|[^<>]*<(?:[^<>]*|[^<>]*<(?:[^<>]*|[^<>]*<(?:[^<>]*|[^<>]*<(?:[^<>]*)(?:, ?(?:[^<>]*))?>)(?:, ?(?:[^<>]*|[^<>]*<(?:[^<>]*)(?:, ?(?:[^<>]*))?>))?>)(?:, ?(?:[^<>]*|[^<>]*<(?:[^<>]*|[^<>]*<(?:[^<>]*)(?:, ?(?:[^<>]*))?>)(?:, ?(?:[^<>]*|[^<>]*<(?:[^<>]*)(?:, ?(?:[^<>]*))?>))?>))?>)(?:, ?(?:[^<>]*|[^<>]*<(?:[^<>]*|[^<>]*<(?:[^<>]*|[^<>]*<(?:[^<>]*)(?:, ?(?:[^<>]*))?>)(?:, ?(?:[^<>]*|[^<>]*<(?:[^<>]*)(?:, ?(?:[^<>]*))?>))?>)(?:, ?(?:[^<>]*|[^<>]*<(?:[^<>]*|[^<>]*<(?:[^<>]*)(?:, ?(?:[^<>]*))?>)(?:, ?(?:[^<>]*|[^<>]*<(?:[^<>]*)(?:, ?(?:[^<>]*))?>))?>))?>))?>)>');
@@ -27,7 +27,7 @@ void main() {
   }
 
   void checkImportableType(ImportableType type, String expected) {
-    final result = ImportableTypeToStringUtils.convertFromString(type, 's');
+    final result = ImportableTypeStringConverter.convertFromString(type, 's');
     expect(result, expected);
   }
 
@@ -56,11 +56,11 @@ void main() {
   void checkMap(String type, String expected) {
     final importableType = typeFromString(type)!;
     final result =
-        ImportableTypeToStringUtils.convertFromString(importableType, 's');
+        ImportableTypeStringConverter.convertFromString(importableType, 's');
     expect(result, expected);
   }
 
-  group('ImportableTypeToStringUtils', () {
+  group('ImportableTypeStringConverter', () {
     test('Dart basic types', () {
       final testTypes = {
         'int': 'int.parse(s)',

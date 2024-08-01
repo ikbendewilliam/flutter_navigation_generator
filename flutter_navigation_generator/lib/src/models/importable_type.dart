@@ -3,6 +3,7 @@ class ImportableType {
   final String? name;
   final String className;
   final bool isRequired;
+  final bool isEnum;
   final bool isNullable;
   final List<ImportableType> typeArguments;
 
@@ -14,6 +15,7 @@ class ImportableType {
     this.import,
     this.isRequired = false,
     this.isNullable = false,
+    this.isEnum = false,
     this.typeArguments = const [],
   });
 
@@ -24,6 +26,7 @@ class ImportableType {
       'name': name,
       'isRequired': isRequired,
       'isNullable': isNullable,
+      'isEnum': isEnum,
       'typeArguments': typeArguments.map((x) => x.toMap()).toList(),
     };
   }
@@ -35,7 +38,10 @@ class ImportableType {
       name: map['name'] as String?,
       isRequired: map['isRequired'] == true,
       isNullable: map['isNullable'] == true,
-      typeArguments: List<ImportableType>.from(map['typeArguments']?.map((dynamic x) => ImportableType.fromMap(x as Map<String, dynamic>)) as Iterable),
+      isEnum: map['isEnum'] == true,
+      typeArguments: List<ImportableType>.from(map['typeArguments']?.map(
+              (dynamic x) => ImportableType.fromMap(x as Map<String, dynamic>))
+          as Iterable),
     );
   }
 }

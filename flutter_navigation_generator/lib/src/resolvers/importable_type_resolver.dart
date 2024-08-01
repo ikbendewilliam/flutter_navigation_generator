@@ -99,6 +99,7 @@ class ImportableTypeResolverImpl extends ImportableTypeResolver {
       className: functionName,
       import: resolveImport(elementToImport),
       isNullable: function.nullabilitySuffix == NullabilitySuffix.question,
+      isEnum: enclosingElement is EnumElement,
     );
   }
 
@@ -115,6 +116,7 @@ class ImportableTypeResolverImpl extends ImportableTypeResolver {
             import: resolveImport(type.element),
             isNullable: type.nullabilitySuffix == NullabilitySuffix.question,
             typeArguments: _resolveTypeArguments(type),
+            isEnum: type.element is EnumElement,
           ));
         }
       }
@@ -138,6 +140,7 @@ class ImportableTypeResolverImpl extends ImportableTypeResolver {
       import: resolveImport(type.element),
       isRequired: isRequired,
       typeArguments: _resolveTypeArguments(type),
+      isEnum: type.element is EnumElement,
     );
   }
 }

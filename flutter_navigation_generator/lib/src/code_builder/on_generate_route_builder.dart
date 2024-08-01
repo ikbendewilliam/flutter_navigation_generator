@@ -3,7 +3,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter_navigation_generator/src/models/importable_type.dart';
 import 'package:flutter_navigation_generator/src/models/route_config.dart';
 import 'package:flutter_navigation_generator/src/utils/case_utils.dart';
-import 'package:flutter_navigation_generator/src/utils/importable_type_to_string.dart';
+import 'package:flutter_navigation_generator/src/utils/importable_type_string_converter.dart';
 import 'package:flutter_navigation_generator/src/utils/route_config_extension.dart';
 import 'package:flutter_navigation_generator/src/utils/utils.dart';
 import 'package:flutter_navigation_generator_annotations/flutter_navigation_generator_annotations.dart';
@@ -41,7 +41,7 @@ class OnGenerateRouteBuilder {
         '$constructor(${route.parameters.asMap().map((_, p) {
               final nullableSuffix = p.isNullable ? '?' : '';
               final convertFromString =
-                  ImportableTypeToStringUtils.convertFromString(
+                  ImportableTypeStringConverter.convertFromString(
                       p, 'arguments[\'${p.argumentName}\']');
               return MapEntry(
                 p.argumentName,

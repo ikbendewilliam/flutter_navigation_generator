@@ -105,26 +105,44 @@ class _MyHomePageState extends State<MyHomePage> {
               child: const Text("Go to page 2 (with fade animation)"),
             ),
             ElevatedButton(
-              onPressed: () => mainNavigator.goToExampleScreenWithRequiredArgument(data: [CustomModel('John', 25), CustomModel('Jeff', 27)]),
+              onPressed: () => mainNavigator
+                  .goToExampleScreenWithRequiredArgument(
+                      data: [CustomModel('John', 25), CustomModel('Jeff', 27)]),
               child: const Text("Go to ExampleScreenWithRequiredArgument"),
             ),
             ElevatedButton(
-              onPressed: () => mainNavigator.customName(id: '1', name: 'John', age: 12),
+              onPressed: () =>
+                  mainNavigator.customName(id: '1', name: 'John', age: 12),
               child: const Text("Go to RouteNameWithArguments"),
             ),
             ElevatedButton(
-              onPressed: () => mainNavigator.goToRouteNameWithArguments2(id: '3', name: 'Will', age: 43),
+              onPressed: () => mainNavigator.goToRouteNameWithArguments2(
+                id: '3',
+                name: 'Will',
+                age: 43,
+                exampleEnum: ExampleEnum.first,
+                exampleEnum2: ExampleEnum.second,
+                exampleEnum3: ExampleEnum.third,
+                exampleEnums4: [ExampleEnum.first, ExampleEnum.second],
+                exampleEnumsMap5: {
+                  'first': ExampleEnum.first,
+                  'second': ExampleEnum.second,
+                },
+              ),
               child: const Text("Go to RouteNameWithArguments2"),
             ),
             ElevatedButton(
-              onPressed: () => mainNavigator.showSheetRecursiveNavigationBottomSheet(),
+              onPressed: () =>
+                  mainNavigator.showSheetRecursiveNavigationBottomSheet(),
               child: const Text("Show a bottom sheet with its own navigator"),
             ),
             ElevatedButton(
-              onPressed: () => mainNavigator.showDialogExampleDialog(text: 'hi there'),
+              onPressed: () =>
+                  mainNavigator.showDialogExampleDialog(text: 'hi there'),
               child: const Text("Show a full screen dialog"),
             ),
-            Text("Has a navigation blocked by a guard (not logged in): ${mainNavigator.canContinueNavigation()}"),
+            Text(
+                "Has a navigation blocked by a guard (not logged in): ${mainNavigator.canContinueNavigation()}"),
             if (mainNavigator.canContinueNavigation()) ...[
               ElevatedButton(
                 onPressed: () async {
@@ -186,7 +204,7 @@ class SecondPage extends StatelessWidget {
 }
 
 @FlutterRoute(
-  routeName: 'home/:id/:name/:nonExistingName/',
+  routeName: 'home/:id/:name/:nonExistingName/number1/',
   methodName: 'customName',
 )
 class RouteNameWithArguments extends StatelessWidget {
@@ -236,17 +254,27 @@ class RouteNameWithArguments extends StatelessWidget {
 }
 
 @FlutterRoute(
-  routeName: '/home/:id/example/:age',
+  routeName: '/home/:id/example/:exampleEnum/:age',
 )
 class RouteNameWithArguments2 extends StatelessWidget {
   final String id;
   final String? name;
   final int? age;
+  final ExampleEnum exampleEnum;
+  final ExampleEnum exampleEnum2;
+  final ExampleEnum? exampleEnum3;
+  final List<ExampleEnum>? exampleEnums4;
+  final Map<String, ExampleEnum>? exampleEnumsMap5;
 
   const RouteNameWithArguments2({
     required this.id,
+    required this.exampleEnum,
+    required this.exampleEnum2,
     this.name,
     this.age,
+    this.exampleEnum3,
+    this.exampleEnums4,
+    this.exampleEnumsMap5,
     super.key,
   });
 
@@ -272,6 +300,21 @@ class RouteNameWithArguments2 extends StatelessWidget {
             ),
             Text(
               'age: $age',
+            ),
+            Text(
+              'exampleEnum: $exampleEnum',
+            ),
+            Text(
+              'exampleEnum2: $exampleEnum2',
+            ),
+            Text(
+              'exampleEnum3: $exampleEnum3',
+            ),
+            Text(
+              'exampleEnums4: $exampleEnums4',
+            ),
+            Text(
+              'exampleEnumsMap5: $exampleEnumsMap5',
             ),
             ElevatedButton(
               onPressed: mainNavigator.goBack,
@@ -320,7 +363,9 @@ class RecursiveNavigationBottomSheet extends StatelessWidget {
                 child: const Text("Go to second page"),
               ),
               ElevatedButton(
-                onPressed: () => myNavigator.showSheetRecursiveNavigationBottomSheet(layers: layers + 1),
+                onPressed: () =>
+                    myNavigator.showSheetRecursiveNavigationBottomSheet(
+                        layers: layers + 1),
                 child: const Text("Open another bottom sheet"),
               ),
             ],
@@ -425,7 +470,8 @@ class Error404 extends StatelessWidget {
               'We couldn\'t find this page, sorry :(',
             ),
             ElevatedButton(
-              onPressed: () => mainNavigator.goToMyHomePage(title: 'returning from 404'),
+              onPressed: () =>
+                  mainNavigator.goToMyHomePage(title: 'returning from 404'),
               child: const Text("go home"),
             ),
           ],
@@ -458,7 +504,8 @@ class ErrorNotLoggedIn extends StatelessWidget {
               'You are not logged in, sorry :(',
             ),
             ElevatedButton(
-              onPressed: () => mainNavigator.goToMyHomePage(title: 'returning from not logged in'),
+              onPressed: () => mainNavigator.goToMyHomePage(
+                  title: 'returning from not logged in'),
               child: const Text("go home"),
             ),
             ElevatedButton(
@@ -501,7 +548,8 @@ class LoggedInPage extends StatelessWidget {
               'You are logged in, yay :)',
             ),
             ElevatedButton(
-              onPressed: () => mainNavigator.goToMyHomePage(title: 'returning from logged in'),
+              onPressed: () => mainNavigator.goToMyHomePage(
+                  title: 'returning from logged in'),
               child: const Text("go home"),
             ),
           ],
@@ -509,6 +557,12 @@ class LoggedInPage extends StatelessWidget {
       ),
     );
   }
+}
+
+enum ExampleEnum {
+  first,
+  second,
+  third,
 }
 
 class LoginGuard extends NavigatorGuard {

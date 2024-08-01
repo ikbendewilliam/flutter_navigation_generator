@@ -103,7 +103,7 @@
 <span id="L41"><span class="lineNum">      41</span> <span class="tlaGNC">           4 :         '$constructor(${route.parameters.asMap().map((_, p) {</span></span>
 <span id="L42"><span class="lineNum">      42</span> <span class="tlaGNC">           1 :               final nullableSuffix = p.isNullable ? '?' : '';</span></span>
 <span id="L43"><span class="lineNum">      43</span>              :               final convertFromString =</span>
-<span id="L44"><span class="lineNum">      44</span> <span class="tlaGNC">           1 :                   ImportableTypeToStringUtils.convertFromString(</span></span>
+<span id="L44"><span class="lineNum">      44</span> <span class="tlaGNC">           1 :                   ImportableTypeStringConverter.convertFromString(</span></span>
 <span id="L45"><span class="lineNum">      45</span> <span class="tlaGNC">           2 :                       p, 'arguments[\'${p.argumentName}\']');</span></span>
 <span id="L46"><span class="lineNum">      46</span> <span class="tlaGNC">           1 :               return MapEntry(</span></span>
 <span id="L47"><span class="lineNum">      47</span> <span class="tlaGNC">           1 :                 p.argumentName,</span></span>
