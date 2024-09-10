@@ -211,9 +211,11 @@ class RouteNameWithArguments extends StatelessWidget {
   final String id;
   final String? name;
   final int? age;
+  final CustomModel? model;
 
   const RouteNameWithArguments({
     required this.id,
+    this.model,
     this.name,
     this.age,
     super.key,

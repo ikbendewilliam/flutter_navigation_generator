@@ -9,8 +9,8 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:convert';
 
-import 'package:example/custom_model.dart' as _i3;
-import 'package:example/main.dart' as _i2;
+import 'package:example/custom_model.dart' as _i2;
+import 'package:example/main.dart' as _i3;
 import 'package:flutter/material.dart' as _i1;
 import 'package:flutter/material.dart';
 import 'package:flutter_navigation_generator_animations/flutter_navigation_generator_animations.dart';
@@ -168,6 +168,10 @@ mixin BaseNavigator {
         return NativeRouteAnimation<void>(
           builder: (_) => RouteNameWithArguments(
             id: arguments['id'] as String,
+            model: arguments['model'] is String
+                ? CustomModel.fromJson(
+                    jsonDecode(utf8.decode(base64Decode(arguments['model']))))
+                : arguments['model'] as CustomModel?,
             name: arguments['name'] as String?,
             age: arguments['age'] is String
                 ? int.parse(arguments['age'])
@@ -336,6 +340,7 @@ mixin BaseNavigator {
 
   Future<void> customName({
     required String id,
+    _i2.CustomModel? model,
     String? name,
     int? age,
     _i1.Key? key,
@@ -346,20 +351,30 @@ mixin BaseNavigator {
             id: id,
             name: name,
           ),
-          queryParameters: {'age': age?.toString()}
-            ..removeWhere((_, v) => v == null),
+          queryParameters: {
+            'model': model == null
+                ? null
+                : base64Encode(utf8.encode(jsonEncode(model))),
+            'age': age?.toString()
+          }..removeWhere((_, v) => v == null),
         ).toString(),
-        arguments: {'id': id, 'name': name, 'age': age, 'key': key},
+        arguments: {
+          'id': id,
+          'model': model,
+          'name': name,
+          'age': age,
+          'key': key
+        },
       );
   Future<void> goToRouteNameWithArguments2({
     required String id,
-    required _i2.ExampleEnum exampleEnum,
-    required _i2.ExampleEnum exampleEnum2,
+    required _i3.ExampleEnum exampleEnum,
+    required _i3.ExampleEnum exampleEnum2,
     String? name,
     int? age,
-    _i2.ExampleEnum? exampleEnum3,
-    List<_i2.ExampleEnum>? exampleEnums4,
-    Map<String, _i2.ExampleEnum>? exampleEnumsMap5,
+    _i3.ExampleEnum? exampleEnum3,
+    List<_i3.ExampleEnum>? exampleEnums4,
+    Map<String, _i3.ExampleEnum>? exampleEnumsMap5,
     _i1.Key? key,
   }) async =>
       navigatorKey.currentState?.pushNamed<dynamic>(
@@ -392,7 +407,7 @@ mixin BaseNavigator {
         },
       );
   Future<void> goToExampleScreenWithRequiredArgument({
-    required List<_i3.CustomModel> data,
+    required List<_i2.CustomModel> data,
     _i1.Key? key,
   }) async =>
       navigatorKey.currentState?.pushNamed<dynamic>(
@@ -414,7 +429,7 @@ mixin BaseNavigator {
     _i1.Key? key,
   }) async =>
       showCustomDialog<dynamic>(
-          widget: _i2.ExampleDialog(
+          widget: _i3.ExampleDialog(
         text: text,
         key: key,
       ));
@@ -423,7 +438,7 @@ mixin BaseNavigator {
     _i1.Key? key,
   }) async =>
       showBottomSheet<dynamic>(
-          widget: _i2.RecursiveNavigationBottomSheet(
+          widget: _i3.RecursiveNavigationBottomSheet(
         layers: layers,
         key: key,
       ));
