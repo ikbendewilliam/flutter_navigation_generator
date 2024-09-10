@@ -9,6 +9,20 @@ class ImportableType {
 
   String get argumentName => name ?? className;
 
+  bool get isCustomClass {
+    if (isEnum) return false;
+    return ![
+      'int',
+      'double',
+      'bool',
+      'num',
+      'String',
+      'dynamic',
+      'List',
+      'Map',
+    ].contains(className);
+  }
+
   const ImportableType({
     required this.className,
     this.name,
