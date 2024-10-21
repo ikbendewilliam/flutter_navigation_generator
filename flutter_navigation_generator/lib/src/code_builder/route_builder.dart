@@ -114,10 +114,15 @@ class RouteBuilder {
                 !parameters.contains(element.argumentName))
             .toList()
             .asMap()
-            .map((_, p) => MapEntry(
-                  "'${p.argumentName}'",
-                  ImportableTypeStringConverter.convertToString(p),
-                ));
+            .map((_, p) {
+          final stringValue = ImportableTypeStringConverter.convertToString(p);
+          return MapEntry(
+            "'${p.argumentName}'",
+            (p.isNullable && p.isCustomClass)
+                ? '${p.name} == null ? null : $stringValue'
+                : stringValue,
+          );
+        });
 
         final queryParametersRemoveNull = route.parameters.any((element) =>
                 element.className != 'Key' &&
