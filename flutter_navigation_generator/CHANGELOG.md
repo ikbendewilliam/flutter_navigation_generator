@@ -1,3 +1,7 @@
+## 2.0.3 (2024-10-21)
+
+- Fixed a nullability issue
+
 ## 2.0.2 (2024-07-24)
 
 - Added support for enum arguments
