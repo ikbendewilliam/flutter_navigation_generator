@@ -1,6 +1,9 @@
-## 2.0.1 (2024-07-24)
+## 2.1.0 (2024-12-06)
 
-- Fixed an issue where `guards` require a value, meaning defaultGuards were never used
+- Added `@FlutterRouteField` annotation to specify fields with the following options:
+    - `ignore`: Defaults to false (except for Key? key field), excludes this field from the goTo method
+    - `addToJson`: default true, add this field to the json serialization, only useful for web, use this to add cached values, but prevent the user from overriding them
+    - `queryName`: default null, use this to specify the query parameter name, if not specified, the field name is used
 
 ## 2.0.0 (2024-07-21)
 

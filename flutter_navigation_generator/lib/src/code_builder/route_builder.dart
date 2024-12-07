@@ -55,8 +55,7 @@ class RouteBuilder {
     if (route.methodNameIsDefinedByAnnotation) {
       name = route.methodName;
     } else {
-      name =
-          '$namePrefix${CaseUtil(route.methodName.replaceAll(RegExp(':[a-zA-Z0-9]*'), '')).upperCamelCase}';
+      name = '$namePrefix${CaseUtil(route.methodName.replaceAll(RegExp(':[a-zA-Z0-9]*'), '')).upperCamelCase}';
     }
     return Method(
       (b) => b
@@ -67,13 +66,11 @@ class RouteBuilder {
           route.parameters.map(
             (p) => Parameter(
               (b) => b
-                ..name = p.argumentName
+                ..name = p.type.argumentName
                 ..named = true
-                ..required = p.isRequired && route.defaultValues[p.name] == null
-                ..defaultTo = route.defaultValues[p.name] != null
-                    ? Reference(route.defaultValues[p.name]! as String).code
-                    : null
-                ..type = typeRefer(p),
+                ..required = p.type.isRequired && p.defaultValue == null
+                ..defaultTo = p.defaultValue != null ? Reference(p.defaultValue as String).code : null
+                ..type = typeRefer(p.type),
             ),
           ),
         )
@@ -95,55 +92,40 @@ class RouteBuilder {
           path = Reference('RouteNames.${route.asRouteName}').call(
               [],
               (parameters.asMap().map((_, parameter) {
-                final argument = route.parameters
-                    .firstWhereOrNull((element) => element.name == parameter);
+                final argument = route.parameters.firstWhereOrNull((element) => element.type.name == parameter);
                 if (argument == null) return MapEntry(parameter, null);
-                return MapEntry(
-                    parameter,
-                    Reference(ImportableTypeStringConverter.convertToString(
-                        argument)));
+                return MapEntry(parameter, Reference(ImportableTypeStringConverter.convertToString(argument.type)));
               })
                     ..removeWhere((key, value) => value == null))
                   .cast());
         } else {
           path = Reference('RouteNames.${route.asRouteName}');
         }
-        final queryParameters = route.parameters
-            .where((element) =>
-                element.className != 'Key' &&
-                !parameters.contains(element.argumentName))
-            .toList()
-            .asMap()
-            .map((_, p) {
-          final stringValue = ImportableTypeStringConverter.convertToString(p);
+        final queryParameters =
+            route.parameters.where((element) => element.type.className != 'Key' && !parameters.contains(element.type.argumentName)).toList().asMap().map((_, parameterConfig) {
+          final parameter = parameterConfig.type;
+          final stringValue = ImportableTypeStringConverter.convertToString(parameter);
           return MapEntry(
-            "'${p.argumentName}'",
-            (p.isNullable && p.isCustomClass)
-                ? '${p.name} == null ? null : $stringValue'
-                : stringValue,
+            "'${parameter.argumentName}'",
+            (parameter.isNullable && parameter.isCustomClass) ? '${parameter.name} == null ? null : $stringValue' : stringValue,
           );
         });
 
-        final queryParametersRemoveNull = route.parameters.any((element) =>
-                element.className != 'Key' &&
-                !parameters.contains(element.argumentName) &&
-                element.isNullable)
-            ? '..removeWhere((_, v) => v == null)'
-            : '';
+        final queryParametersRemoveNull =
+            route.parameters.any((element) => element.type.className != 'Key' && !parameters.contains(element.type.argumentName) && element.type.isNullable)
+                ? '..removeWhere((_, v) => v == null)'
+                : '';
 
         final bodyCall = TypeReference(
           (b) => b
-            ..symbol =
-                'navigatorKey.currentState?.${route.navigationType.navigatorMethod}'
+            ..symbol = 'navigatorKey.currentState?.${route.navigationType.navigatorMethod}'
             ..types.addAll(
               [
                 const Reference('dynamic'),
                 if (route.navigationType == NavigationType.pushReplacement ||
                     route.navigationType == NavigationType.popAndPush ||
-                    route.navigationType ==
-                        NavigationType.restorablePushReplacement ||
-                    route.navigationType ==
-                        NavigationType.restorablePopAndPush) ...[
+                    route.navigationType == NavigationType.restorablePushReplacement ||
+                    route.navigationType == NavigationType.restorablePopAndPush) ...[
                   const Reference('dynamic'),
                 ],
               ],
@@ -159,32 +141,23 @@ class RouteBuilder {
                     [],
                     {
                       'path': path,
-                      'queryParameters': Reference(
-                          '$queryParameters$queryParametersRemoveNull'),
+                      'queryParameters': Reference('$queryParameters$queryParametersRemoveNull'),
                     },
                   ).property('toString()'),
-            if (route.navigationType == NavigationType.pushAndReplaceAll ||
-                route.navigationType ==
-                    NavigationType.restorablePushAndReplaceAll) ...[
+            if (route.navigationType == NavigationType.pushAndReplaceAll || route.navigationType == NavigationType.restorablePushAndReplaceAll) ...[
               const Reference('(_) => false'),
             ],
           ],
           {
-            'arguments': Reference(
-                '${route.parameters.asMap().map((_, p) => MapEntry("'${p.argumentName}'", p.argumentName))}'),
+            'arguments':
+                Reference('${route.parameters.asMap().map((_, parameterConfig) => MapEntry("'${parameterConfig.type.argumentName}'", parameterConfig.type.argumentName))}'),
           },
         );
         Code body;
         if (route.returnType != null) {
           body = Block((b) => b
-            ..statements.add(
-                declareFinal('result', type: const Reference('dynamic'))
-                    .assign(bodyCall.awaited)
-                    .statement)
-            ..statements.add(const Reference('result')
-                .asA(typeRefer(route.returnType, forceNullable: true))
-                .returned
-                .statement));
+            ..statements.add(declareFinal('result', type: const Reference('dynamic')).assign(bodyCall.awaited).statement)
+            ..statements.add(const Reference('result').asA(typeRefer(route.returnType, forceNullable: true)).returned.statement));
         } else {
           body = bodyCall.code;
         }
@@ -210,22 +183,16 @@ class RouteBuilder {
       body: TypeReference(
         (b) => b
           ..symbol = bodyCall
-          ..types.add(route.returnType == null
-              ? const Reference('dynamic')
-              : typeRefer(route.returnType!)),
+          ..types.add(route.returnType == null ? const Reference('dynamic') : typeRefer(route.returnType!)),
       ).call(
         [],
         {
           'widget': Reference(
-            route.constructorName == route.routeWidget.className ||
-                    route.constructorName.isEmpty
+            route.constructorName == route.routeWidget.className || route.constructorName.isEmpty
                 ? route.routeWidget.className
                 : '${route.routeWidget.className}.${route.constructorName}',
             typeRefer(route.routeWidget).url,
-          ).call(
-              [],
-              route.parameters.asMap().map((_, p) =>
-                  MapEntry(p.argumentName, Reference(p.argumentName)))),
+          ).call([], route.parameters.asMap().map((_, p) => MapEntry(p.type.argumentName, Reference(p.type.argumentName)))),
         },
       ).code,
     );
@@ -253,8 +220,7 @@ class RouteBuilder {
             ..name = 'goBack'
             ..lambda = true
             ..returns = const Reference('void')
-            ..body =
-                const Reference('navigatorKey.currentState?.pop').call([]).code,
+            ..body = const Reference('navigatorKey.currentState?.pop').call([]).code,
         ),
         Method(
           (b) => b
@@ -268,8 +234,7 @@ class RouteBuilder {
                 ..type = const Reference('T?'),
             ))
             ..returns = const Reference('void')
-            ..body = const Reference('navigatorKey.currentState?.pop')
-                .call([const Reference('result')]).code,
+            ..body = const Reference('navigatorKey.currentState?.pop').call([const Reference('result')]).code,
         ),
         Method(
           (b) => b
@@ -283,8 +248,7 @@ class RouteBuilder {
                   ..requiredParameters.add(const Reference('Route<dynamic>'))),
             ))
             ..returns = const Reference('void')
-            ..body = const Reference('navigatorKey.currentState?.popUntil')
-                .call([const Reference('predicate')]).code,
+            ..body = const Reference('navigatorKey.currentState?.popUntil').call([const Reference('predicate')]).code,
         ),
         Method(
           (b) => b
@@ -313,8 +277,7 @@ class RouteBuilder {
             ..returns = const Reference('Future<T?>')
             ..body = const Reference('showDialog<T>').call([], {
               'context': const Reference('navigatorKey.currentContext!'),
-              'builder':
-                  const Reference('(_) => widget ?? const SizedBox.shrink()'),
+              'builder': const Reference('(_) => widget ?? const SizedBox.shrink()'),
             }).code,
         ),
         Method(
@@ -332,8 +295,7 @@ class RouteBuilder {
             ..returns = const Reference('Future<T?>')
             ..body = const Reference('showModalBottomSheet<T>').call([], {
               'context': const Reference('navigatorKey.currentContext!'),
-              'builder':
-                  const Reference('(_) => widget ?? const SizedBox.shrink()'),
+              'builder': const Reference('(_) => widget ?? const SizedBox.shrink()'),
             }).code,
         ),
       ];
