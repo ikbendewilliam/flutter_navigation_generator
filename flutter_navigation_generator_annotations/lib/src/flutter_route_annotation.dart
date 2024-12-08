@@ -5,8 +5,8 @@ class FlutterRoute {
   /// Override the default name of the route
   ///
   /// optionally use `:name` to declare a parameter in the route for web.
-  /// Defaults to use query parameters. Name must match the variable name
-  /// included in the constructor
+  /// Defaults to use query parameters. Name must match queryName of the field
+  /// (defaults to the variable name included in the constructor)
   final String? routeName;
 
   /// Override the method to open the route

@@ -2,7 +2,9 @@ class CustomModel {
   final String name;
   final int age;
 
-  CustomModel(this.name, this.age);
+  const CustomModel(this.name, this.age);
+
+  static const testDefault = CustomModel('test default inside class', 123);
 
   Map<String, dynamic> toJson() {
     return {

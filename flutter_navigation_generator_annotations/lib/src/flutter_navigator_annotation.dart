@@ -30,10 +30,14 @@ class FlutterNavigator {
   /// the routename. Does not effect custom route names
   final List<String> removeSuffixes;
 
+  /// Ignore `Key? key` argument by default, override single fields with [FlutterRouteField]
+  final bool ignoreKeysByDefault;
+
   const FlutterNavigator({
     this.navigatorClassName,
     this.pageType,
     this.unknownRoute,
+    this.ignoreKeysByDefault = true,
     this.defaultGuards = const [],
     this.removeSuffixes = const ['Page', 'Screen', 'View', 'Widget'],
   });

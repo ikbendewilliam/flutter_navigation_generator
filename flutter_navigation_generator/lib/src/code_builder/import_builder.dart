@@ -8,11 +8,13 @@ class ImportBuilder {
   final Uri? targetFile;
   final ImportableType? pageType;
   final List<ImportableType> defaultGuards;
+  final bool ignoreKeysByDefault;
 
   ImportBuilder({
     required this.routes,
     this.targetFile,
     this.pageType,
+    this.ignoreKeysByDefault = true,
     this.defaultGuards = const [],
   });
 
@@ -20,22 +22,19 @@ class ImportBuilder {
     final imports = <String?>{
       'package:flutter/material.dart',
       'dart:convert',
-      if (routes.any((route) => route.guards?.isNotEmpty == true) ||
-          defaultGuards.isNotEmpty)
+      if (routes.any((route) => route.guards?.isNotEmpty == true) || defaultGuards.isNotEmpty)
         'package:flutter_navigation_generator_annotations/flutter_navigation_generator_annotations.dart',
     };
     imports.add(typeRefer(pageType, targetFile: targetFile).url);
-    imports.addAll(
-        defaultGuards.map((e) => typeRefer(e, targetFile: targetFile).url));
+    imports.addAll(defaultGuards.map((e) => typeRefer(e, targetFile: targetFile).url));
     imports.addAll(routes.expand(
       (route) => [
         typeRefer(route.routeWidget, targetFile: targetFile).url,
         typeRefer(route.pageType, targetFile: targetFile).url,
         typeRefer(route.returnType, targetFile: targetFile).url,
-        ...route.parameters.expand((e) => [
-              typeRefer(e, targetFile: targetFile).url,
-              ...e.typeArguments
-                  .map((e) => typeRefer(e, targetFile: targetFile).url),
+        ...route.parameters.where((e) => !e.ignoreWithKeyCheck(ignoreKeysByDefault)).expand((e) => [
+              typeRefer(e.type, targetFile: targetFile).url,
+              ...e.type.typeArguments.map((e) => typeRefer(e, targetFile: targetFile).url),
             ]),
         ...?route.guards?.map((e) => typeRefer(e, targetFile: targetFile).url),
       ],

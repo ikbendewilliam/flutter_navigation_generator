@@ -13,6 +13,7 @@ class LibraryGenerator {
   final ImportableType? unknownRoute;
   final List<String> removeSuffixes;
   final List<ImportableType> defaultGuards;
+  final bool ignoreKeysByDefault;
 
   LibraryGenerator({
     required this.routes,
@@ -22,6 +23,7 @@ class LibraryGenerator {
     this.unknownRoute,
     this.removeSuffixes = const [],
     this.defaultGuards = const [],
+    this.ignoreKeysByDefault = true,
   });
 
   Library generate() {
@@ -34,6 +36,7 @@ class LibraryGenerator {
             pageType: pageType,
             targetFile: targetFile,
             defaultGuards: defaultGuards,
+            ignoreKeysByDefault: ignoreKeysByDefault,
           ).generate(),
         )
         ..body.addAll(
@@ -45,6 +48,7 @@ class LibraryGenerator {
               targetFile: targetFile,
               unknownRoute: unknownRoute,
               defaultGuards: defaultGuards,
+              ignoreKeysByDefault: ignoreKeysByDefault,
             ).generate(),
             RouteNamesBuilder(
               routes: routes,
