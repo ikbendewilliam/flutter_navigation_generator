@@ -13,6 +13,7 @@ class NavigatorBuilder {
   final ImportableType? pageType;
   final ImportableType? unknownRoute;
   final List<ImportableType> defaultGuards;
+  final bool ignoreKeysByDefault;
 
   NavigatorBuilder({
     required this.routes,
@@ -21,6 +22,7 @@ class NavigatorBuilder {
     required this.unknownRoute,
     required this.pageType,
     required this.defaultGuards,
+    this.ignoreKeysByDefault = true,
   });
 
   Field buildNavigatorKey() {
@@ -34,8 +36,7 @@ class NavigatorBuilder {
   }
 
   Spec generate() {
-    final hasGuards = routes.any((route) => route.guards?.isNotEmpty == true) ||
-        defaultGuards.isNotEmpty;
+    final hasGuards = routes.any((route) => route.guards?.isNotEmpty == true) || defaultGuards.isNotEmpty;
     return Mixin(
       (b) => b
         ..name = className
@@ -47,6 +48,7 @@ class NavigatorBuilder {
             targetFile: targetFile,
             unknownRoute: unknownRoute,
             defaultGuards: defaultGuards,
+            ignoreKeysByDefault: ignoreKeysByDefault,
           ).generate(),
         )
         ..methods.addAll(
@@ -66,6 +68,7 @@ class NavigatorBuilder {
             routes: routes,
             pageType: pageType,
             targetFile: targetFile,
+            ignoreKeysByDefault: ignoreKeysByDefault,
           ).generate(),
         ),
     );

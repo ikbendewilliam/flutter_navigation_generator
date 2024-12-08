@@ -8,11 +8,13 @@ class ImportBuilder {
   final Uri? targetFile;
   final ImportableType? pageType;
   final List<ImportableType> defaultGuards;
+  final bool ignoreKeysByDefault;
 
   ImportBuilder({
     required this.routes,
     this.targetFile,
     this.pageType,
+    this.ignoreKeysByDefault = true,
     this.defaultGuards = const [],
   });
 
@@ -30,7 +32,7 @@ class ImportBuilder {
         typeRefer(route.routeWidget, targetFile: targetFile).url,
         typeRefer(route.pageType, targetFile: targetFile).url,
         typeRefer(route.returnType, targetFile: targetFile).url,
-        ...route.parameters.where((e) => !e.ignore).expand((e) => [
+        ...route.parameters.where((e) => !e.ignoreWithKeyCheck(ignoreKeysByDefault)).expand((e) => [
               typeRefer(e.type, targetFile: targetFile).url,
               ...e.type.typeArguments.map((e) => typeRefer(e, targetFile: targetFile).url),
             ]),

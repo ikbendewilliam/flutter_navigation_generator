@@ -13,11 +13,13 @@ class RouteBuilder {
   final Set<RouteConfig> routes;
   final ImportableType? pageType;
   final Uri? targetFile;
+  final bool ignoreKeysByDefault;
 
   RouteBuilder({
     required this.routes,
     required this.pageType,
     required this.targetFile,
+    this.ignoreKeysByDefault = true,
   });
 
   Iterable<Method> generate() {
@@ -63,16 +65,16 @@ class RouteBuilder {
         ..lambda = isLambda
         ..modifier = isAsync ? MethodModifier.async : null
         ..optionalParameters.addAll(
-          route.parameters.map(
-            (p) => Parameter(
-              (b) => b
-                ..name = p.type.argumentName
-                ..named = true
-                ..required = p.type.isRequired && p.defaultValue == null
-                ..defaultTo = p.defaultValue != null ? Reference(p.defaultValue as String).code : null
-                ..type = typeRefer(p.type),
-            ),
-          ),
+          route.parameters.where((p) => !p.ignoreWithKeyCheck(ignoreKeysByDefault)).map(
+                (p) => Parameter(
+                  (b) => b
+                    ..name = p.type.argumentName
+                    ..named = true
+                    ..required = p.type.isRequired && p.defaultValue == null
+                    ..defaultTo = p.defaultValue != null ? Code(p.defaultValue!) : null
+                    ..type = typeRefer(p.type),
+                ),
+              ),
         )
         ..returns = typeRefer(
           route.returnType,
@@ -87,11 +89,11 @@ class RouteBuilder {
     return routes.map(
       (route) {
         Expression path;
-        final parameters = route.routeName.parametersFromRouteName;
+        final parametersInRouteName = route.routeName.parametersFromRouteName;
         if (route.routeNameContainsParameters) {
           path = Reference('RouteNames.${route.asRouteName}').call(
               [],
-              (parameters.asMap().map((_, parameter) {
+              (parametersInRouteName.asMap().map((_, parameter) {
                 final argument = route.parameters.firstWhereOrNull((element) => element.type.name == parameter);
                 if (argument == null) return MapEntry(parameter, null);
                 return MapEntry(parameter, Reference(ImportableTypeStringConverter.convertToString(argument.type)));
@@ -101,20 +103,17 @@ class RouteBuilder {
         } else {
           path = Reference('RouteNames.${route.asRouteName}');
         }
-        final queryParameters =
-            route.parameters.where((element) => element.type.className != 'Key' && !parameters.contains(element.type.argumentName)).toList().asMap().map((_, parameterConfig) {
+        final filteredParameters = route.parameters
+            .where((element) => !element.ignoreWithKeyCheck(ignoreKeysByDefault) && element.addToJson && !parametersInRouteName.contains(element.type.argumentName));
+        final queryParameters = filteredParameters.toList().asMap().map((_, parameterConfig) {
           final parameter = parameterConfig.type;
           final stringValue = ImportableTypeStringConverter.convertToString(parameter);
           return MapEntry(
-            "'${parameter.argumentName}'",
+            "'${parameterConfig.queryName}'",
             (parameter.isNullable && parameter.isCustomClass) ? '${parameter.name} == null ? null : $stringValue' : stringValue,
           );
         });
-
-        final queryParametersRemoveNull =
-            route.parameters.any((element) => element.type.className != 'Key' && !parameters.contains(element.type.argumentName) && element.type.isNullable)
-                ? '..removeWhere((_, v) => v == null)'
-                : '';
+        final queryParametersRemoveNull = filteredParameters.any((element) => element.type.isNullable) ? '..removeWhere((_, v) => v == null)' : '';
 
         final bodyCall = TypeReference(
           (b) => b
@@ -149,8 +148,8 @@ class RouteBuilder {
             ],
           ],
           {
-            'arguments':
-                Reference('${route.parameters.asMap().map((_, parameterConfig) => MapEntry("'${parameterConfig.type.argumentName}'", parameterConfig.type.argumentName))}'),
+            'arguments': Reference(
+                '${route.parameters.where((p) => !p.ignoreWithKeyCheck(ignoreKeysByDefault)).toList().asMap().map((_, parameterConfig) => MapEntry("'${parameterConfig.type.argumentName}'", parameterConfig.type.argumentName))}'),
           },
         );
         Code body;
@@ -192,7 +191,13 @@ class RouteBuilder {
                 ? route.routeWidget.className
                 : '${route.routeWidget.className}.${route.constructorName}',
             typeRefer(route.routeWidget).url,
-          ).call([], route.parameters.asMap().map((_, p) => MapEntry(p.type.argumentName, Reference(p.type.argumentName)))),
+          ).call(
+              [],
+              route.parameters
+                  .where((p) => !p.ignoreWithKeyCheck(ignoreKeysByDefault))
+                  .toList()
+                  .asMap()
+                  .map((_, p) => MapEntry(p.type.argumentName, Reference(p.type.argumentName)))),
         },
       ).code,
     );

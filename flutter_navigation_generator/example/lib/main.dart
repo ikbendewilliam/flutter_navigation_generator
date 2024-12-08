@@ -106,7 +106,7 @@ class _MyHomePageState extends State<MyHomePage> {
               child: const Text("Go to page 2 (with fade animation)"),
             ),
             ElevatedButton(
-              onPressed: () => mainNavigator.goToExampleScreenWithRequiredArgument(data: [CustomModel('John', 25), CustomModel('Jeff', 27)]),
+              onPressed: () => mainNavigator.goToExampleScreenWithRequiredArgument(data: [const CustomModel('John', 25), const CustomModel('Jeff', 27)]),
               child: const Text("Go to ExampleScreenWithRequiredArgument"),
             ),
             ElevatedButton(
@@ -543,6 +543,104 @@ class LoggedInPage extends StatelessWidget {
             ElevatedButton(
               onPressed: () => mainNavigator.goToMyHomePage(title: 'returning from logged in'),
               child: const Text("go home"),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+@flutterRoute
+class FieldValueTests extends StatelessWidget {
+  final String? nullableString;
+  final String nonNullableString;
+  final String nonNullableStringWithDefaultValue;
+  final int? nullableInt;
+  final int nonNullableInt;
+  final int nonNullableIntWithDefaultValue;
+  final bool? nullableBool;
+  final bool nonNullableBool;
+  final bool nonNullableBoolWithDefaultValue;
+  final double? nullableDouble;
+  final double nonNullableDouble;
+  final double nonNullableDoubleWithDefaultValue;
+  final List<String>? nullableList;
+  final List<String> nonNullableList;
+  final List<String> nonNullableListWithDefaultValue;
+  final Map<String, String>? nullableMap;
+  final Map<String, String> nonNullableMap;
+  final Map<String, String> nonNullableMapWithDefaultValue;
+  final CustomModel? nullableCustomModel;
+  final CustomModel nonNullableCustomModel;
+  final CustomModel nonNullableCustomModelWithDefaultValue;
+  final CustomModel nonNullableCustomModelWithDefaultValue2;
+  final notUsedField = const CustomModel('Not used', 0);
+
+  const FieldValueTests({
+    required this.nonNullableString,
+    required this.nonNullableInt,
+    required this.nonNullableBool,
+    required this.nonNullableDouble,
+    required this.nonNullableList,
+    required this.nonNullableMap,
+    required this.nonNullableCustomModel,
+    this.nullableString,
+    this.nullableInt,
+    this.nullableBool,
+    this.nullableDouble,
+    this.nullableList,
+    this.nullableMap,
+    this.nullableCustomModel,
+    this.nonNullableStringWithDefaultValue = 'default',
+    this.nonNullableIntWithDefaultValue = 42,
+    this.nonNullableBoolWithDefaultValue = true,
+    this.nonNullableDoubleWithDefaultValue = 3.14,
+    this.nonNullableListWithDefaultValue = const ['default'],
+    this.nonNullableMapWithDefaultValue = const {'default': 'default'},
+    this.nonNullableCustomModelWithDefaultValue = const CustomModel('default', 0),
+    this.nonNullableCustomModelWithDefaultValue2 = CustomModel.testDefault,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: const Text('Field value tests'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text(
+              'Field value tests:',
+            ),
+            Text(
+              'Strings: $nullableString, $nonNullableString, $nonNullableStringWithDefaultValue',
+            ),
+            Text(
+              'Ints: $nullableInt, $nonNullableInt, $nonNullableIntWithDefaultValue',
+            ),
+            Text(
+              'Bools: $nullableBool, $nonNullableBool, $nonNullableBoolWithDefaultValue',
+            ),
+            Text(
+              'Doubles: $nullableDouble, $nonNullableDouble, $nonNullableDoubleWithDefaultValue',
+            ),
+            Text(
+              'Lists: $nullableList, $nonNullableList, $nonNullableListWithDefaultValue',
+            ),
+            Text(
+              'Maps: $nullableMap, $nonNullableMap, $nonNullableMapWithDefaultValue',
+            ),
+            Text(
+              'Custom models: $nullableCustomModel, $nonNullableCustomModel, $nonNullableCustomModelWithDefaultValue',
+            ),
+            ElevatedButton(
+              onPressed: mainNavigator.goBack,
+              child: const Text("Back"),
             ),
           ],
         ),

@@ -64,8 +64,7 @@ class RouteResolver {
       importablePageType = _typeResolver.resolveType(pageType, forceNullable: true);
     }
 
-    final constructorParameters = _routeFieldResolver.resolveConstructorFieldsMethod(constructor);
-    final parameters = _routeFieldResolver.resolveFieldsMethod(classElement, constructorParameters);
+    final parameters = _routeFieldResolver.resolveFieldsMethod(constructor, classElement);
 
     return RouteConfig(
       routeWidget: _typeResolver.resolveType(classElement.thisType),

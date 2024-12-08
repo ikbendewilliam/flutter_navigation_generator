@@ -4,8 +4,8 @@ import 'package:flutter_navigation_generator/src/models/importable_type.dart';
 
 class RouteFieldConfig {
   final ImportableType type;
-  final dynamic defaultValue;
-  final bool ignore;
+  final String? defaultValue;
+  final bool? ignore;
   final bool addToJson;
   final String queryName;
 
@@ -16,6 +16,8 @@ class RouteFieldConfig {
     required this.addToJson,
     required this.queryName,
   });
+
+  bool ignoreWithKeyCheck(bool ignoreKeysByDefault) => ignore ?? ignoreKeysByDefault && type.className == 'Key' && type.argumentName == 'key';
 
   RouteFieldConfig copyWith({
     ImportableType? type,
@@ -36,7 +38,7 @@ class RouteFieldConfig {
   Map<String, dynamic> toMap() {
     return {
       'type': type.toMap(),
-      'defaultValue': defaultValue,
+      'defaultValue': defaultValue?.replaceAll(' ', '--~~'),
       'ignore': ignore,
       'addToJson': addToJson,
       'queryName': queryName,
@@ -46,7 +48,7 @@ class RouteFieldConfig {
   factory RouteFieldConfig.fromMap(Map<String, dynamic> map) {
     return RouteFieldConfig(
       type: ImportableType.fromMap(map['type']),
-      defaultValue: map['defaultValue'],
+      defaultValue: map['defaultValue']?.replaceAll('--~~', ' '),
       ignore: map['ignore'],
       addToJson: map['addToJson'] ?? true,
       queryName: map['queryName'] ?? '',

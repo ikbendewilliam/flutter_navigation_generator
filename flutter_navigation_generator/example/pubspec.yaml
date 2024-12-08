@@ -8,6 +8,7 @@ environment:
   sdk: '>=3.0.3 <4.0.0'
 
 dependencies:
+  analyzer: '>=6.4.1 <7.0.0'
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.2
