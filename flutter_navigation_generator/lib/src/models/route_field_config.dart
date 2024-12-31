@@ -17,7 +17,11 @@ class RouteFieldConfig {
     required this.queryName,
   });
 
-  bool ignoreWithKeyCheck(bool ignoreKeysByDefault) => ignore ?? ignoreKeysByDefault && type.className == 'Key' && type.argumentName == 'key';
+  bool ignoreWithKeyCheck(bool ignoreKeysByDefault) =>
+      ignore ??
+      ignoreKeysByDefault &&
+          type.className == 'Key' &&
+          type.argumentName == 'key';
 
   RouteFieldConfig copyWith({
     ImportableType? type,
@@ -57,7 +61,8 @@ class RouteFieldConfig {
 
   String toJson() => json.encode(toMap());
 
-  factory RouteFieldConfig.fromJson(String source) => RouteFieldConfig.fromMap(json.decode(source));
+  factory RouteFieldConfig.fromJson(String source) =>
+      RouteFieldConfig.fromMap(json.decode(source));
 
   @override
   String toString() {
@@ -78,6 +83,10 @@ class RouteFieldConfig {
 
   @override
   int get hashCode {
-    return type.hashCode ^ defaultValue.hashCode ^ ignore.hashCode ^ addToJson.hashCode ^ queryName.hashCode;
+    return type.hashCode ^
+        defaultValue.hashCode ^
+        ignore.hashCode ^
+        addToJson.hashCode ^
+        queryName.hashCode;
   }
 }

@@ -11,21 +11,28 @@ void main() {
         routes: {},
       ).generate();
       expect(directives.any((element) => element.url == 'dart:convert'), true);
-      expect(directives.any((element) => element.url == 'package:flutter/material.dart'), true);
+      expect(
+          directives
+              .any((element) => element.url == 'package:flutter/material.dart'),
+          true);
       expect(directives.length, 2);
     });
 
     test('imports for routeWidget', () {
       const testImport = 'package:test/test.dart';
       final config = RouteConfig(
-        routeWidget: const ImportableType(className: 'test', import: testImport),
+        routeWidget:
+            const ImportableType(className: 'test', import: testImport),
       );
       final directives = ImportBuilder(
         routes: {config},
       ).generate();
       expect(directives.any((element) => element.url == 'dart:convert'), true);
       expect(directives.any((element) => element.url == testImport), true);
-      expect(directives.any((element) => element.url == 'package:flutter/material.dart'), true);
+      expect(
+          directives
+              .any((element) => element.url == 'package:flutter/material.dart'),
+          true);
       expect(directives.length, 3);
     });
 
@@ -48,7 +55,10 @@ void main() {
       ).generate();
       expect(directives.any((element) => element.url == 'dart:convert'), true);
       expect(directives.any((element) => element.url == testImport), true);
-      expect(directives.any((element) => element.url == 'package:flutter/material.dart'), true);
+      expect(
+          directives
+              .any((element) => element.url == 'package:flutter/material.dart'),
+          true);
       expect(directives.length, 3);
     });
   });

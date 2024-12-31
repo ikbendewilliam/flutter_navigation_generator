@@ -6,14 +6,17 @@ import 'package:flutter_navigation_generator/src/resolvers/importable_type_resol
 import 'package:flutter_navigation_generator_annotations/flutter_navigation_generator_annotations.dart';
 import 'package:source_gen/source_gen.dart';
 
-const TypeChecker _flutterRouteFieldAnnotationChecker = TypeChecker.fromRuntime(FlutterRouteField);
+const TypeChecker _flutterRouteFieldAnnotationChecker =
+    TypeChecker.fromRuntime(FlutterRouteField);
 
 class RouteFieldResolver {
   final ImportableTypeResolverImpl _typeResolver;
 
-  RouteFieldResolver(List<LibraryElement> libs) : _typeResolver = ImportableTypeResolverImpl(libs);
+  RouteFieldResolver(List<LibraryElement> libs)
+      : _typeResolver = ImportableTypeResolverImpl(libs);
 
-  List<_RawRouteFieldConfig> _resolveConstructorFields(ExecutableElement constructor) {
+  List<_RawRouteFieldConfig> _resolveConstructorFields(
+      ExecutableElement constructor) {
     final constructorParameters = constructor.parameters;
 
     return constructorParameters.map((parameter) {
@@ -22,7 +25,9 @@ class RouteFieldResolver {
         isRequired: parameter.isRequired,
         name: parameter.name,
       );
-      final annotation = _flutterRouteFieldAnnotationChecker.annotationsOf(parameter, throwOnUnresolved: false).map(ConstantReader.new);
+      final annotation = _flutterRouteFieldAnnotationChecker
+          .annotationsOf(parameter, throwOnUnresolved: false)
+          .map(ConstantReader.new);
       if (annotation.isEmpty) {
         return _RawRouteFieldConfig(
           type: field,
@@ -48,8 +53,12 @@ class RouteFieldResolver {
     ExecutableElement constructor,
     ClassElement classElement,
   ) {
-    final fieldsWithAnnotation =
-        classElement.fields.asMap().map((key, value) => MapEntry(value.displayName, _flutterRouteFieldAnnotationChecker.annotationsOf(value).map(ConstantReader.new)));
+    final fieldsWithAnnotation = classElement.fields.asMap().map((key, value) =>
+        MapEntry(
+            value.displayName,
+            _flutterRouteFieldAnnotationChecker
+                .annotationsOf(value)
+                .map(ConstantReader.new)));
 
     final constructorParameters = _resolveConstructorFields(constructor);
     return constructorParameters
@@ -72,7 +81,9 @@ class RouteFieldResolver {
     return RouteFieldConfig(
       type: parameterData.type,
       defaultValue: parameterData.defaultValue,
-      queryName: parameterData.queryName ?? queryName ?? parameterData.type.argumentName,
+      queryName: parameterData.queryName ??
+          queryName ??
+          parameterData.type.argumentName,
       ignore: parameterData.ignore ?? ignore,
       addToJson: parameterData.addToJson ?? addToJson ?? true,
     );
