@@ -295,7 +295,7 @@ class RouteBuilder {
               ..type = const Reference('String')))
             ..returns = const Reference('void')
             ..body = const Reference('popUntil').call([
-              const Reference('(route) => route.settings.name == routeName'),
+              const Reference('(route) => route.settings.name?.split(\'?\').first == routeName'),
             ]).code,
         ),
         Method(

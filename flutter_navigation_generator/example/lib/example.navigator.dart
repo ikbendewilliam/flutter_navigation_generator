@@ -448,7 +448,7 @@ mixin BaseNavigator {
   void popUntil(bool Function(Route<dynamic>) predicate) =>
       navigatorKey.currentState?.popUntil(predicate);
   void goBackTo(String routeName) =>
-      popUntil((route) => route.settings.name == routeName);
+      popUntil((route) => route.settings.name?.split('?').first == routeName);
   Future<T?> showCustomDialog<T>({Widget? widget}) async => showDialog<T>(
         context: navigatorKey.currentContext!,
         builder: (_) => widget ?? const SizedBox.shrink(),

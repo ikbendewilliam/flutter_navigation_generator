@@ -1,3 +1,7 @@
+## 2.1.0 (2024-12-31)
+
+- Fixed goBackTo not working with web parameters
+
 ## 2.0.3 (2024-10-21)
 
 - Fixed a nullability issue
