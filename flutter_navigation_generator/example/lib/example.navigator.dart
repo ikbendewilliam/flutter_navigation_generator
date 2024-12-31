@@ -11,6 +11,7 @@ import 'dart:convert';
 
 import 'package:example/custom_model.dart' as _i2;
 import 'package:example/main.dart' as _i3;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' as _i1;
 import 'package:flutter/material.dart';
 import 'package:flutter_navigation_generator_animations/flutter_navigation_generator_animations.dart';
@@ -308,7 +309,9 @@ mixin BaseNavigator {
       navigatorKey.currentState?.pushNamed<dynamic>(
         Uri(
           path: RouteNames.myHomePage,
-          queryParameters: {'title': title}..removeWhere((_, v) => v == null),
+          queryParameters: kIsWeb
+              ? ({'title': title}..removeWhere((_, v) => v == null))
+              : null,
         ).toString(),
         arguments: {'key': key, 'title': title},
       );
@@ -351,12 +354,14 @@ mixin BaseNavigator {
             id: id,
             name: name,
           ),
-          queryParameters: {
-            'model': model == null
-                ? null
-                : base64Encode(utf8.encode(jsonEncode(model))),
-            'age': age?.toString()
-          }..removeWhere((_, v) => v == null),
+          queryParameters: kIsWeb
+              ? ({
+                  'model': model == null
+                      ? null
+                      : base64Encode(utf8.encode(jsonEncode(model))),
+                  'age': age?.toString()
+                }..removeWhere((_, v) => v == null))
+              : null,
         ).toString(),
         arguments: {
           'id': id,
@@ -384,15 +389,17 @@ mixin BaseNavigator {
             exampleEnum: exampleEnum.index.toString(),
             age: age?.toString(),
           ),
-          queryParameters: {
-            'exampleEnum2': exampleEnum2.index.toString(),
-            'name': name,
-            'exampleEnum3': exampleEnum3?.index.toString(),
-            'exampleEnums4': base64Encode(utf8.encode(
-                jsonEncode(exampleEnums4?.map((e) => e.index).toList()))),
-            'exampleEnumsMap5': base64Encode(utf8.encode(jsonEncode(
-                exampleEnumsMap5?.map((k, v) => MapEntry(k, v.index)))))
-          }..removeWhere((_, v) => v == null),
+          queryParameters: kIsWeb
+              ? ({
+                  'exampleEnum2': exampleEnum2.index.toString(),
+                  'name': name,
+                  'exampleEnum3': exampleEnum3?.index.toString(),
+                  'exampleEnums4': base64Encode(utf8.encode(
+                      jsonEncode(exampleEnums4?.map((e) => e.index).toList()))),
+                  'exampleEnumsMap5': base64Encode(utf8.encode(jsonEncode(
+                      exampleEnumsMap5?.map((k, v) => MapEntry(k, v.index)))))
+                }..removeWhere((_, v) => v == null))
+              : null,
         ).toString(),
         arguments: {
           'id': id,
@@ -413,9 +420,9 @@ mixin BaseNavigator {
       navigatorKey.currentState?.pushNamed<dynamic>(
         Uri(
           path: RouteNames.exampleScreenWithRequiredArgument,
-          queryParameters: {
-            'data': base64Encode(utf8.encode(jsonEncode(data)))
-          },
+          queryParameters: kIsWeb
+              ? {'data': base64Encode(utf8.encode(jsonEncode(data)))}
+              : null,
         ).toString(),
         arguments: {'data': data, 'key': key},
       );
@@ -448,7 +455,7 @@ mixin BaseNavigator {
   void popUntil(bool Function(Route<dynamic>) predicate) =>
       navigatorKey.currentState?.popUntil(predicate);
   void goBackTo(String routeName) =>
-      popUntil((route) => route.settings.name == routeName);
+      popUntil((route) => route.settings.name?.split('?').first == routeName);
   Future<T?> showCustomDialog<T>({Widget? widget}) async => showDialog<T>(
         context: navigatorKey.currentContext!,
         builder: (_) => widget ?? const SizedBox.shrink(),

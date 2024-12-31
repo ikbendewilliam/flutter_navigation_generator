@@ -2,12 +2,7 @@ import 'package:flutter_navigation_generator_annotations/flutter_navigation_gene
 
 extension NavigationTypeExtension on NavigationType? {
   bool get isAsync => switch (this) {
-        NavigationType.push ||
-        NavigationType.restorablePush ||
-        NavigationType.bottomSheet ||
-        NavigationType.dialog ||
-        null =>
-          true,
+        NavigationType.push || NavigationType.pushNotNamed || NavigationType.restorablePush || NavigationType.bottomSheet || NavigationType.dialog || null => true,
         NavigationType.popAndPush ||
         NavigationType.pushReplacement ||
         NavigationType.pushAndReplaceAll ||

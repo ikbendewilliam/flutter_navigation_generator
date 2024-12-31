@@ -4,6 +4,7 @@ import 'package:flutter_navigation_generator/src/code_builder/navigator_builder.
 import 'package:flutter_navigation_generator/src/code_builder/route_names_builder.dart';
 import 'package:flutter_navigation_generator/src/models/importable_type.dart';
 import 'package:flutter_navigation_generator/src/models/route_config.dart';
+import 'package:flutter_navigation_generator_annotations/flutter_navigation_generator_annotations.dart';
 
 class LibraryGenerator {
   final Set<RouteConfig> routes;
@@ -13,10 +14,12 @@ class LibraryGenerator {
   final ImportableType? unknownRoute;
   final List<String> removeSuffixes;
   final List<ImportableType> defaultGuards;
+  final IncludeQueryParametersType includeQueryParametersNavigatorConfig;
 
   LibraryGenerator({
     required this.routes,
     required this.className,
+    required this.includeQueryParametersNavigatorConfig,
     this.targetFile,
     this.pageType,
     this.unknownRoute,
@@ -34,6 +37,7 @@ class LibraryGenerator {
             pageType: pageType,
             targetFile: targetFile,
             defaultGuards: defaultGuards,
+            includeQueryParametersNavigatorConfig: includeQueryParametersNavigatorConfig,
           ).generate(),
         )
         ..body.addAll(
@@ -45,6 +49,7 @@ class LibraryGenerator {
               targetFile: targetFile,
               unknownRoute: unknownRoute,
               defaultGuards: defaultGuards,
+              includeQueryParametersNavigatorConfig: includeQueryParametersNavigatorConfig,
             ).generate(),
             RouteNamesBuilder(
               routes: routes,
