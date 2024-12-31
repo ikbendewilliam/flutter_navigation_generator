@@ -37,7 +37,8 @@ class NavigatorBuilder {
   }
 
   Spec generate() {
-    final hasGuards = routes.any((route) => route.guards?.isNotEmpty == true) || defaultGuards.isNotEmpty;
+    final hasGuards = routes.any((route) => route.guards?.isNotEmpty == true) ||
+        defaultGuards.isNotEmpty;
     return Mixin(
       (b) => b
         ..name = className
@@ -68,7 +69,8 @@ class NavigatorBuilder {
             routes: routes,
             pageType: pageType,
             targetFile: targetFile,
-            includeQueryParametersNavigatorConfig: includeQueryParametersNavigatorConfig,
+            includeQueryParametersNavigatorConfig:
+                includeQueryParametersNavigatorConfig,
           ).generate(),
         ),
     );
