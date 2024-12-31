@@ -5,6 +5,7 @@ export 'src/flutter_dialog_annotation.dart';
 export 'src/flutter_navigator_annotation.dart';
 export 'src/flutter_route_annotation.dart';
 export 'src/flutter_route_constructor.dart';
+export 'src/include_query_parameters_type.dart';
 export 'src/navigation_type.dart';
 
 /// Base class for all navigator guards

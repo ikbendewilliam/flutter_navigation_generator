@@ -1,3 +1,8 @@
+## 2.0.2 (2024-12-31)
+
+- Added `includeQueryParameters` to `FlutterNavigator` and `FlutterRoute` to include query parameters in the route. Default is [IncludeQueryParametersType.onlyOnWeb] (which differs from before, which was always)
+- Added [NavigationType.pushNotNamed] to push the new route without using named. Use this for routes that are not navigationable by the user on web, for example dialogs, bottom sheets, etc. that use custom transitions
+
 ## 2.0.1 (2024-07-24)
 
 - Fixed an issue where `guards` require a value, meaning defaultGuards were never used
