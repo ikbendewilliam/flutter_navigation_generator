@@ -4,6 +4,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter_navigation_generator/src/models/importable_type.dart';
 import 'package:flutter_navigation_generator/src/models/route_config.dart';
 import 'package:flutter_navigation_generator/src/resolvers/importable_type_resolver.dart';
+import 'package:flutter_navigation_generator/src/resolvers/route_field_resolver.dart';
 import 'package:flutter_navigation_generator/src/utils/case_utils.dart';
 import 'package:flutter_navigation_generator_annotations/flutter_navigation_generator_annotations.dart';
 import 'package:source_gen/source_gen.dart';
@@ -15,9 +16,11 @@ const TypeChecker _constructorAnnotationChecker =
 
 class RouteResolver {
   final ImportableTypeResolverImpl _typeResolver;
+  final RouteFieldResolver _routeFieldResolver;
 
   RouteResolver(List<LibraryElement> libs)
-      : _typeResolver = ImportableTypeResolverImpl(libs);
+      : _typeResolver = ImportableTypeResolverImpl(libs),
+        _routeFieldResolver = RouteFieldResolver(libs);
 
   List<RouteConfig> resolve(ClassElement classElement) {
     final flutterRouteAnnotations = _flutterRouteAnnotationChecker
@@ -91,27 +94,16 @@ class RouteResolver {
       importablePageType =
           _typeResolver.resolveType(pageType, forceNullable: true);
     }
-    final constructorParameters = constructor.parameters
-        .map((p) => _typeResolver.resolveType(
-              p.type,
-              isRequired: p.isRequired,
-              name: p.name,
-            ))
-        .toList();
-    final constructorDefaultValues = ((constructor.parameters
-            .asMap()
-            .map<String, dynamic>((_, p) =>
-                MapEntry<String, dynamic>(p.name, p.defaultValueCode)))
-          ..removeWhere((key, dynamic value) => value == null))
-        .cast<String, String>();
+
+    final parameters =
+        _routeFieldResolver.resolveFieldsMethod(constructor, classElement);
 
     return RouteConfig(
       routeWidget: _typeResolver.resolveType(classElement.thisType),
       returnType: importableReturnType,
       constructorName: constructor.name,
-      parameters: constructorParameters,
+      parameters: parameters,
       guards: guards,
-      defaultValues: constructorDefaultValues,
       routeName: routeName,
       methodName: methodName,
       pageType: importablePageType,

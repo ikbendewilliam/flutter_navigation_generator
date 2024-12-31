@@ -32,6 +32,9 @@ class FlutterNavigator {
   /// the routename. Does not effect custom route names
   final List<String> removeSuffixes;
 
+  /// Ignore `Key? key` argument by default, override single fields with [FlutterRouteField]
+  final bool ignoreKeysByDefault;
+
   /// Whether to use query parameters to provide the arguments
   /// Default is [IncludeQueryParametersType.onlyOnWeb]
   final IncludeQueryParametersType includeQueryParameters;
@@ -40,6 +43,7 @@ class FlutterNavigator {
     this.navigatorClassName,
     this.pageType,
     this.unknownRoute,
+    this.ignoreKeysByDefault = true,
     this.includeQueryParameters = IncludeQueryParametersType.onlyOnWeb,
     this.defaultGuards = const [],
     this.removeSuffixes = const ['Page', 'Screen', 'View', 'Widget'],

@@ -26,6 +26,8 @@ class FlutterNavigatorGenerator
         annotation.peek('navigatorClassName')?.stringValue;
     final pageTypeAsDartType = annotation.peek('pageType')?.typeValue;
     final unknownRouteAsDartType = annotation.peek('unknownRoute')?.typeValue;
+    final ignoreKeysByDefault =
+        annotation.peek('ignoreKeysByDefault')?.boolValue ?? true;
     final removeSuffixes = annotation
             .peek('removeSuffixes')
             ?.listValue
@@ -51,7 +53,6 @@ class FlutterNavigatorGenerator
             .values[
         annotation.peek('includeQueryParameters')?.peek('index')?.intValue ??
             IncludeQueryParametersType.onlyOnWeb.index];
-
     final jsonData = <Map>[];
 
     await for (final id in buildStep.findAssets(configFiles)) {
@@ -72,6 +73,7 @@ class FlutterNavigatorGenerator
       unknownRoute: unknownRoute,
       removeSuffixes: removeSuffixes,
       defaultGuards: defaultGuards,
+      ignoreKeysByDefault: ignoreKeysByDefault,
       includeQueryParametersNavigatorConfig:
           includeQueryParametersNavigatorConfig,
     );

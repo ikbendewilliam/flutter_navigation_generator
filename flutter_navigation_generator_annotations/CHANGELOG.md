@@ -1,3 +1,11 @@
+## 2.1.0 (2024-12-31)
+
+- Added `@FlutterRouteField` annotation to specify fields with the following options:
+    - `ignore`: Defaults to false (except for Key? key field, see `ignoreKeysByDefault`), excludes this field from the goTo method
+    - `addToJson`: default true, add this field to the json serialization, only useful for web, use this to add cached values, but prevent the user from overriding them
+    - `queryName`: default null, use this to specify the query parameter name, if not specified, the field name is used
+- Added `ignoreKeysByDefault` to `@FlutterNavigator` to override default behaviour of ignoring keys
+
 ## 2.0.2 (2024-12-31)
 
 - Added `includeQueryParameters` to `FlutterNavigator` and `FlutterRoute` to include query parameters in the route. Default is [IncludeQueryParametersType.onlyOnWeb] (which differs from before, which was always)

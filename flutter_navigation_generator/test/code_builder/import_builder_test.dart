@@ -1,6 +1,7 @@
 import 'package:flutter_navigation_generator/src/code_builder/import_builder.dart';
 import 'package:flutter_navigation_generator/src/models/importable_type.dart';
 import 'package:flutter_navigation_generator/src/models/route_config.dart';
+import 'package:flutter_navigation_generator/src/models/route_field_config.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -40,7 +41,13 @@ void main() {
       final config = RouteConfig(
         routeWidget: const ImportableType(className: 'test'),
         parameters: [
-          const ImportableType(className: 'test2', import: testImport)
+          RouteFieldConfig(
+            type: const ImportableType(className: 'test2', import: testImport),
+            addToJson: true,
+            defaultValue: null,
+            ignore: false,
+            queryName: 'test',
+          ),
         ],
       );
       final directives = ImportBuilder(

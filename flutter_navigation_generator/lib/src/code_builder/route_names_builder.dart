@@ -57,8 +57,8 @@ class RouteNamesBuilder {
               final parameters =
                   pageRoute.routeName.parametersFromRouteName.map(
                 (parameter) {
-                  final argument = pageRoute.parameters
-                      .firstWhereOrNull((element) => element.name == parameter);
+                  final argument = pageRoute.parameters.firstWhereOrNull(
+                      (element) => element.type.name == parameter);
                   if (argument == null) {
                     printBoxed(
                         'Parameter $parameter is not defined in the constructor of ${pageRoute.routeWidget.className}, but is in the routeName ${pageRoute.routeName}');
@@ -68,8 +68,8 @@ class RouteNamesBuilder {
                       ..name = CaseUtil(parameter).camelCase
                       ..named = true
                       ..type = Reference(
-                          'String${argument?.isRequired != true ? '?' : ''}')
-                      ..required = argument?.isRequired == true,
+                          'String${argument?.type.isRequired != true ? '?' : ''}')
+                      ..required = argument?.type.isRequired == true,
                   );
                 },
               ).whereNotNull();

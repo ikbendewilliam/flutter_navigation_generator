@@ -1,3 +1,12 @@
+## 2.1.0 (2024-12-31)
+
+- Added `@FlutterRouteField` annotation to specify fields with the following options:
+    - `ignore`: Defaults to false (except for Key? key field), excludes this field from the goTo method
+    - `addToJson`: default true, add this field to the json serialization, only useful for web, use this to add cached values, but prevent the user from overriding them
+    - `queryName`: default null, use this to specify the query parameter name, if not specified, the field name is used
+- Added `ignoreKeysByDefault` to `@FlutterNavigator` to override default behaviour of ignoring keys
+- Improved workings of defaultValues so they are used even if not included in query parameters. NOTE: Default values use the default value of the field, but cannot be from a class that is not included in the generated file
+
 ## 2.0.4 (2024-12-31)
 
 - Fixed goBackTo not working with web parameters

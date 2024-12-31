@@ -70,21 +70,29 @@ myNavigator.goToSecondPage();
 - `removeSuffixes`: A list of suffixes to remove from the route name. Default: `['Page', 'Screen', 'View', 'Widget']` (Note: the suffixes are removed from the end of the name, so `FirstPage` becomes `First`)
 - `unknownRoute`: The screen to use when a route is not found, similar to/use this for a 404 page on web
 - `defaultGuards`: Adds these guards to all routes where no guards are specified. Useful for adding e.g. login guards without having to add them to every route. Guards must extend [NavigatorGuard]. Note: Navigation can be continued by calling `navigator.continueNavigation()`. See the continueNavigation() method in the Navigator for more information
+- `includeQueryParameters`: Whether to include query parameters in the route. Default: `IncludeQueryParametersType.onlyOnWeb`, valid options are: `always`, `never`, `onlyOnWeb` Note that parameters are always provided as arguments too
+- `ignoreKeysByDefault`: By default the Key? key argument is ignored in the goTo method. Set this to true to include it.
+
 
 ### FlutterRoute
 
 - `routeName`: The name of the route. Optionally use `:name` to declare a parameter in the route for web. Defaults to use query parameters. Name must match the variable name included in the constructor (for example: `/events/:eventId/sponsors`). Default: `[className]` (converted to kebab-case, as [recommended by Google for urls](<https://developers.google.com/search/docs/crawling-indexing/url-structure#:~:text=Consider%20using%20hyphens%20to%20separate,(%20_%20)%20in%20your%20URLs.>))
 - `methodName`: The name of the method. Default: `goTo[ClassName]`
 - `returnType`: The return type of the route. Default: `void`
-- `navigationType`: The type of navigation. Default: `NavigationType.push`, valid options are: `pushAndReplaceAll`, `pushReplacement`, `popAndPush`, `push` and `dialog` to specify a dialog and `bottomSheet` to specify a bottom sheet
+- `navigationType`: The type of navigation. Default: `NavigationType.push`, valid options are: `pushAndReplaceAll`, `pushReplacement`, `popAndPush`, `push` and `dialog` to specify a dialog, `bottomSheet` to specify a bottom sheet, and `pushNotNamed` in case you want to push a route without a name (dialogs with a custom pageType for example)
 - `generateMethod`: If a method should be generated for the route. Default: `true` (More info in separate method/page section below)
 - `generatePage`: If a page should be generated for the route. Default: `true` (More info in separate method/page section below)
 - `isFullscreenDialog`: If the route should be launched fullscreen. Default: `false` (` true`` for  `dialog`and`bottomSheet` navigation types)
 - `pageType`: The type of the generated pages, must extend [PageRoute]. Default: `MaterialPageRoute`
 - `guards`: A list of guards to use for this route. Guards are used to prevent navigation, they can be used to check if the user is logged in. Guards must extend [NavigatorGuard]. Note: Navigation can be continued by calling `navigator.continueNavigation()`. See the continueNavigation() method in the Navigator for more information
+- `includeQueryParameters`: Whether to include query parameters in the route. Default: `IncludeQueryParametersType.onlyOnWeb`, valid options are: `always`, `never`, `onlyOnWeb` Note that parameters are always provided as arguments too
 
 - `@flutterRouteConstructor`: The constructor to use for the route. Defaults to unnamed constructor. This can be any constructor or static method
 - `@FlutterRouteConstructor(routeName)`: routeName specifies for which FlutterRoute this constructor is used
+- `@FlutterRouteField`: Specify fields with the following options:
+  - `ignore`: Defaults to false (except for Key? key field), excludes this field from the goTo method
+  - `addToJson`: default true, add this field to the json serialization, only useful for web, use this to add cached values, but prevent the user from overriding them
+  - `queryName`: default null, use this to specify the query parameter name, if not specified, the field name is used
 
 ```dart
 @FlutterRoute(

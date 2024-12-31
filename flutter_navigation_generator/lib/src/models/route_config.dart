@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter_navigation_generator/src/models/importable_type.dart';
+import 'package:flutter_navigation_generator/src/models/route_field_config.dart';
 import 'package:flutter_navigation_generator_annotations/flutter_navigation_generator_annotations.dart';
 
 class RouteConfig {
@@ -16,7 +17,7 @@ class RouteConfig {
   final ImportableType? returnType;
   final ImportableType? pageType;
   final NavigationType navigationType;
-  final List<ImportableType> parameters;
+  final List<RouteFieldConfig> parameters;
   final List<ImportableType>? guards;
   final Map<String, dynamic> defaultValues;
   final IncludeQueryParametersType? includeQueryParameters;
@@ -83,9 +84,9 @@ class RouteConfig {
           ? ImportableType.fromMap(map['pageType'])
           : null,
       navigationType: NavigationType.values[map['navigationType']],
-      parameters: List<ImportableType>.from(map['parameters']?.map(
-              (dynamic x) => ImportableType.fromMap(x as Map<String, dynamic>))
-          as Iterable),
+      parameters: List<RouteFieldConfig>.from(map['parameters']?.map(
+          (dynamic x) =>
+              RouteFieldConfig.fromMap(x as Map<String, dynamic>)) as Iterable),
       guards: map['guards'] == null
           ? null
           : List<ImportableType>.from(map['guards'].map((dynamic x) =>

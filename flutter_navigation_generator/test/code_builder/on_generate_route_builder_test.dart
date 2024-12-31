@@ -6,6 +6,7 @@ import 'package:code_builder/code_builder.dart';
 import 'package:flutter_navigation_generator/src/code_builder/on_generate_route_builder.dart';
 import 'package:flutter_navigation_generator/src/models/importable_type.dart';
 import 'package:flutter_navigation_generator/src/models/route_config.dart';
+import 'package:flutter_navigation_generator/src/models/route_field_config.dart';
 import 'package:flutter_navigation_generator_annotations/flutter_navigation_generator_annotations.dart';
 import 'package:test/test.dart';
 
@@ -46,7 +47,7 @@ void main() {
       final bodyStatements =
           (content.body as Block).statements.map((f) => f.toString()).toList();
       final expectedStatements = [
-        "final arguments = settings.arguments is Map ? (settings.arguments as Map).cast<String, dynamic>() : <String, dynamic>{};\n    final settingsUri = Uri.parse(settings.name ?? '');\n    settingsUri.queryParameters.forEach((key, value) {\n      arguments[key] ??= value;\n    });",
+        "final arguments = settings.arguments is Map ? (settings.arguments as Map).cast<String, dynamic>() : <String, dynamic>{};\n    final settingsUri = Uri.parse(settings.name ?? '');\n    final queryParameters = Map.from(settingsUri.queryParameters);",
         "switch (settingsUri.path) {case RouteNames.test: return MaterialPageRoute<void>(builder: (_) => TestPage(), settings: settings, fullscreenDialog: false,);}",
         "return null;",
       ];
@@ -82,7 +83,7 @@ void main() {
       final bodyStatements =
           (content.body as Block).statements.map((f) => f.toString()).toList();
       final expectedStatements = [
-        "final arguments = settings.arguments is Map ? (settings.arguments as Map).cast<String, dynamic>() : <String, dynamic>{};\n    final settingsUri = Uri.parse(settings.name ?? '');\n    settingsUri.queryParameters.forEach((key, value) {\n      arguments[key] ??= value;\n    });",
+        "final arguments = settings.arguments is Map ? (settings.arguments as Map).cast<String, dynamic>() : <String, dynamic>{};\n    final settingsUri = Uri.parse(settings.name ?? '');\n    final queryParameters = Map.from(settingsUri.queryParameters);",
         "switch (settingsUri.path) {case RouteNames.testWithoutReturn: return MaterialPageRoute<void>(builder: (_) => TestPageWithoutReturn(), settings: settings, fullscreenDialog: false,);case RouteNames.testWithReturn: return MaterialPageRoute<ReturnType>(builder: (_) => TestPageWithReturn(), settings: settings, fullscreenDialog: false,);}",
         "return null;",
       ];
@@ -121,7 +122,7 @@ void main() {
       final bodyStatements =
           (content.body as Block).statements.map((f) => f.toString()).toList();
       final expectedStatements = [
-        "final arguments = settings.arguments is Map ? (settings.arguments as Map).cast<String, dynamic>() : <String, dynamic>{};\n    final settingsUri = Uri.parse(settings.name ?? '');\n    settingsUri.queryParameters.forEach((key, value) {\n      arguments[key] ??= value;\n    });",
+        "final arguments = settings.arguments is Map ? (settings.arguments as Map).cast<String, dynamic>() : <String, dynamic>{};\n    final settingsUri = Uri.parse(settings.name ?? '');\n    final queryParameters = Map.from(settingsUri.queryParameters);",
         "switch (settingsUri.path) {case RouteNames.testWithoutReturn: return MaterialPageRoute<void>(builder: (_) => TestPageWithoutReturn(), settings: settings, fullscreenDialog: false,);case RouteNames.testWithReturn: return MaterialPageRoute<ReturnType>(builder: (_) => TestPageWithReturn(), settings: settings, fullscreenDialog: false,);}",
         "return MaterialPageRoute<void>(builder: (_) => Route404(), settings: settings, fullscreenDialog: false,);",
       ];
@@ -148,7 +149,7 @@ void main() {
       final bodyStatements =
           (content.body as Block).statements.map((f) => f.toString()).toList();
       final expectedStatements = [
-        "final arguments = settings.arguments is Map ? (settings.arguments as Map).cast<String, dynamic>() : <String, dynamic>{};\n    final settingsUri = Uri.parse(settings.name ?? '');\n    settingsUri.queryParameters.forEach((key, value) {\n      arguments[key] ??= value;\n    });",
+        "final arguments = settings.arguments is Map ? (settings.arguments as Map).cast<String, dynamic>() : <String, dynamic>{};\n    final settingsUri = Uri.parse(settings.name ?? '');\n    final queryParameters = Map.from(settingsUri.queryParameters);",
         "switch (settingsUri.path) {case RouteNames.r404: return MaterialPageRoute<void>(builder: (_) => Route404(), settings: settings, fullscreenDialog: false,);}",
         "return null;",
       ];
@@ -176,7 +177,7 @@ void main() {
       final bodyStatements =
           (content.body as Block).statements.map((f) => f.toString()).toList();
       final expectedStatements = [
-        "final arguments = settings.arguments is Map ? (settings.arguments as Map).cast<String, dynamic>() : <String, dynamic>{};\n    final settingsUri = Uri.parse(settings.name ?? '');\n    settingsUri.queryParameters.forEach((key, value) {\n      arguments[key] ??= value;\n    });",
+        "final arguments = settings.arguments is Map ? (settings.arguments as Map).cast<String, dynamic>() : <String, dynamic>{};\n    final settingsUri = Uri.parse(settings.name ?? '');\n    final queryParameters = Map.from(settingsUri.queryParameters);",
         "switch (settingsUri.path) {case RouteNames.test: return MaterialPageRoute<void>(builder: (_) => TestPage.constructorName(), settings: settings, fullscreenDialog: false,);}",
         "return null;",
       ];
@@ -203,7 +204,7 @@ void main() {
       final bodyStatements =
           (content.body as Block).statements.map((f) => f.toString()).toList();
       final expectedStatements = [
-        "final arguments = settings.arguments is Map ? (settings.arguments as Map).cast<String, dynamic>() : <String, dynamic>{};\n    final settingsUri = Uri.parse(settings.name ?? '');\n    settingsUri.queryParameters.forEach((key, value) {\n      arguments[key] ??= value;\n    });",
+        "final arguments = settings.arguments is Map ? (settings.arguments as Map).cast<String, dynamic>() : <String, dynamic>{};\n    final settingsUri = Uri.parse(settings.name ?? '');\n    final queryParameters = Map.from(settingsUri.queryParameters);",
         "switch (settingsUri.path) {case RouteNames.test: return MaterialPageRoute<void>(builder: (_) => TestPage(), settings: settings, fullscreenDialog: true,);}",
         "return null;",
       ];
@@ -233,7 +234,7 @@ void main() {
       final bodyStatements =
           (content.body as Block).statements.map((f) => f.toString()).toList();
       final expectedStatements = [
-        "final arguments = settings.arguments is Map ? (settings.arguments as Map).cast<String, dynamic>() : <String, dynamic>{};\n    final settingsUri = Uri.parse(settings.name ?? '');\n    settingsUri.queryParameters.forEach((key, value) {\n      arguments[key] ??= value;\n    });",
+        "final arguments = settings.arguments is Map ? (settings.arguments as Map).cast<String, dynamic>() : <String, dynamic>{};\n    final settingsUri = Uri.parse(settings.name ?? '');\n    final queryParameters = Map.from(settingsUri.queryParameters);",
         "switch (settingsUri.path) {case RouteNames.test: return CustomPageType<void>(builder: (_) => TestPage(), settings: settings, fullscreenDialog: false,);}",
         "return null;",
       ];
@@ -263,7 +264,7 @@ void main() {
       final bodyStatements =
           (content.body as Block).statements.map((f) => f.toString()).toList();
       final expectedStatements = [
-        "final arguments = settings.arguments is Map ? (settings.arguments as Map).cast<String, dynamic>() : <String, dynamic>{};\n    final settingsUri = Uri.parse(settings.name ?? '');\n    settingsUri.queryParameters.forEach((key, value) {\n      arguments[key] ??= value;\n    });",
+        "final arguments = settings.arguments is Map ? (settings.arguments as Map).cast<String, dynamic>() : <String, dynamic>{};\n    final settingsUri = Uri.parse(settings.name ?? '');\n    final queryParameters = Map.from(settingsUri.queryParameters);",
         "switch (settingsUri.path) {case RouteNames.test: return CustomPageType<void>(builder: (_) => TestPage(), settings: settings, fullscreenDialog: false,);}",
         "return null;",
       ];
@@ -283,9 +284,21 @@ void main() {
               className: 'TestPage',
             ),
             parameters: [
-              const ImportableType(
-                  className: 'bool', name: 'testBool', isNullable: true),
-              const ImportableType(className: 'int', name: 'testInt'),
+              RouteFieldConfig(
+                type: const ImportableType(
+                    className: 'bool', name: 'testBool', isNullable: true),
+                addToJson: true,
+                defaultValue: null,
+                ignore: false,
+                queryName: 'testBool',
+              ),
+              RouteFieldConfig(
+                type: const ImportableType(className: 'int', name: 'testInt'),
+                addToJson: true,
+                defaultValue: null,
+                ignore: false,
+                queryName: 'testInt',
+              ),
             ],
           ),
         },
@@ -295,8 +308,8 @@ void main() {
       final bodyStatements =
           (content.body as Block).statements.map((f) => f.toString()).toList();
       final expectedStatements = [
-        "final arguments = settings.arguments is Map ? (settings.arguments as Map).cast<String, dynamic>() : <String, dynamic>{};\n    final settingsUri = Uri.parse(settings.name ?? '');\n    settingsUri.queryParameters.forEach((key, value) {\n      arguments[key] ??= value;\n    });",
-        "switch (settingsUri.path) {case RouteNames.test: return MaterialPageRoute<void>(builder: (_) => TestPage(testBool: arguments['testBool'] is String ? arguments['testBool'] == 'true' : arguments['testBool'] as bool?,testInt: arguments['testInt'] is String ? int.parse(arguments['testInt']) : arguments['testInt'] as int,), settings: settings, fullscreenDialog: false,);}",
+        "final arguments = settings.arguments is Map ? (settings.arguments as Map).cast<String, dynamic>() : <String, dynamic>{};\n    final settingsUri = Uri.parse(settings.name ?? '');\n    final queryParameters = Map.from(settingsUri.queryParameters);",
+        "switch (settingsUri.path) {case RouteNames.test: return MaterialPageRoute<void>(builder: (_) => TestPage(testBool: queryParameters['testBool'] != null ? queryParameters['testBool']! == 'true' : arguments['testBool'] as bool?,testInt: queryParameters['testInt'] != null ? int.parse(queryParameters['testInt']!) : arguments['testInt'] as int,), settings: settings, fullscreenDialog: false,);}",
         "return null;",
       ];
       if (printActuals) print(jsonEncode(bodyStatements));
@@ -315,9 +328,21 @@ void main() {
               className: 'TestPage',
             ),
             parameters: [
-              const ImportableType(
-                  className: 'bool', name: 'testBool', isNullable: true),
-              const ImportableType(className: 'int', name: 'testInt'),
+              RouteFieldConfig(
+                type: const ImportableType(
+                    className: 'bool', name: 'testBool', isNullable: true),
+                addToJson: true,
+                defaultValue: null,
+                ignore: false,
+                queryName: 'testBool',
+              ),
+              RouteFieldConfig(
+                type: const ImportableType(className: 'int', name: 'testInt'),
+                addToJson: true,
+                defaultValue: null,
+                ignore: false,
+                queryName: 'testInt',
+              ),
             ],
           ),
         },
@@ -327,10 +352,10 @@ void main() {
       final bodyStatements =
           (content.body as Block).statements.map((f) => f.toString()).toList();
       final expectedStatements = [
-        "final arguments = settings.arguments is Map ? (settings.arguments as Map).cast<String, dynamic>() : <String, dynamic>{};\n    final settingsUri = Uri.parse(settings.name ?? '');\n    settingsUri.queryParameters.forEach((key, value) {\n      arguments[key] ??= value;\n    });",
+        "final arguments = settings.arguments is Map ? (settings.arguments as Map).cast<String, dynamic>() : <String, dynamic>{};\n    final settingsUri = Uri.parse(settings.name ?? '');\n    final queryParameters = Map.from(settingsUri.queryParameters);",
         "switch (settingsUri.path) {}",
         "final pathSegments = settingsUri.pathSegments;",
-        "if (pathSegments.length == 2) {if (pathSegments[0] == 'test') {arguments['testBool'] = pathSegments[1];return MaterialPageRoute<void>(builder: (_) => TestPage(testBool: arguments['testBool'] is String ? arguments['testBool'] == 'true' : arguments['testBool'] as bool?,testInt: arguments['testInt'] is String ? int.parse(arguments['testInt']) : arguments['testInt'] as int,), settings: settings, fullscreenDialog: false,);}}",
+        "if (pathSegments.length == 2) {if (pathSegments[0] == 'test') {queryParameters['testBool'] = pathSegments[1];return MaterialPageRoute<void>(builder: (_) => TestPage(testBool: queryParameters['testBool'] != null ? queryParameters['testBool']! == 'true' : arguments['testBool'] as bool?,testInt: queryParameters['testInt'] != null ? int.parse(queryParameters['testInt']!) : arguments['testInt'] as int,), settings: settings, fullscreenDialog: false,);}}",
         "return null;",
       ];
       if (printActuals) print(jsonEncode(bodyStatements));
@@ -350,9 +375,21 @@ void main() {
               className: 'TestPage',
             ),
             parameters: [
-              const ImportableType(
-                  className: 'bool', name: 'testBool', isNullable: true),
-              const ImportableType(className: 'int', name: 'testInt'),
+              RouteFieldConfig(
+                type: const ImportableType(
+                    className: 'bool', name: 'testBool', isNullable: true),
+                addToJson: true,
+                defaultValue: null,
+                ignore: false,
+                queryName: 'testBool',
+              ),
+              RouteFieldConfig(
+                type: const ImportableType(className: 'int', name: 'testInt'),
+                addToJson: true,
+                defaultValue: null,
+                ignore: false,
+                queryName: 'testInt',
+              ),
             ],
           ),
         },
@@ -362,8 +399,8 @@ void main() {
       final bodyStatements =
           (content.body as Block).statements.map((f) => f.toString()).toList();
       final expectedStatements = [
-        "final arguments = settings.arguments is Map ? (settings.arguments as Map).cast<String, dynamic>() : <String, dynamic>{};\n    final settingsUri = Uri.parse(settings.name ?? '');\n    settingsUri.queryParameters.forEach((key, value) {\n      arguments[key] ??= value;\n    });",
-        "switch (settingsUri.path) {case RouteNames.testPage: return MaterialPageRoute<void>(builder: (_) => TestPage(testBool: arguments['testBool'] is String ? arguments['testBool'] == 'true' : arguments['testBool'] as bool?,testInt: arguments['testInt'] is String ? int.parse(arguments['testInt']) : arguments['testInt'] as int,), settings: settings, fullscreenDialog: false,);}",
+        "final arguments = settings.arguments is Map ? (settings.arguments as Map).cast<String, dynamic>() : <String, dynamic>{};\n    final settingsUri = Uri.parse(settings.name ?? '');\n    final queryParameters = Map.from(settingsUri.queryParameters);",
+        "switch (settingsUri.path) {case RouteNames.testPage: return MaterialPageRoute<void>(builder: (_) => TestPage(testBool: queryParameters['testBool'] != null ? queryParameters['testBool']! == 'true' : arguments['testBool'] as bool?,testInt: queryParameters['testInt'] != null ? int.parse(queryParameters['testInt']!) : arguments['testInt'] as int,), settings: settings, fullscreenDialog: false,);}",
         "return null;",
       ];
       if (printActuals) print(jsonEncode(bodyStatements));
@@ -382,9 +419,21 @@ void main() {
               className: 'TestPage',
             ),
             parameters: [
-              const ImportableType(
-                  className: 'bool', name: 'testBool', isNullable: true),
-              const ImportableType(className: 'int', name: 'testInt'),
+              RouteFieldConfig(
+                type: const ImportableType(
+                    className: 'bool', name: 'testBool', isNullable: true),
+                addToJson: true,
+                defaultValue: null,
+                ignore: false,
+                queryName: 'testBool',
+              ),
+              RouteFieldConfig(
+                type: const ImportableType(className: 'int', name: 'testInt'),
+                addToJson: true,
+                defaultValue: null,
+                ignore: false,
+                queryName: 'testInt',
+              ),
             ],
           ),
         },
@@ -394,10 +443,10 @@ void main() {
       final bodyStatements =
           (content.body as Block).statements.map((f) => f.toString()).toList();
       final expectedStatements = [
-        "final arguments = settings.arguments is Map ? (settings.arguments as Map).cast<String, dynamic>() : <String, dynamic>{};\n    final settingsUri = Uri.parse(settings.name ?? '');\n    settingsUri.queryParameters.forEach((key, value) {\n      arguments[key] ??= value;\n    });",
+        "final arguments = settings.arguments is Map ? (settings.arguments as Map).cast<String, dynamic>() : <String, dynamic>{};\n    final settingsUri = Uri.parse(settings.name ?? '');\n    final queryParameters = Map.from(settingsUri.queryParameters);",
         "switch (settingsUri.path) {}",
         "final pathSegments = settingsUri.pathSegments;",
-        "if (pathSegments.length == 3) {if (pathSegments[0] == 'test' && pathSegments[2] == '') {arguments['testBool'] = pathSegments[1];return MaterialPageRoute<void>(builder: (_) => TestPage(testBool: arguments['testBool'] is String ? arguments['testBool'] == 'true' : arguments['testBool'] as bool?,testInt: arguments['testInt'] is String ? int.parse(arguments['testInt']) : arguments['testInt'] as int,), settings: settings, fullscreenDialog: false,);}}",
+        "if (pathSegments.length == 3) {if (pathSegments[0] == 'test' && pathSegments[2] == '') {queryParameters['testBool'] = pathSegments[1];return MaterialPageRoute<void>(builder: (_) => TestPage(testBool: queryParameters['testBool'] != null ? queryParameters['testBool']! == 'true' : arguments['testBool'] as bool?,testInt: queryParameters['testInt'] != null ? int.parse(queryParameters['testInt']!) : arguments['testInt'] as int,), settings: settings, fullscreenDialog: false,);}}",
         "return null;",
       ];
       if (printActuals) print(jsonEncode(bodyStatements));
@@ -416,14 +465,22 @@ void main() {
               className: 'TestPage',
             ),
             parameters: [
-              const ImportableType(
-                  className: 'bool', name: 'testBool', isNullable: true),
-              const ImportableType(className: 'int', name: 'testInt'),
+              RouteFieldConfig(
+                type: const ImportableType(
+                    className: 'bool', name: 'testBool', isNullable: true),
+                addToJson: true,
+                defaultValue: 'true',
+                ignore: false,
+                queryName: 'testBool',
+              ),
+              RouteFieldConfig(
+                type: const ImportableType(className: 'int', name: 'testInt'),
+                addToJson: true,
+                defaultValue: '1',
+                ignore: false,
+                queryName: 'testInt',
+              ),
             ],
-            defaultValues: {
-              'testBool': 'true',
-              'testInt': '1',
-            },
           ),
         },
       ).generate();
@@ -432,8 +489,8 @@ void main() {
       final bodyStatements =
           (content.body as Block).statements.map((f) => f.toString()).toList();
       final expectedStatements = [
-        "final arguments = settings.arguments is Map ? (settings.arguments as Map).cast<String, dynamic>() : <String, dynamic>{};\n    final settingsUri = Uri.parse(settings.name ?? '');\n    settingsUri.queryParameters.forEach((key, value) {\n      arguments[key] ??= value;\n    });",
-        "switch (settingsUri.path) {case RouteNames.test: return MaterialPageRoute<void>(builder: (_) => TestPage(testBool: arguments['testBool'] is String ? arguments['testBool'] == 'true' : arguments['testBool'] as bool?,testInt: arguments['testInt'] is String ? int.parse(arguments['testInt']) : arguments['testInt'] as int,), settings: settings, fullscreenDialog: false,);}",
+        "final arguments = settings.arguments is Map ? (settings.arguments as Map).cast<String, dynamic>() : <String, dynamic>{};\n    final settingsUri = Uri.parse(settings.name ?? '');\n    final queryParameters = Map.from(settingsUri.queryParameters);",
+        "switch (settingsUri.path) {case RouteNames.test: return MaterialPageRoute<void>(builder: (_) => TestPage(testBool: queryParameters['testBool'] != null ? queryParameters['testBool']! == 'true' : arguments['testBool'] as bool? ?? true,testInt: queryParameters['testInt'] != null ? int.parse(queryParameters['testInt']!) : arguments['testInt'] as int? ?? 1,), settings: settings, fullscreenDialog: false,);}",
         "return null;",
       ];
       if (printActuals) print(jsonEncode(bodyStatements));
@@ -525,7 +582,7 @@ void main() {
       final bodyStatements =
           (content.body as Block).statements.map((f) => f.toString()).toList();
       final expectedStatements = [
-        "final arguments = settings.arguments is Map ? (settings.arguments as Map).cast<String, dynamic>() : <String, dynamic>{};\n    final settingsUri = Uri.parse(settings.name ?? '');\n    settingsUri.queryParameters.forEach((key, value) {\n      arguments[key] ??= value;\n    });",
+        "final arguments = settings.arguments is Map ? (settings.arguments as Map).cast<String, dynamic>() : <String, dynamic>{};\n    final settingsUri = Uri.parse(settings.name ?? '');\n    final queryParameters = Map.from(settingsUri.queryParameters);",
         "switch (settingsUri.path) {case RouteNames.test: final testGuard = guards.whereType<TestGuard>().first;\nif (!testGuard.value) {\n  guardedRouteSettings = settings;\n  return onGenerateRoute(RouteSettings(\n    arguments: settings.arguments,\n    name: testGuard.alternativeRoute,\n  ));\n}\nreturn MaterialPageRoute<void>(builder: (_) => TestPage(), settings: settings, fullscreenDialog: false,);case RouteNames.test2: return MaterialPageRoute<void>(builder: (_) => TestPage2(), settings: settings, fullscreenDialog: false,);}",
         "return null;",
       ];
@@ -562,7 +619,7 @@ void main() {
       final bodyStatements =
           (content.body as Block).statements.map((f) => f.toString()).toList();
       final expectedStatements = [
-        "final arguments = settings.arguments is Map ? (settings.arguments as Map).cast<String, dynamic>() : <String, dynamic>{};\n    final settingsUri = Uri.parse(settings.name ?? '');\n    settingsUri.queryParameters.forEach((key, value) {\n      arguments[key] ??= value;\n    });",
+        "final arguments = settings.arguments is Map ? (settings.arguments as Map).cast<String, dynamic>() : <String, dynamic>{};\n    final settingsUri = Uri.parse(settings.name ?? '');\n    final queryParameters = Map.from(settingsUri.queryParameters);",
         "switch (settingsUri.path) {case RouteNames.test: final testGuard = guards.whereType<TestGuard>().first;\nif (!testGuard.value) {\n  guardedRouteSettings = settings;\n  return onGenerateRoute(RouteSettings(\n    arguments: settings.arguments,\n    name: testGuard.alternativeRoute,\n  ));\n}\nreturn MaterialPageRoute<void>(builder: (_) => TestPage(), settings: settings, fullscreenDialog: false,);case RouteNames.test2: return MaterialPageRoute<void>(builder: (_) => TestPage2(), settings: settings, fullscreenDialog: false,);}",
         "return null;",
       ];

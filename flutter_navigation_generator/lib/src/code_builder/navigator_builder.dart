@@ -14,6 +14,7 @@ class NavigatorBuilder {
   final ImportableType? pageType;
   final ImportableType? unknownRoute;
   final List<ImportableType> defaultGuards;
+  final bool ignoreKeysByDefault;
   final IncludeQueryParametersType includeQueryParametersNavigatorConfig;
 
   NavigatorBuilder({
@@ -24,6 +25,7 @@ class NavigatorBuilder {
     required this.pageType,
     required this.defaultGuards,
     required this.includeQueryParametersNavigatorConfig,
+    this.ignoreKeysByDefault = true,
   });
 
   Field buildNavigatorKey() {
@@ -50,6 +52,7 @@ class NavigatorBuilder {
             targetFile: targetFile,
             unknownRoute: unknownRoute,
             defaultGuards: defaultGuards,
+            ignoreKeysByDefault: ignoreKeysByDefault,
           ).generate(),
         )
         ..methods.addAll(
@@ -69,6 +72,7 @@ class NavigatorBuilder {
             routes: routes,
             pageType: pageType,
             targetFile: targetFile,
+            ignoreKeysByDefault: ignoreKeysByDefault,
             includeQueryParametersNavigatorConfig:
                 includeQueryParametersNavigatorConfig,
           ).generate(),
