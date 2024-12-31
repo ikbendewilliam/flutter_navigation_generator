@@ -1,4 +1,4 @@
-## 2.1.0 (2024-12-06)
+## 2.1.0 (2024-12-31)
 
 - Added `@FlutterRouteField` annotation to specify fields with the following options:
     - `ignore`: Defaults to false (except for Key? key field), excludes this field from the goTo method
