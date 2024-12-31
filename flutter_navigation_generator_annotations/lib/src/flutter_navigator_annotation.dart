@@ -1,3 +1,5 @@
+import 'package:flutter_navigation_generator_annotations/src/include_query_parameters_type.dart';
+
 /// Marks a class as a navigator and create
 /// a base navigator mixin for it
 class FlutterNavigator {
@@ -33,11 +35,16 @@ class FlutterNavigator {
   /// Ignore `Key? key` argument by default, override single fields with [FlutterRouteField]
   final bool ignoreKeysByDefault;
 
+  /// Whether to use query parameters to provide the arguments
+  /// Default is [IncludeQueryParametersType.onlyOnWeb]
+  final IncludeQueryParametersType includeQueryParameters;
+
   const FlutterNavigator({
     this.navigatorClassName,
     this.pageType,
     this.unknownRoute,
     this.ignoreKeysByDefault = true,
+    this.includeQueryParameters = IncludeQueryParametersType.onlyOnWeb,
     this.defaultGuards = const [],
     this.removeSuffixes = const ['Page', 'Screen', 'View', 'Widget'],
   });

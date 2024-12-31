@@ -53,6 +53,8 @@ class RouteResolver {
     final pageType = flutterRoute.peek('pageType')?.typeValue;
     final guards = flutterRoute.peek('guards')?.listValue.map((e) => e.toTypeValue()).whereNotNull().map(_typeResolver.resolveType).toList();
     final navigationType = NavigationType.values.firstWhere((element) => element.index == flutterRoute.peek('navigationType')?.peek('index')?.intValue);
+    final includeQueryParametersIndex = flutterRoute.peek('includeQueryParameters')?.peek('index')?.intValue;
+    final includeQueryParameters = includeQueryParametersIndex == null ? null : IncludeQueryParametersType.values[includeQueryParametersIndex];
     final constructor = _resolveConstructorMethod(classElement, routeName);
 
     ImportableType? importableReturnType;
@@ -81,6 +83,7 @@ class RouteResolver {
       isFullscreenDialog: flutterRoute.peek('isFullscreenDialog')?.boolValue ?? false,
       generateMethod: flutterRoute.peek('generateMethod')?.boolValue ?? true,
       generatePageRoute: (flutterRoute.peek('generatePageRoute')?.boolValue ?? true) && navigationType != NavigationType.dialog && navigationType != NavigationType.bottomSheet,
+      includeQueryParameters: includeQueryParameters,
     );
   }
 }

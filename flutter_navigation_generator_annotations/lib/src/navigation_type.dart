@@ -52,6 +52,12 @@ enum NavigationType {
   /// Push the new route
   push('pushNamed'),
 
+  /// Push the new route without using named. Use this
+  /// for routes that are not navigationable by the user
+  /// on web, for example dialogs, bottom sheets, etc. that
+  /// use custom transitions
+  pushNotNamed('push'),
+
   /// Create a dialog
   dialog,
 

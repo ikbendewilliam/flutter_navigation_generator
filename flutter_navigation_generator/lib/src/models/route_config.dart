@@ -19,6 +19,8 @@ class RouteConfig {
   final NavigationType navigationType;
   final List<RouteFieldConfig> parameters;
   final List<ImportableType>? guards;
+  final Map<String, dynamic> defaultValues;
+  final IncludeQueryParametersType? includeQueryParameters;
 
   bool get routeNameContainsParameters => routeName.contains(':');
 
@@ -37,6 +39,8 @@ class RouteConfig {
     this.navigationType = NavigationType.push,
     this.parameters = const [],
     this.guards,
+    this.defaultValues = const {},
+    this.includeQueryParameters,
   });
 
   Map<String, dynamic> toMap() {
@@ -55,6 +59,8 @@ class RouteConfig {
       'navigationType': navigationType.index,
       'parameters': parameters.map((x) => x.toMap()).toList(),
       'guards': guards?.map((x) => x.toMap()).toList(),
+      'defaultValues': defaultValues,
+      'includeQueryParameters': includeQueryParameters?.index,
     };
   }
 
@@ -74,6 +80,8 @@ class RouteConfig {
       navigationType: NavigationType.values[map['navigationType']],
       parameters: List<RouteFieldConfig>.from(map['parameters']?.map((dynamic x) => RouteFieldConfig.fromMap(x as Map<String, dynamic>)) as Iterable),
       guards: map['guards'] == null ? null : List<ImportableType>.from(map['guards'].map((dynamic x) => ImportableType.fromMap(x as Map<String, dynamic>)) as Iterable),
+      defaultValues: map['defaultValues'] as Map<String, dynamic>? ?? <String, dynamic>{},
+      includeQueryParameters: map['includeQueryParameters'] == null ? null : IncludeQueryParametersType.values[map['includeQueryParameters']],
     );
   }
 

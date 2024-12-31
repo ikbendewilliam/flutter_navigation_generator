@@ -27,6 +27,8 @@ class FlutterNavigatorGenerator extends GeneratorForAnnotation<FlutterNavigator>
     final defaultGuards = annotation.peek('defaultGuards')?.listValue.map((e) => e.toTypeValue()).whereNotNull().map(typeResolver.resolveType).toList() ?? [];
     final pageType = pageTypeAsDartType == null ? null : typeResolver.resolveType(pageTypeAsDartType);
     final unknownRoute = unknownRouteAsDartType == null ? null : typeResolver.resolveType(unknownRouteAsDartType);
+    final includeQueryParametersNavigatorConfig =
+        IncludeQueryParametersType.values[annotation.peek('includeQueryParameters')?.peek('index')?.intValue ?? IncludeQueryParametersType.onlyOnWeb.index];
     final jsonData = <Map>[];
 
     await for (final id in buildStep.findAssets(configFiles)) {
@@ -48,6 +50,7 @@ class FlutterNavigatorGenerator extends GeneratorForAnnotation<FlutterNavigator>
       removeSuffixes: removeSuffixes,
       defaultGuards: defaultGuards,
       ignoreKeysByDefault: ignoreKeysByDefault,
+      includeQueryParametersNavigatorConfig: includeQueryParametersNavigatorConfig,
     );
 
     final generatedLib = generator.generate();

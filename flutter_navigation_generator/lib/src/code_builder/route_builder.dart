@@ -11,6 +11,7 @@ import 'package:flutter_navigation_generator_annotations/flutter_navigation_gene
 
 class RouteBuilder {
   final Set<RouteConfig> routes;
+  final IncludeQueryParametersType includeQueryParametersNavigatorConfig;
   final ImportableType? pageType;
   final Uri? targetFile;
   final bool ignoreKeysByDefault;
@@ -19,6 +20,7 @@ class RouteBuilder {
     required this.routes,
     required this.pageType,
     required this.targetFile,
+    required this.includeQueryParametersNavigatorConfig,
     this.ignoreKeysByDefault = true,
   });
 
@@ -85,9 +87,49 @@ class RouteBuilder {
     );
   }
 
+  String _generateQueryParameters(RouteConfig route, List<String> parametersInRouteName) {
+    final includeQueryParameters = route.includeQueryParameters ?? includeQueryParametersNavigatorConfig;
+    if (includeQueryParameters == IncludeQueryParametersType.never) return '';
+
+    final filteredParameters =
+        route.parameters.where((element) => !element.ignoreWithKeyCheck(ignoreKeysByDefault) && element.addToJson && !parametersInRouteName.contains(element.type.argumentName));
+    final queryParametersMap = filteredParameters.toList().asMap().map((_, parameterConfig) {
+      final parameter = parameterConfig.type;
+      final stringValue = ImportableTypeStringConverter.convertToString(parameter);
+      return MapEntry(
+        "'${parameterConfig.queryName}'",
+        (parameter.isNullable && parameter.isCustomClass) ? '${parameter.name} == null ? null : $stringValue' : stringValue,
+      );
+    });
+
+    if (queryParametersMap.isEmpty) return '';
+    var queryParameters = queryParametersMap.toString();
+
+    var addRemoveWhere = filteredParameters.any((element) => element.type.isNullable);
+    if (addRemoveWhere) {
+      queryParameters = '$queryParameters..removeWhere((_, v) => v == null)';
+    }
+    if (includeQueryParameters == IncludeQueryParametersType.onlyOnWeb) {
+      if (addRemoveWhere) {
+        queryParameters = '($queryParameters)';
+      }
+      queryParameters = 'kIsWeb ? $queryParameters : null';
+    }
+    return queryParameters;
+  }
+
   Iterable<Method> _generatePageRoutes(List<RouteConfig> routes) {
     return routes.map(
       (route) {
+        if (route.navigationType == NavigationType.pushNotNamed) {
+          return _generateBottomSheetOrDialogRoute(
+            route: route,
+            namePrefix: 'goTo',
+            bodyCall: 'navigatorKey.currentState?.push',
+            useNamedWidgetArugment: false,
+            withPageType: true,
+          );
+        }
         Expression path;
         final parametersInRouteName = route.routeName.parametersFromRouteName;
         if (route.routeNameContainsParameters) {
@@ -103,17 +145,8 @@ class RouteBuilder {
         } else {
           path = Reference('RouteNames.${route.asRouteName}');
         }
-        final filteredParameters = route.parameters
-            .where((element) => !element.ignoreWithKeyCheck(ignoreKeysByDefault) && element.addToJson && !parametersInRouteName.contains(element.type.argumentName));
-        final queryParameters = filteredParameters.toList().asMap().map((_, parameterConfig) {
-          final parameter = parameterConfig.type;
-          final stringValue = ImportableTypeStringConverter.convertToString(parameter);
-          return MapEntry(
-            "'${parameterConfig.queryName}'",
-            (parameter.isNullable && parameter.isCustomClass) ? '${parameter.name} == null ? null : $stringValue' : stringValue,
-          );
-        });
-        final queryParametersRemoveNull = filteredParameters.any((element) => element.type.isNullable) ? '..removeWhere((_, v) => v == null)' : '';
+
+        var queryParameters = _generateQueryParameters(route, parametersInRouteName);
 
         final bodyCall = TypeReference(
           (b) => b
@@ -140,7 +173,7 @@ class RouteBuilder {
                     [],
                     {
                       'path': path,
-                      'queryParameters': Reference('$queryParameters$queryParametersRemoveNull'),
+                      'queryParameters': Reference(queryParameters),
                     },
                   ).property('toString()'),
             if (route.navigationType == NavigationType.pushAndReplaceAll || route.navigationType == NavigationType.restorablePushAndReplaceAll) ...[
@@ -175,7 +208,34 @@ class RouteBuilder {
     required RouteConfig route,
     required String namePrefix,
     required String bodyCall,
+    bool useNamedWidgetArugment = true,
+    bool withPageType = false,
   }) {
+    var argument = Reference(
+      route.constructorName == route.routeWidget.className || route.constructorName.isEmpty
+          ? route.routeWidget.className
+          : '${route.routeWidget.className}.${route.constructorName}',
+      typeRefer(route.routeWidget).url,
+    ).call([],
+        route.parameters.where((p) => !p.ignoreWithKeyCheck(ignoreKeysByDefault)).toList().asMap().map((_, p) => MapEntry(p.type.argumentName, Reference(p.type.argumentName))));
+    if (withPageType) {
+      final pageClass = route.pageType != null
+          ? typeRefer(route.pageType)
+          : pageType != null
+              ? typeRefer(pageType)
+              : const Reference('MaterialPageRoute');
+      argument = pageClass.call(
+        [],
+        {
+          'builder': Method(
+            (b) => b
+              ..body = argument.code
+              ..requiredParameters.add(Parameter((b) => b..name = 'context')),
+          ).genericClosure,
+          'fullscreenDialog': Reference(route.isFullscreenDialog == true ? 'true' : 'false'),
+        },
+      );
+    }
     return _generateMethod(
       route: route,
       namePrefix: namePrefix,
@@ -183,23 +243,12 @@ class RouteBuilder {
         (b) => b
           ..symbol = bodyCall
           ..types.add(route.returnType == null ? const Reference('dynamic') : typeRefer(route.returnType!)),
-      ).call(
-        [],
-        {
-          'widget': Reference(
-            route.constructorName == route.routeWidget.className || route.constructorName.isEmpty
-                ? route.routeWidget.className
-                : '${route.routeWidget.className}.${route.constructorName}',
-            typeRefer(route.routeWidget).url,
-          ).call(
-              [],
-              route.parameters
-                  .where((p) => !p.ignoreWithKeyCheck(ignoreKeysByDefault))
-                  .toList()
-                  .asMap()
-                  .map((_, p) => MapEntry(p.type.argumentName, Reference(p.type.argumentName)))),
-        },
-      ).code,
+      )
+          .call(
+            useNamedWidgetArugment ? [] : [argument],
+            useNamedWidgetArugment ? {'widget': argument} : {},
+          )
+          .code,
     );
   }
 
@@ -264,7 +313,7 @@ class RouteBuilder {
               ..type = const Reference('String')))
             ..returns = const Reference('void')
             ..body = const Reference('popUntil').call([
-              const Reference('(route) => route.settings.name == routeName'),
+              const Reference('(route) => route.settings.name?.split(\'?\').first == routeName'),
             ]).code,
         ),
         Method(

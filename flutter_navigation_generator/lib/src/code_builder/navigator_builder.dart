@@ -5,6 +5,7 @@ import 'package:flutter_navigation_generator/src/code_builder/on_generate_route_
 import 'package:flutter_navigation_generator/src/code_builder/route_builder.dart';
 import 'package:flutter_navigation_generator/src/models/importable_type.dart';
 import 'package:flutter_navigation_generator/src/models/route_config.dart';
+import 'package:flutter_navigation_generator_annotations/flutter_navigation_generator_annotations.dart';
 
 class NavigatorBuilder {
   final Set<RouteConfig> routes;
@@ -14,6 +15,7 @@ class NavigatorBuilder {
   final ImportableType? unknownRoute;
   final List<ImportableType> defaultGuards;
   final bool ignoreKeysByDefault;
+  final IncludeQueryParametersType includeQueryParametersNavigatorConfig;
 
   NavigatorBuilder({
     required this.routes,
@@ -22,6 +24,7 @@ class NavigatorBuilder {
     required this.unknownRoute,
     required this.pageType,
     required this.defaultGuards,
+    required this.includeQueryParametersNavigatorConfig,
     this.ignoreKeysByDefault = true,
   });
 
@@ -69,6 +72,7 @@ class NavigatorBuilder {
             pageType: pageType,
             targetFile: targetFile,
             ignoreKeysByDefault: ignoreKeysByDefault,
+            includeQueryParametersNavigatorConfig: includeQueryParametersNavigatorConfig,
           ).generate(),
         ),
     );

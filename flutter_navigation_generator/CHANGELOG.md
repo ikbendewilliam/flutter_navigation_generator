@@ -7,6 +7,12 @@
 - Added `ignoreKeysByDefault` to `@FlutterNavigator` to override default behaviour of ignoring keys
 - Improved workings of defaultValues so they are used even if not included in query parameters. NOTE: Default values use the default value of the field, but cannot be from a class that is not included in the generated file
 
+## 2.0.4 (2024-12-31)
+
+- Fixed goBackTo not working with web parameters
+- Added `includeQueryParameters` to `FlutterNavigator` and `FlutterRoute` to include query parameters in the route. Default is [IncludeQueryParametersType.onlyOnWeb] (which differs from before, which was always)
+- Added [NavigationType.pushNotNamed] to push the new route without using named. Use this for routes that are not navigationable by the user on web, for example dialogs, bottom sheets, etc. that use custom transitions
+
 ## 2.0.3 (2024-10-21)
 
 - Fixed a nullability issue

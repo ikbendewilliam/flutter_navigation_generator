@@ -61,6 +61,10 @@ class FlutterRoute {
   /// See the continueNavigation() method in the Navigator for more information
   final List<Type>? guards;
 
+  /// Whether to use query parameters to provide the arguments
+  /// If unset, uses the value of [FlutterNavigator.includeQueryParameters]
+  final IncludeQueryParametersType? includeQueryParameters;
+
   const FlutterRoute({
     this.navigationType = NavigationType.push,
     this.routeName,
@@ -71,6 +75,7 @@ class FlutterRoute {
     this.generatePageRoute = true,
     this.generateMethod = true,
     this.guards,
+    this.includeQueryParameters,
   });
 }
 

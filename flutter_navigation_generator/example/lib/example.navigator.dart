@@ -11,6 +11,7 @@ import 'dart:convert';
 
 import 'package:example/custom_model.dart' as _i2;
 import 'package:example/main.dart' as _i3;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' as _i1;
 import 'package:flutter/material.dart';
 import 'package:flutter_navigation_generator_animations/flutter_navigation_generator_animations.dart';
@@ -423,11 +424,14 @@ mixin BaseNavigator {
       navigatorKey.currentState?.pushNamed<dynamic>(
         Uri(
           path: RouteNames.myHomePage,
-          queryParameters: {
-            'page_title': title,
-            'key':
-                key == null ? null : base64Encode(utf8.encode(jsonEncode(key)))
-          }..removeWhere((_, v) => v == null),
+          queryParameters: kIsWeb
+              ? ({
+                  'page_title': title,
+                  'key': key == null
+                      ? null
+                      : base64Encode(utf8.encode(jsonEncode(key)))
+                }..removeWhere((_, v) => v == null))
+              : null,
         ).toString(),
         arguments: {'title': title, 'key': key},
       );
@@ -438,11 +442,14 @@ mixin BaseNavigator {
       navigatorKey.currentState?.pushNamedAndRemoveUntil<dynamic>(
         Uri(
           path: RouteNames.myHomePagePopAll,
-          queryParameters: {
-            'page_title': title,
-            'key':
-                key == null ? null : base64Encode(utf8.encode(jsonEncode(key)))
-          }..removeWhere((_, v) => v == null),
+          queryParameters: kIsWeb
+              ? ({
+                  'page_title': title,
+                  'key': key == null
+                      ? null
+                      : base64Encode(utf8.encode(jsonEncode(key)))
+                }..removeWhere((_, v) => v == null))
+              : null,
         ).toString(),
         (_) => false,
         arguments: {'title': title, 'key': key},
@@ -476,12 +483,14 @@ mixin BaseNavigator {
             id: id,
             name: name,
           ),
-          queryParameters: {
-            'model': model == null
-                ? null
-                : base64Encode(utf8.encode(jsonEncode(model))),
-            'age': age?.toString()
-          }..removeWhere((_, v) => v == null),
+          queryParameters: kIsWeb
+              ? ({
+                  'model': model == null
+                      ? null
+                      : base64Encode(utf8.encode(jsonEncode(model))),
+                  'age': age?.toString()
+                }..removeWhere((_, v) => v == null))
+              : null,
         ).toString(),
         arguments: {'id': id, 'model': model, 'name': name, 'age': age},
       );
@@ -502,15 +511,17 @@ mixin BaseNavigator {
             exampleEnum: exampleEnum.index.toString(),
             age: age?.toString(),
           ),
-          queryParameters: {
-            'exampleEnum2': exampleEnum2.index.toString(),
-            'name': name,
-            'exampleEnum3': exampleEnum3?.index.toString(),
-            'exampleEnums4': base64Encode(utf8.encode(
-                jsonEncode(exampleEnums4?.map((e) => e.index).toList()))),
-            'exampleEnumsMap5': base64Encode(utf8.encode(jsonEncode(
-                exampleEnumsMap5?.map((k, v) => MapEntry(k, v.index)))))
-          }..removeWhere((_, v) => v == null),
+          queryParameters: kIsWeb
+              ? ({
+                  'exampleEnum2': exampleEnum2.index.toString(),
+                  'name': name,
+                  'exampleEnum3': exampleEnum3?.index.toString(),
+                  'exampleEnums4': base64Encode(utf8.encode(
+                      jsonEncode(exampleEnums4?.map((e) => e.index).toList()))),
+                  'exampleEnumsMap5': base64Encode(utf8.encode(jsonEncode(
+                      exampleEnumsMap5?.map((k, v) => MapEntry(k, v.index)))))
+                }..removeWhere((_, v) => v == null))
+              : null,
         ).toString(),
         arguments: {
           'id': id,
@@ -528,9 +539,9 @@ mixin BaseNavigator {
       navigatorKey.currentState?.pushNamed<dynamic>(
         Uri(
           path: RouteNames.exampleScreenWithRequiredArgument,
-          queryParameters: {
-            'data': base64Encode(utf8.encode(jsonEncode(data)))
-          },
+          queryParameters: kIsWeb
+              ? {'data': base64Encode(utf8.encode(jsonEncode(data)))}
+              : null,
         ).toString(),
         arguments: {'data': data},
       );
@@ -570,43 +581,50 @@ mixin BaseNavigator {
       navigatorKey.currentState?.pushNamed<dynamic>(
         Uri(
           path: RouteNames.fieldValueTests,
-          queryParameters: {
-            'nonNullableString': nonNullableString,
-            'nonNullableInt': nonNullableInt.toString(),
-            'nonNullableBool': nonNullableBool.toString(),
-            'nonNullableDouble': nonNullableDouble.toString(),
-            'nonNullableList':
-                base64Encode(utf8.encode(jsonEncode(nonNullableList))),
-            'nonNullableMap':
-                base64Encode(utf8.encode(jsonEncode(nonNullableMap))),
-            'nonNullableCustomModel':
-                base64Encode(utf8.encode(jsonEncode(nonNullableCustomModel))),
-            'nullableString': nullableString,
-            'nullableInt': nullableInt?.toString(),
-            'nullableBool': nullableBool?.toString(),
-            'nullableDouble': nullableDouble?.toString(),
-            'nullableList': base64Encode(utf8.encode(jsonEncode(nullableList))),
-            'nullableMap': base64Encode(utf8.encode(jsonEncode(nullableMap))),
-            'nullableCustomModel': nullableCustomModel == null
-                ? null
-                : base64Encode(utf8.encode(jsonEncode(nullableCustomModel))),
-            'nonNullableStringWithDefaultValue':
-                nonNullableStringWithDefaultValue,
-            'nonNullableIntWithDefaultValue':
-                nonNullableIntWithDefaultValue.toString(),
-            'nonNullableBoolWithDefaultValue':
-                nonNullableBoolWithDefaultValue.toString(),
-            'nonNullableDoubleWithDefaultValue':
-                nonNullableDoubleWithDefaultValue.toString(),
-            'nonNullableListWithDefaultValue': base64Encode(
-                utf8.encode(jsonEncode(nonNullableListWithDefaultValue))),
-            'nonNullableMapWithDefaultValue': base64Encode(
-                utf8.encode(jsonEncode(nonNullableMapWithDefaultValue))),
-            'nonNullableCustomModelWithDefaultValue': base64Encode(utf8
-                .encode(jsonEncode(nonNullableCustomModelWithDefaultValue))),
-            'nonNullableCustomModelWithDefaultValue2': base64Encode(utf8
-                .encode(jsonEncode(nonNullableCustomModelWithDefaultValue2)))
-          }..removeWhere((_, v) => v == null),
+          queryParameters: kIsWeb
+              ? ({
+                  'nonNullableString': nonNullableString,
+                  'nonNullableInt': nonNullableInt.toString(),
+                  'nonNullableBool': nonNullableBool.toString(),
+                  'nonNullableDouble': nonNullableDouble.toString(),
+                  'nonNullableList':
+                      base64Encode(utf8.encode(jsonEncode(nonNullableList))),
+                  'nonNullableMap':
+                      base64Encode(utf8.encode(jsonEncode(nonNullableMap))),
+                  'nonNullableCustomModel': base64Encode(
+                      utf8.encode(jsonEncode(nonNullableCustomModel))),
+                  'nullableString': nullableString,
+                  'nullableInt': nullableInt?.toString(),
+                  'nullableBool': nullableBool?.toString(),
+                  'nullableDouble': nullableDouble?.toString(),
+                  'nullableList':
+                      base64Encode(utf8.encode(jsonEncode(nullableList))),
+                  'nullableMap':
+                      base64Encode(utf8.encode(jsonEncode(nullableMap))),
+                  'nullableCustomModel': nullableCustomModel == null
+                      ? null
+                      : base64Encode(
+                          utf8.encode(jsonEncode(nullableCustomModel))),
+                  'nonNullableStringWithDefaultValue':
+                      nonNullableStringWithDefaultValue,
+                  'nonNullableIntWithDefaultValue':
+                      nonNullableIntWithDefaultValue.toString(),
+                  'nonNullableBoolWithDefaultValue':
+                      nonNullableBoolWithDefaultValue.toString(),
+                  'nonNullableDoubleWithDefaultValue':
+                      nonNullableDoubleWithDefaultValue.toString(),
+                  'nonNullableListWithDefaultValue': base64Encode(
+                      utf8.encode(jsonEncode(nonNullableListWithDefaultValue))),
+                  'nonNullableMapWithDefaultValue': base64Encode(
+                      utf8.encode(jsonEncode(nonNullableMapWithDefaultValue))),
+                  'nonNullableCustomModelWithDefaultValue': base64Encode(
+                      utf8.encode(
+                          jsonEncode(nonNullableCustomModelWithDefaultValue))),
+                  'nonNullableCustomModelWithDefaultValue2': base64Encode(
+                      utf8.encode(
+                          jsonEncode(nonNullableCustomModelWithDefaultValue2)))
+                }..removeWhere((_, v) => v == null))
+              : null,
         ).toString(),
         arguments: {
           'nonNullableString': nonNullableString,
@@ -649,7 +667,7 @@ mixin BaseNavigator {
   void popUntil(bool Function(Route<dynamic>) predicate) =>
       navigatorKey.currentState?.popUntil(predicate);
   void goBackTo(String routeName) =>
-      popUntil((route) => route.settings.name == routeName);
+      popUntil((route) => route.settings.name?.split('?').first == routeName);
   Future<T?> showCustomDialog<T>({Widget? widget}) async => showDialog<T>(
         context: navigatorKey.currentContext!,
         builder: (_) => widget ?? const SizedBox.shrink(),
