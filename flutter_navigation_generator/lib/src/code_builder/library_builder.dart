@@ -37,7 +37,8 @@ class LibraryGenerator {
             pageType: pageType,
             targetFile: targetFile,
             defaultGuards: defaultGuards,
-            includeQueryParametersNavigatorConfig: includeQueryParametersNavigatorConfig,
+            includeQueryParametersNavigatorConfig:
+                includeQueryParametersNavigatorConfig,
           ).generate(),
         )
         ..body.addAll(
@@ -49,7 +50,8 @@ class LibraryGenerator {
               targetFile: targetFile,
               unknownRoute: unknownRoute,
               defaultGuards: defaultGuards,
-              includeQueryParametersNavigatorConfig: includeQueryParametersNavigatorConfig,
+              includeQueryParametersNavigatorConfig:
+                  includeQueryParametersNavigatorConfig,
             ).generate(),
             RouteNamesBuilder(
               routes: routes,
