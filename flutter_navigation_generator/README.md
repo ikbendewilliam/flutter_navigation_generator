@@ -50,7 +50,7 @@ final myNavigator = MainNavigator();
 ...
 
 MaterialApp(
-  key: myNavigator.navigatorKey,
+  navigatorKey: myNavigator.navigatorKey,
   onGenerateRoute: myNavigator.onGenerateRoute,
   initialRoute: RouteNames.myHomePage,
 ),
