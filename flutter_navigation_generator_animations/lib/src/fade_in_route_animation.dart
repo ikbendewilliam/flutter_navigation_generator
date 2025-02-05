@@ -1,15 +1,13 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
-class FadeInRoute<T> extends PageRouteBuilder<T> {
-  final Function(BuildContext context) builder;
-  final Curve curve;
+class FadeInRouteAnimation<T> extends PageRouteBuilder<T> {
+  final Widget Function(BuildContext context) builder;
 
-  FadeInRoute({
+  FadeInRouteAnimation({
     required this.builder,
-    this.curve = Curves.linear,
     super.settings,
     super.fullscreenDialog,
-    super.transitionDuration = const Duration(milliseconds: 300),
+    super.transitionDuration,
   }) : super(
           pageBuilder: (context, animation, secondaryAnimation) =>
               builder(context),

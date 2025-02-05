@@ -1,8 +1,8 @@
 import 'package:example/custom_model.dart';
 import 'package:example/example.dart';
 import 'package:example/example.navigator.dart';
-import 'package:example/fade_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_navigation_generator_animations/flutter_navigation_generator_animations.dart';
 import 'package:flutter_navigation_generator_annotations/flutter_navigation_generator_annotations.dart';
 
 Future<void> main() async {
@@ -165,13 +165,13 @@ class _MyHomePageState extends State<MyHomePage> {
 
 @FlutterRoute(
   returnType: bool,
-  pageType: FadeInRoute,
+  pageType: FadeInRouteAnimation,
 )
 @FlutterRoute(
   // If you don't specify another routeName, make sure the returnType and pagetype are the same
   navigationType: NavigationType.popAndPush,
   returnType: bool,
-  pageType: FadeInRoute,
+  pageType: FadeInRouteAnimation,
   methodName: 'popAndGoToSecondPage',
 )
 class SecondPage extends StatelessWidget {
