@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_navigation_generator_animations/src/zoom_page_transition.dart';
 
 class NativeRouteAnimation<T> extends PageRouteBuilder<T> {
-  final Function(BuildContext context) builder;
+  final Widget Function(BuildContext context) builder;
   final bool iOSLinearTransition;
   final bool androidAllowSnapshotting;
   final bool androidAllowEnterRouteSnapshotting;

@@ -18,7 +18,6 @@ import 'package:flutter_navigation_generator_animations/flutter_navigation_gener
 import 'package:flutter_navigation_generator_annotations/flutter_navigation_generator_annotations.dart';
 
 import 'custom_model.dart';
-import 'fade_route.dart';
 import 'main.dart';
 
 mixin BaseNavigator {
@@ -86,7 +85,7 @@ mixin BaseNavigator {
             name: exampleDefaultGuard.alternativeRoute,
           ));
         }
-        return FadeInRoute<bool>(
+        return FadeInRouteAnimation<bool>(
           builder: (_) => SecondPage(),
           settings: settings,
           fullscreenDialog: false,
