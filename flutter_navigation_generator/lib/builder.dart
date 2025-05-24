@@ -8,13 +8,12 @@ import 'src/generators/flutter_navigator_generator.dart';
 Builder flutterRouteBuilder(BuilderOptions options) {
   return LibraryBuilder(
     const FlutterRouteGenerator(),
-    formatOutput: (generated) => generated.replaceAll(RegExp(r'//.*|\s'), ''),
+    formatOutput: (generated, version) => generated.replaceAll(RegExp(r'//.*|\s'), ''),
     generatedExtension: '.navigator.json',
   );
 }
 
 /// A builder that generates the navigator class.
 Builder flutterNavigatorBuilder(BuilderOptions options) {
-  return LibraryBuilder(FlutterNavigatorGenerator(),
-      generatedExtension: '.navigator.dart');
+  return LibraryBuilder(FlutterNavigatorGenerator(), generatedExtension: '.navigator.dart');
 }

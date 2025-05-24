@@ -4,6 +4,8 @@ include: package:flutter_lints/flutter.yaml
 # https://dart.dev/guides/language/analysis-options
 
 analyzer:
+  errors:
+    deprecated_member_use: ignore
   language:
     strict-casts: false
     strict-raw-types: false

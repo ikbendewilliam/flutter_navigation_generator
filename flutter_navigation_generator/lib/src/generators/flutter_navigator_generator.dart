@@ -10,49 +10,26 @@ import 'package:flutter_navigation_generator/src/models/route_config.dart';
 import 'package:flutter_navigation_generator/src/resolvers/importable_type_resolver.dart';
 import 'package:flutter_navigation_generator_annotations/flutter_navigation_generator_annotations.dart';
 import 'package:glob/glob.dart';
+import 'package:pub_semver/pub_semver.dart';
 import 'package:source_gen/source_gen.dart';
 
-class FlutterNavigatorGenerator
-    extends GeneratorForAnnotation<FlutterNavigator> {
+class FlutterNavigatorGenerator extends GeneratorForAnnotation<FlutterNavigator> {
   static const _navigatorClassNameDefault = 'BaseNavigator';
 
   @override
-  dynamic generateForAnnotatedElement(
-      Element element, ConstantReader annotation, BuildStep buildStep) async {
-    final typeResolver =
-        ImportableTypeResolverImpl(await buildStep.resolver.libraries.toList());
+  dynamic generateForAnnotatedElement(Element element, ConstantReader annotation, BuildStep buildStep) async {
+    final typeResolver = ImportableTypeResolverImpl(await buildStep.resolver.libraries.toList());
     final configFiles = Glob("**.navigator.json");
-    final navigatorClassName =
-        annotation.peek('navigatorClassName')?.stringValue;
+    final navigatorClassName = annotation.peek('navigatorClassName')?.stringValue;
     final pageTypeAsDartType = annotation.peek('pageType')?.typeValue;
     final unknownRouteAsDartType = annotation.peek('unknownRoute')?.typeValue;
-    final ignoreKeysByDefault =
-        annotation.peek('ignoreKeysByDefault')?.boolValue ?? true;
-    final removeSuffixes = annotation
-            .peek('removeSuffixes')
-            ?.listValue
-            .map((e) => e.toStringValue())
-            .whereType<String>()
-            .toList() ??
-        [];
-    final defaultGuards = annotation
-            .peek('defaultGuards')
-            ?.listValue
-            .map((e) => e.toTypeValue())
-            .whereNotNull()
-            .map(typeResolver.resolveType)
-            .toList() ??
-        [];
-    final pageType = pageTypeAsDartType == null
-        ? null
-        : typeResolver.resolveType(pageTypeAsDartType);
-    final unknownRoute = unknownRouteAsDartType == null
-        ? null
-        : typeResolver.resolveType(unknownRouteAsDartType);
-    final includeQueryParametersNavigatorConfig = IncludeQueryParametersType
-            .values[
-        annotation.peek('includeQueryParameters')?.peek('index')?.intValue ??
-            IncludeQueryParametersType.onlyOnWeb.index];
+    final ignoreKeysByDefault = annotation.peek('ignoreKeysByDefault')?.boolValue ?? true;
+    final removeSuffixes = annotation.peek('removeSuffixes')?.listValue.map((e) => e.toStringValue()).whereType<String>().toList() ?? [];
+    final defaultGuards = annotation.peek('defaultGuards')?.listValue.map((e) => e.toTypeValue()).whereNotNull().map(typeResolver.resolveType).toList() ?? [];
+    final pageType = pageTypeAsDartType == null ? null : typeResolver.resolveType(pageTypeAsDartType);
+    final unknownRoute = unknownRouteAsDartType == null ? null : typeResolver.resolveType(unknownRouteAsDartType);
+    final includeQueryParametersNavigatorConfig =
+        IncludeQueryParametersType.values[annotation.peek('includeQueryParameters')?.peek('index')?.intValue ?? IncludeQueryParametersType.onlyOnWeb.index];
     final jsonData = <Map>[];
 
     await for (final id in buildStep.findAssets(configFiles)) {
@@ -74,8 +51,7 @@ class FlutterNavigatorGenerator
       removeSuffixes: removeSuffixes,
       defaultGuards: defaultGuards,
       ignoreKeysByDefault: ignoreKeysByDefault,
-      includeQueryParametersNavigatorConfig:
-          includeQueryParametersNavigatorConfig,
+      includeQueryParametersNavigatorConfig: includeQueryParametersNavigatorConfig,
     );
 
     final generatedLib = generator.generate();
@@ -86,6 +62,6 @@ class FlutterNavigatorGenerator
       useNullSafetySyntax: true,
     );
 
-    return DartFormatter().format(generatedLib.accept(emitter).toString());
+    return DartFormatter(languageVersion: Version(3, 7, 0)).format(generatedLib.accept(emitter).toString());
   }
 }

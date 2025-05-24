@@ -1,3 +1,7 @@
+## 2.2.0 (2025-05-24)
+WARNING: This version is using source_gen 2.0.0 which is not yet migrated to analyzers new Element2. Meaning we are using a deprecated API. Everything should work as before though.
+- Upgraded to analyze 7.0.0
+
 ## 2.1.0 (2024-12-31)
 
 - Added `@FlutterRouteField` annotation to specify fields with the following options:

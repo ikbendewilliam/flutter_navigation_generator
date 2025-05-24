@@ -1,3 +1,4 @@
+// dart format width=80
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
 // **************************************************************************
@@ -25,7 +26,7 @@ mixin BaseNavigator {
 
   final Set<NavigatorGuard> guards = <NavigatorGuard>{
     ExampleDefaultGuard(),
-    LoginGuard()
+    LoginGuard(),
   };
 
   RouteSettings? guardedRouteSettings;
@@ -42,10 +43,12 @@ mixin BaseNavigator {
             guards.whereType<ExampleDefaultGuard>().first;
         if (!exampleDefaultGuard.value) {
           guardedRouteSettings = settings;
-          return onGenerateRoute(RouteSettings(
-            arguments: settings.arguments,
-            name: exampleDefaultGuard.alternativeRoute,
-          ));
+          return onGenerateRoute(
+            RouteSettings(
+              arguments: settings.arguments,
+              name: exampleDefaultGuard.alternativeRoute,
+            ),
+          );
         }
         return NativeRouteAnimation<void>(
           builder: (_) => MyHomePage(
@@ -61,10 +64,12 @@ mixin BaseNavigator {
             guards.whereType<ExampleDefaultGuard>().first;
         if (!exampleDefaultGuard.value) {
           guardedRouteSettings = settings;
-          return onGenerateRoute(RouteSettings(
-            arguments: settings.arguments,
-            name: exampleDefaultGuard.alternativeRoute,
-          ));
+          return onGenerateRoute(
+            RouteSettings(
+              arguments: settings.arguments,
+              name: exampleDefaultGuard.alternativeRoute,
+            ),
+          );
         }
         return NativeRouteAnimation<void>(
           builder: (_) => MyHomePage(
@@ -80,10 +85,12 @@ mixin BaseNavigator {
             guards.whereType<ExampleDefaultGuard>().first;
         if (!exampleDefaultGuard.value) {
           guardedRouteSettings = settings;
-          return onGenerateRoute(RouteSettings(
-            arguments: settings.arguments,
-            name: exampleDefaultGuard.alternativeRoute,
-          ));
+          return onGenerateRoute(
+            RouteSettings(
+              arguments: settings.arguments,
+              name: exampleDefaultGuard.alternativeRoute,
+            ),
+          );
         }
         return FadeInRouteAnimation<bool>(
           builder: (_) => SecondPage(),
@@ -95,18 +102,26 @@ mixin BaseNavigator {
             guards.whereType<ExampleDefaultGuard>().first;
         if (!exampleDefaultGuard.value) {
           guardedRouteSettings = settings;
-          return onGenerateRoute(RouteSettings(
-            arguments: settings.arguments,
-            name: exampleDefaultGuard.alternativeRoute,
-          ));
+          return onGenerateRoute(
+            RouteSettings(
+              arguments: settings.arguments,
+              name: exampleDefaultGuard.alternativeRoute,
+            ),
+          );
         }
         return NativeRouteAnimation<void>(
           builder: (_) => ExampleScreenWithRequiredArgument(
             data: queryParameters['data'] != null
                 ? (jsonDecode(
-                            utf8.decode(base64Decode(queryParameters['data']!)))
-                        as List<dynamic>)
-                    .map((e) => CustomModel.fromJson(e as Map<String, dynamic>))
+                    utf8.decode(
+                      base64Decode(queryParameters['data']!),
+                    ),
+                  ) as List<dynamic>)
+                    .map(
+                      (e) => CustomModel.fromJson(
+                        e as Map<String, dynamic>,
+                      ),
+                    )
                     .toList()
                 : arguments['data'] as List<CustomModel>,
           ),
@@ -118,10 +133,12 @@ mixin BaseNavigator {
             guards.whereType<ExampleDefaultGuard>().first;
         if (!exampleDefaultGuard.value) {
           guardedRouteSettings = settings;
-          return onGenerateRoute(RouteSettings(
-            arguments: settings.arguments,
-            name: exampleDefaultGuard.alternativeRoute,
-          ));
+          return onGenerateRoute(
+            RouteSettings(
+              arguments: settings.arguments,
+              name: exampleDefaultGuard.alternativeRoute,
+            ),
+          );
         }
         return NativeRouteAnimation<void>(
           builder: (_) => Error404(),
@@ -133,10 +150,12 @@ mixin BaseNavigator {
             guards.whereType<ExampleDefaultGuard>().first;
         if (!exampleDefaultGuard.value) {
           guardedRouteSettings = settings;
-          return onGenerateRoute(RouteSettings(
-            arguments: settings.arguments,
-            name: exampleDefaultGuard.alternativeRoute,
-          ));
+          return onGenerateRoute(
+            RouteSettings(
+              arguments: settings.arguments,
+              name: exampleDefaultGuard.alternativeRoute,
+            ),
+          );
         }
         return NativeRouteAnimation<void>(
           builder: (_) => ErrorNotLoggedIn(),
@@ -147,10 +166,12 @@ mixin BaseNavigator {
         final loginGuard = guards.whereType<LoginGuard>().first;
         if (!loginGuard.value) {
           guardedRouteSettings = settings;
-          return onGenerateRoute(RouteSettings(
-            arguments: settings.arguments,
-            name: loginGuard.alternativeRoute,
-          ));
+          return onGenerateRoute(
+            RouteSettings(
+              arguments: settings.arguments,
+              name: loginGuard.alternativeRoute,
+            ),
+          );
         }
         return NativeRouteAnimation<void>(
           builder: (_) => LoggedInPage(),
@@ -162,10 +183,12 @@ mixin BaseNavigator {
             guards.whereType<ExampleDefaultGuard>().first;
         if (!exampleDefaultGuard.value) {
           guardedRouteSettings = settings;
-          return onGenerateRoute(RouteSettings(
-            arguments: settings.arguments,
-            name: exampleDefaultGuard.alternativeRoute,
-          ));
+          return onGenerateRoute(
+            RouteSettings(
+              arguments: settings.arguments,
+              name: exampleDefaultGuard.alternativeRoute,
+            ),
+          );
         }
         return NativeRouteAnimation<void>(
           builder: (_) => FieldValueTests(
@@ -181,21 +204,37 @@ mixin BaseNavigator {
                 ? double.parse(queryParameters['nonNullableDouble']!)
                 : arguments['nonNullableDouble'] as double,
             nonNullableList: queryParameters['nonNullableList'] != null
-                ? (jsonDecode(utf8.decode(
-                            base64Decode(queryParameters['nonNullableList']!)))
-                        as List<dynamic>)
+                ? (jsonDecode(
+                    utf8.decode(
+                      base64Decode(
+                        queryParameters['nonNullableList']!,
+                      ),
+                    ),
+                  ) as List<dynamic>)
                     .map((e) => e as String)
                     .toList()
                 : arguments['nonNullableList'] as List<String>,
             nonNullableMap: queryParameters['nonNullableMap'] != null
-                ? Map<String, String>.from(jsonDecode(utf8
-                    .decode(base64Decode(queryParameters['nonNullableMap']!))))
+                ? Map<String, String>.from(
+                    jsonDecode(
+                      utf8.decode(
+                        base64Decode(queryParameters['nonNullableMap']!),
+                      ),
+                    ),
+                  )
                 : arguments['nonNullableMap'] as Map<String, String>,
-            nonNullableCustomModel: queryParameters['nonNullableCustomModel'] !=
-                    null
-                ? CustomModel.fromJson(jsonDecode(utf8.decode(
-                    base64Decode(queryParameters['nonNullableCustomModel']!))))
-                : arguments['nonNullableCustomModel'] as CustomModel,
+            nonNullableCustomModel:
+                queryParameters['nonNullableCustomModel'] != null
+                    ? CustomModel.fromJson(
+                        jsonDecode(
+                          utf8.decode(
+                            base64Decode(
+                              queryParameters['nonNullableCustomModel']!,
+                            ),
+                          ),
+                        ),
+                      )
+                    : arguments['nonNullableCustomModel'] as CustomModel,
             nullableString: queryParameters['nullableString'] ??
                 arguments['nullableString'] as String?,
             nullableInt: queryParameters['nullableInt'] != null
@@ -208,19 +247,35 @@ mixin BaseNavigator {
                 ? double.parse(queryParameters['nullableDouble']!)
                 : arguments['nullableDouble'] as double?,
             nullableList: queryParameters['nullableList'] != null
-                ? (jsonDecode(utf8.decode(
-                            base64Decode(queryParameters['nullableList']!)))
-                        as List<dynamic>)
+                ? (jsonDecode(
+                    utf8.decode(
+                      base64Decode(
+                        queryParameters['nullableList']!,
+                      ),
+                    ),
+                  ) as List<dynamic>)
                     .map((e) => e as String)
                     .toList()
                 : arguments['nullableList'] as List<String>?,
             nullableMap: queryParameters['nullableMap'] != null
-                ? Map<String, String>.from(jsonDecode(
-                    utf8.decode(base64Decode(queryParameters['nullableMap']!))))
+                ? Map<String, String>.from(
+                    jsonDecode(
+                      utf8.decode(
+                        base64Decode(queryParameters['nullableMap']!),
+                      ),
+                    ),
+                  )
                 : arguments['nullableMap'] as Map<String, String>?,
             nullableCustomModel: queryParameters['nullableCustomModel'] != null
-                ? CustomModel.fromJson(jsonDecode(utf8.decode(
-                    base64Decode(queryParameters['nullableCustomModel']!))))
+                ? CustomModel.fromJson(
+                    jsonDecode(
+                      utf8.decode(
+                        base64Decode(
+                          queryParameters['nullableCustomModel']!,
+                        ),
+                      ),
+                    ),
+                  )
                 : arguments['nullableCustomModel'] as CustomModel?,
             nonNullableStringWithDefaultValue:
                 queryParameters['nonNullableStringWithDefaultValue'] ??
@@ -229,7 +284,8 @@ mixin BaseNavigator {
             nonNullableIntWithDefaultValue:
                 queryParameters['nonNullableIntWithDefaultValue'] != null
                     ? int.parse(
-                        queryParameters['nonNullableIntWithDefaultValue']!)
+                        queryParameters['nonNullableIntWithDefaultValue']!,
+                      )
                     : arguments['nonNullableIntWithDefaultValue'] as int? ?? 42,
             nonNullableBoolWithDefaultValue:
                 queryParameters['nonNullableBoolWithDefaultValue'] != null
@@ -240,43 +296,69 @@ mixin BaseNavigator {
             nonNullableDoubleWithDefaultValue:
                 queryParameters['nonNullableDoubleWithDefaultValue'] != null
                     ? double.parse(
-                        queryParameters['nonNullableDoubleWithDefaultValue']!)
+                        queryParameters['nonNullableDoubleWithDefaultValue']!,
+                      )
                     : arguments['nonNullableDoubleWithDefaultValue']
                             as double? ??
                         3.14,
             nonNullableListWithDefaultValue:
                 queryParameters['nonNullableListWithDefaultValue'] != null
-                    ? (jsonDecode(utf8.decode(base64Decode(queryParameters[
-                                'nonNullableListWithDefaultValue']!)))
-                            as List<dynamic>)
+                    ? (jsonDecode(
+                        utf8.decode(
+                          base64Decode(
+                            queryParameters['nonNullableListWithDefaultValue']!,
+                          ),
+                        ),
+                      ) as List<dynamic>)
                         .map((e) => e as String)
                         .toList()
                     : arguments['nonNullableListWithDefaultValue']
                             as List<String>? ??
                         const ['default'],
-            nonNullableMapWithDefaultValue: queryParameters[
-                        'nonNullableMapWithDefaultValue'] !=
-                    null
-                ? Map<String, String>.from(jsonDecode(utf8.decode(base64Decode(
-                    queryParameters['nonNullableMapWithDefaultValue']!))))
-                : arguments['nonNullableMapWithDefaultValue']
-                        as Map<String, String>? ??
-                    const {'default': 'default'},
+            nonNullableMapWithDefaultValue:
+                queryParameters['nonNullableMapWithDefaultValue'] != null
+                    ? Map<String, String>.from(
+                        jsonDecode(
+                          utf8.decode(
+                            base64Decode(
+                              queryParameters[
+                                  'nonNullableMapWithDefaultValue']!,
+                            ),
+                          ),
+                        ),
+                      )
+                    : arguments['nonNullableMapWithDefaultValue']
+                            as Map<String, String>? ??
+                        const {'default': 'default'},
             nonNullableCustomModelWithDefaultValue:
                 queryParameters['nonNullableCustomModelWithDefaultValue'] !=
                         null
-                    ? CustomModel.fromJson(jsonDecode(utf8.decode(base64Decode(
-                        queryParameters[
-                            'nonNullableCustomModelWithDefaultValue']!))))
+                    ? CustomModel.fromJson(
+                        jsonDecode(
+                          utf8.decode(
+                            base64Decode(
+                              queryParameters[
+                                  'nonNullableCustomModelWithDefaultValue']!,
+                            ),
+                          ),
+                        ),
+                      )
                     : arguments['nonNullableCustomModelWithDefaultValue']
                             as CustomModel? ??
                         const CustomModel('default', 0),
             nonNullableCustomModelWithDefaultValue2:
                 queryParameters['nonNullableCustomModelWithDefaultValue2'] !=
                         null
-                    ? CustomModel.fromJson(jsonDecode(utf8.decode(base64Decode(
-                        queryParameters[
-                            'nonNullableCustomModelWithDefaultValue2']!))))
+                    ? CustomModel.fromJson(
+                        jsonDecode(
+                          utf8.decode(
+                            base64Decode(
+                              queryParameters[
+                                  'nonNullableCustomModelWithDefaultValue2']!,
+                            ),
+                          ),
+                        ),
+                      )
                     : arguments['nonNullableCustomModelWithDefaultValue2']
                             as CustomModel? ??
                         CustomModel.testDefault,
@@ -297,17 +379,24 @@ mixin BaseNavigator {
             guards.whereType<ExampleDefaultGuard>().first;
         if (!exampleDefaultGuard.value) {
           guardedRouteSettings = settings;
-          return onGenerateRoute(RouteSettings(
-            arguments: settings.arguments,
-            name: exampleDefaultGuard.alternativeRoute,
-          ));
+          return onGenerateRoute(
+            RouteSettings(
+              arguments: settings.arguments,
+              name: exampleDefaultGuard.alternativeRoute,
+            ),
+          );
         }
         return NativeRouteAnimation<void>(
           builder: (_) => RouteNameWithArguments(
             id: queryParameters['id'] ?? arguments['id'] as String,
             model: queryParameters['model'] != null
-                ? CustomModel.fromJson(jsonDecode(
-                    utf8.decode(base64Decode(queryParameters['model']!))))
+                ? CustomModel.fromJson(
+                    jsonDecode(
+                      utf8.decode(
+                        base64Decode(queryParameters['model']!),
+                      ),
+                    ),
+                  )
                 : arguments['model'] as CustomModel?,
             name: queryParameters['name'] ?? arguments['name'] as String?,
             age: queryParameters['age'] != null
@@ -328,40 +417,56 @@ mixin BaseNavigator {
             guards.whereType<ExampleDefaultGuard>().first;
         if (!exampleDefaultGuard.value) {
           guardedRouteSettings = settings;
-          return onGenerateRoute(RouteSettings(
-            arguments: settings.arguments,
-            name: exampleDefaultGuard.alternativeRoute,
-          ));
+          return onGenerateRoute(
+            RouteSettings(
+              arguments: settings.arguments,
+              name: exampleDefaultGuard.alternativeRoute,
+            ),
+          );
         }
         return NativeRouteAnimation<void>(
           builder: (_) => RouteNameWithArguments2(
             id: queryParameters['id'] ?? arguments['id'] as String,
             exampleEnum: queryParameters['exampleEnum'] != null
-                ? ExampleEnum.values[int.parse(queryParameters['exampleEnum']!)]
+                ? ExampleEnum.values[int.parse(
+                    queryParameters['exampleEnum']!,
+                  )]
                 : arguments['exampleEnum'] as ExampleEnum,
             exampleEnum2: queryParameters['exampleEnum2'] != null
-                ? ExampleEnum
-                    .values[int.parse(queryParameters['exampleEnum2']!)]
+                ? ExampleEnum.values[int.parse(
+                    queryParameters['exampleEnum2']!,
+                  )]
                 : arguments['exampleEnum2'] as ExampleEnum,
             name: queryParameters['name'] ?? arguments['name'] as String?,
             age: queryParameters['age'] != null
                 ? int.parse(queryParameters['age']!)
                 : arguments['age'] as int?,
             exampleEnum3: queryParameters['exampleEnum3'] != null
-                ? ExampleEnum
-                    .values[int.parse(queryParameters['exampleEnum3']!)]
+                ? ExampleEnum.values[int.parse(
+                    queryParameters['exampleEnum3']!,
+                  )]
                 : arguments['exampleEnum3'] as ExampleEnum?,
             exampleEnums4: queryParameters['exampleEnums4'] != null
-                ? (jsonDecode(utf8.decode(
-                            base64Decode(queryParameters['exampleEnums4']!)))
-                        as List<dynamic>)
+                ? (jsonDecode(
+                    utf8.decode(
+                      base64Decode(
+                        queryParameters['exampleEnums4']!,
+                      ),
+                    ),
+                  ) as List<dynamic>)
                     .map((e) => ExampleEnum.values[e])
                     .toList()
                 : arguments['exampleEnums4'] as List<ExampleEnum>?,
             exampleEnumsMap5: queryParameters['exampleEnumsMap5'] != null
-                ? Map<String, ExampleEnum>.from(jsonDecode(utf8.decode(
-                        base64Decode(queryParameters['exampleEnumsMap5']!)))
-                    .map((k, v) => MapEntry(k, ExampleEnum.values[v])))
+                ? Map<String, ExampleEnum>.from(
+                    jsonDecode(
+                      utf8.decode(
+                        base64Decode(
+                          queryParameters['exampleEnumsMap5']!,
+                        ),
+                      ),
+                    ).map((k, v) => MapEntry(k, ExampleEnum.values[v])),
+                  )
                 : arguments['exampleEnumsMap5'] as Map<String, ExampleEnum>?,
           ),
           settings: settings,
@@ -400,8 +505,9 @@ mixin BaseNavigator {
     if (settings == null) return;
     guardedRouteSettings = null;
     return navigatorKey.currentState?.pushReplacementNamed<void, dynamic>(
-        settings.name!,
-        arguments: settings.arguments);
+      settings.name!,
+      arguments: settings.arguments,
+    );
   }
 
   /// Whether we can continues navigation. A guard will reroute navigation to a page. Call this method to continue navigation after the guard has rerouted
@@ -416,10 +522,7 @@ mixin BaseNavigator {
   /// }
   /// ```
   bool canContinueNavigation() => guardedRouteSettings != null;
-  Future<void> goToMyHomePage({
-    String? title,
-    _i1.Key? key,
-  }) async =>
+  Future<void> goToMyHomePage({String? title, _i1.Key? key}) async =>
       navigatorKey.currentState?.pushNamed<dynamic>(
         Uri(
           path: RouteNames.myHomePage,
@@ -428,16 +531,13 @@ mixin BaseNavigator {
                   'page_title': title,
                   'key': key == null
                       ? null
-                      : base64Encode(utf8.encode(jsonEncode(key)))
+                      : base64Encode(utf8.encode(jsonEncode(key))),
                 }..removeWhere((_, v) => v == null))
               : null,
         ).toString(),
         arguments: {'title': title, 'key': key},
       );
-  void goToHomePageWithPathParameter({
-    String? title,
-    _i1.Key? key,
-  }) =>
+  void goToHomePageWithPathParameter({String? title, _i1.Key? key}) =>
       navigatorKey.currentState?.pushNamedAndRemoveUntil<dynamic>(
         Uri(
           path: RouteNames.myHomePagePopAll,
@@ -446,7 +546,7 @@ mixin BaseNavigator {
                   'page_title': title,
                   'key': key == null
                       ? null
-                      : base64Encode(utf8.encode(jsonEncode(key)))
+                      : base64Encode(utf8.encode(jsonEncode(key))),
                 }..removeWhere((_, v) => v == null))
               : null,
         ).toString(),
@@ -478,16 +578,13 @@ mixin BaseNavigator {
   }) async =>
       navigatorKey.currentState?.pushNamed<dynamic>(
         Uri(
-          path: RouteNames.homeIdNameNonExistingNameNumber1(
-            id: id,
-            name: name,
-          ),
+          path: RouteNames.homeIdNameNonExistingNameNumber1(id: id, name: name),
           queryParameters: kIsWeb
               ? ({
                   'model': model == null
                       ? null
                       : base64Encode(utf8.encode(jsonEncode(model))),
-                  'age': age?.toString()
+                  'age': age?.toString(),
                 }..removeWhere((_, v) => v == null))
               : null,
         ).toString(),
@@ -515,10 +612,18 @@ mixin BaseNavigator {
                   'exampleEnum2': exampleEnum2.index.toString(),
                   'name': name,
                   'exampleEnum3': exampleEnum3?.index.toString(),
-                  'exampleEnums4': base64Encode(utf8.encode(
-                      jsonEncode(exampleEnums4?.map((e) => e.index).toList()))),
-                  'exampleEnumsMap5': base64Encode(utf8.encode(jsonEncode(
-                      exampleEnumsMap5?.map((k, v) => MapEntry(k, v.index)))))
+                  'exampleEnums4': base64Encode(
+                    utf8.encode(
+                      jsonEncode(exampleEnums4?.map((e) => e.index).toList()),
+                    ),
+                  ),
+                  'exampleEnumsMap5': base64Encode(
+                    utf8.encode(
+                      jsonEncode(
+                        exampleEnumsMap5?.map((k, v) => MapEntry(k, v.index)),
+                      ),
+                    ),
+                  ),
                 }..removeWhere((_, v) => v == null))
               : null,
         ).toString(),
@@ -530,11 +635,12 @@ mixin BaseNavigator {
           'age': age,
           'exampleEnum3': exampleEnum3,
           'exampleEnums4': exampleEnums4,
-          'exampleEnumsMap5': exampleEnumsMap5
+          'exampleEnumsMap5': exampleEnumsMap5,
         },
       );
-  Future<void> goToExampleScreenWithRequiredArgument(
-          {required List<_i2.CustomModel> data}) async =>
+  Future<void> goToExampleScreenWithRequiredArgument({
+    required List<_i2.CustomModel> data,
+  }) async =>
       navigatorKey.currentState?.pushNamed<dynamic>(
         Uri(
           path: RouteNames.exampleScreenWithRequiredArgument,
@@ -544,11 +650,8 @@ mixin BaseNavigator {
         ).toString(),
         arguments: {'data': data},
       );
-  Future<void> goToLoggedInPage() async =>
-      navigatorKey.currentState?.pushNamed<dynamic>(
-        RouteNames.loggedInPage,
-        arguments: {},
-      );
+  Future<void> goToLoggedInPage() async => navigatorKey.currentState
+      ?.pushNamed<dynamic>(RouteNames.loggedInPage, arguments: {});
   Future<void> goToFieldValueTests({
     required String nonNullableString,
     required int nonNullableInt,
@@ -570,10 +673,12 @@ mixin BaseNavigator {
     double nonNullableDoubleWithDefaultValue = 3.14,
     List<String> nonNullableListWithDefaultValue = const ['default'],
     Map<String, String> nonNullableMapWithDefaultValue = const {
-      'default': 'default'
+      'default': 'default',
     },
-    _i2.CustomModel nonNullableCustomModelWithDefaultValue =
-        const CustomModel('default', 0),
+    _i2.CustomModel nonNullableCustomModelWithDefaultValue = const CustomModel(
+      'default',
+      0,
+    ),
     _i2.CustomModel nonNullableCustomModelWithDefaultValue2 =
         CustomModel.testDefault,
   }) async =>
@@ -586,24 +691,30 @@ mixin BaseNavigator {
                   'nonNullableInt': nonNullableInt.toString(),
                   'nonNullableBool': nonNullableBool.toString(),
                   'nonNullableDouble': nonNullableDouble.toString(),
-                  'nonNullableList':
-                      base64Encode(utf8.encode(jsonEncode(nonNullableList))),
-                  'nonNullableMap':
-                      base64Encode(utf8.encode(jsonEncode(nonNullableMap))),
+                  'nonNullableList': base64Encode(
+                    utf8.encode(jsonEncode(nonNullableList)),
+                  ),
+                  'nonNullableMap': base64Encode(
+                    utf8.encode(jsonEncode(nonNullableMap)),
+                  ),
                   'nonNullableCustomModel': base64Encode(
-                      utf8.encode(jsonEncode(nonNullableCustomModel))),
+                    utf8.encode(jsonEncode(nonNullableCustomModel)),
+                  ),
                   'nullableString': nullableString,
                   'nullableInt': nullableInt?.toString(),
                   'nullableBool': nullableBool?.toString(),
                   'nullableDouble': nullableDouble?.toString(),
-                  'nullableList':
-                      base64Encode(utf8.encode(jsonEncode(nullableList))),
-                  'nullableMap':
-                      base64Encode(utf8.encode(jsonEncode(nullableMap))),
+                  'nullableList': base64Encode(
+                    utf8.encode(jsonEncode(nullableList)),
+                  ),
+                  'nullableMap': base64Encode(
+                    utf8.encode(jsonEncode(nullableMap)),
+                  ),
                   'nullableCustomModel': nullableCustomModel == null
                       ? null
                       : base64Encode(
-                          utf8.encode(jsonEncode(nullableCustomModel))),
+                          utf8.encode(jsonEncode(nullableCustomModel)),
+                        ),
                   'nonNullableStringWithDefaultValue':
                       nonNullableStringWithDefaultValue,
                   'nonNullableIntWithDefaultValue':
@@ -613,15 +724,21 @@ mixin BaseNavigator {
                   'nonNullableDoubleWithDefaultValue':
                       nonNullableDoubleWithDefaultValue.toString(),
                   'nonNullableListWithDefaultValue': base64Encode(
-                      utf8.encode(jsonEncode(nonNullableListWithDefaultValue))),
+                    utf8.encode(jsonEncode(nonNullableListWithDefaultValue)),
+                  ),
                   'nonNullableMapWithDefaultValue': base64Encode(
-                      utf8.encode(jsonEncode(nonNullableMapWithDefaultValue))),
+                    utf8.encode(jsonEncode(nonNullableMapWithDefaultValue)),
+                  ),
                   'nonNullableCustomModelWithDefaultValue': base64Encode(
-                      utf8.encode(
-                          jsonEncode(nonNullableCustomModelWithDefaultValue))),
+                    utf8.encode(
+                      jsonEncode(nonNullableCustomModelWithDefaultValue),
+                    ),
+                  ),
                   'nonNullableCustomModelWithDefaultValue2': base64Encode(
-                      utf8.encode(
-                          jsonEncode(nonNullableCustomModelWithDefaultValue2)))
+                    utf8.encode(
+                      jsonEncode(nonNullableCustomModelWithDefaultValue2),
+                    ),
+                  ),
                 }..removeWhere((_, v) => v == null))
               : null,
         ).toString(),
@@ -651,15 +768,17 @@ mixin BaseNavigator {
           'nonNullableCustomModelWithDefaultValue':
               nonNullableCustomModelWithDefaultValue,
           'nonNullableCustomModelWithDefaultValue2':
-              nonNullableCustomModelWithDefaultValue2
+              nonNullableCustomModelWithDefaultValue2,
         },
       );
   Future<void> showDialogExampleDialog({required String text}) async =>
       showCustomDialog<dynamic>(widget: _i3.ExampleDialog(text: text));
-  Future<void> showSheetRecursiveNavigationBottomSheet(
-          {int layers = 1}) async =>
+  Future<void> showSheetRecursiveNavigationBottomSheet({
+    int layers = 1,
+  }) async =>
       showBottomSheet<dynamic>(
-          widget: _i3.RecursiveNavigationBottomSheet(layers: layers));
+        widget: _i3.RecursiveNavigationBottomSheet(layers: layers),
+      );
   void goBack() => navigatorKey.currentState?.pop();
   void goBackWithResult<T>({T? result}) =>
       navigatorKey.currentState?.pop(result);
