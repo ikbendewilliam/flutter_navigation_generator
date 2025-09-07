@@ -14,7 +14,10 @@ abstract class ImportableTypeResolver {
     bool forceNullable = false,
   });
 
-  ImportableType resolveFunctionType(FunctionType function, [ExecutableElement2? executableElement]);
+  ImportableType resolveFunctionType(
+    FunctionType function, [
+    ExecutableElement2? executableElement,
+  ]);
 
   static String? relative(String? path, Uri? to) {
     if (path == null || to == null) {
@@ -22,11 +25,16 @@ abstract class ImportableTypeResolver {
     }
     var fileUri = Uri.parse(path);
     var libName = to.pathSegments.first;
-    if ((to.scheme == 'package' && fileUri.scheme == 'package' && fileUri.pathSegments.first == libName) || (to.scheme == 'asset' && fileUri.scheme != 'package')) {
+    if ((to.scheme == 'package' &&
+            fileUri.scheme == 'package' &&
+            fileUri.pathSegments.first == libName) ||
+        (to.scheme == 'asset' && fileUri.scheme != 'package')) {
       if (fileUri.path == to.path) {
         return fileUri.pathSegments.last;
       } else {
-        return p.posix.relative(fileUri.path, from: to.path).replaceFirst('../', '');
+        return p.posix
+            .relative(fileUri.path, from: to.path)
+            .replaceFirst('../', '');
       }
     } else {
       return path;
@@ -58,18 +66,24 @@ class ImportableTypeResolverImpl extends ImportableTypeResolver {
     }
 
     for (var lib in libs) {
-      if (!_isCoreDartType(lib) && lib.exportNamespace.definedNames2.values.contains(element)) {
+      if (!_isCoreDartType(lib) &&
+          lib.exportNamespace.definedNames2.values.contains(element)) {
         return lib.uri.toString();
       }
     }
     return null;
   }
 
-  bool _isCoreDartType(Element2? element) => element?.library2?.isDartCore ?? false;
+  bool _isCoreDartType(Element2? element) =>
+      element?.library2?.isDartCore ?? false;
 
   @override
-  ImportableType resolveFunctionType(FunctionType function, [ExecutableElement2? executableElement]) {
-    final functionElement = executableElement ?? function.element ?? function.alias?.element2;
+  ImportableType resolveFunctionType(
+    FunctionType function, [
+    ExecutableElement2? executableElement,
+  ]) {
+    final functionElement =
+        executableElement ?? function.element ?? function.alias?.element2;
     if (functionElement == null) {
       throw 'Can not resolve function type \nTry using an alias e.g typedef MyFunction = ${function.getDisplayString()};';
     }
@@ -99,13 +113,17 @@ class ImportableTypeResolverImpl extends ImportableTypeResolver {
         if (type.element3 is TypeParameterElement2) {
           importableTypes.add(const ImportableType(className: 'dynamic'));
         } else {
-          importableTypes.add(ImportableType(
-            className: type.element3?.displayName.replaceAll('?', '') ?? type.getDisplayString().replaceAll('?', ''),
-            import: resolveImport(type.element3),
-            isNullable: type.nullabilitySuffix == NullabilitySuffix.question,
-            typeArguments: _resolveTypeArguments(type),
-            isEnum: type.element3 is EnumElement2,
-          ));
+          importableTypes.add(
+            ImportableType(
+              className:
+                  type.element3?.displayName.replaceAll('?', '') ??
+                  type.getDisplayString().replaceAll('?', ''),
+              import: resolveImport(type.element3),
+              isNullable: type.nullabilitySuffix == NullabilitySuffix.question,
+              typeArguments: _resolveTypeArguments(type),
+              isEnum: type.element3 is EnumElement2,
+            ),
+          );
         }
       }
     }
@@ -120,9 +138,12 @@ class ImportableTypeResolverImpl extends ImportableTypeResolver {
     bool forceNullable = false,
   }) {
     return ImportableType(
-      className: type.element3?.displayName ?? type.getDisplayString().replaceAll('?', ''),
+      className:
+          type.element3?.displayName ??
+          type.getDisplayString().replaceAll('?', ''),
       name: name,
-      isNullable: forceNullable || type.nullabilitySuffix == NullabilitySuffix.question,
+      isNullable:
+          forceNullable || type.nullabilitySuffix == NullabilitySuffix.question,
       import: resolveImport(type.element3),
       isRequired: isRequired,
       typeArguments: _resolveTypeArguments(type),

@@ -29,22 +29,19 @@ void throwSourceError(String message) {
 }
 
 void throwError(String message, {Element2? element}) {
-  throw InvalidGenerationSourceError(
-    message,
-    element: element,
-  );
+  throw InvalidGenerationSourceError(message, element: element);
 }
 
 void throwIf(bool condition, String message, {Element2? element}) {
   if (condition) {
-    throw InvalidGenerationSourceError(
-      message,
-      element: element,
-    );
+    throw InvalidGenerationSourceError(message, element: element);
   }
 }
 
-void printBoxed(String message, {String header = '--------------------------'}) {
+void printBoxed(
+  String message, {
+  String header = '--------------------------',
+}) {
   final pre = header;
   // ignore: avoid_print
   print("$pre\n$message\n${''.padRight(72, '-')} \n");
@@ -61,33 +58,44 @@ Reference typeRefer(
   if (type == null) {
     typeReference = TypeReference((r) => r..symbol = 'void');
   } else {
-    final relativeImport = targetFile == null ? ImportableTypeResolver.resolveAssetImport(type.import) : ImportableTypeResolver.relative(type.import, targetFile);
+    final relativeImport =
+        targetFile == null
+            ? ImportableTypeResolver.resolveAssetImport(type.import)
+            : ImportableTypeResolver.relative(type.import, targetFile);
     typeReference = TypeReference((reference) {
       reference
         ..symbol = type.className
         ..url = relativeImport
-        ..isNullable = withNullabilitySuffix && (forceNullable || type.isNullable);
+        ..isNullable =
+            withNullabilitySuffix && (forceNullable || type.isNullable);
       if (type.typeArguments.isNotEmpty) {
         reference.types.addAll(
-          type.typeArguments.map((e) => typeRefer(
-                e,
-                targetFile: targetFile,
-                withNullabilitySuffix: withNullabilitySuffix,
-              )),
+          type.typeArguments.map(
+            (e) => typeRefer(
+              e,
+              targetFile: targetFile,
+              withNullabilitySuffix: withNullabilitySuffix,
+            ),
+          ),
         );
       }
     });
   }
   if (!forceFuture) return typeReference;
   return TypeReference(
-    (r) => r
-      ..symbol = 'Future'
-      ..types.add(typeReference),
+    (r) =>
+        r
+          ..symbol = 'Future'
+          ..types.add(typeReference),
   );
 }
 
 extension StringExtension on String {
   List<String> get pathSegments => Uri.parse(this).pathSegments.toList();
 
-  List<String> get parametersFromRouteName => pathSegments.where((element) => element.startsWith(':')).map((e) => e.substring(1)).toList();
+  List<String> get parametersFromRouteName =>
+      pathSegments
+          .where((element) => element.startsWith(':'))
+          .map((e) => e.substring(1))
+          .toList();
 }

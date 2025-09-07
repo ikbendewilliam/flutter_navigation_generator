@@ -16,9 +16,7 @@ const printActuals = false;
 void main() {
   group('OnGenerateRouteBuilder', () {
     test('Empty routes', () {
-      final content = OnGenerateRouteBuilder(
-        routes: {},
-      ).generate();
+      final content = OnGenerateRouteBuilder(routes: {}).generate();
 
       expect(content.name, 'onGenerateRoute');
       expect(content.returns?.symbol, 'Route<dynamic>?');
@@ -27,21 +25,22 @@ void main() {
       expect(content.requiredParameters.length, 1);
       expect(content.body is Block, true);
       expect(
-          (content.body as Block).statements.first.toString(), 'return null;');
+        (content.body as Block).statements.first.toString(),
+        'return null;',
+      );
       expect((content.body as Block).statements.length, 1);
     });
 
     test('1 test route no return', () {
-      final content = OnGenerateRouteBuilder(
-        routes: {
-          RouteConfig(
-            routeName: 'test',
-            routeWidget: const ImportableType(
-              className: 'TestPage',
-            ),
-          ),
-        },
-      ).generate();
+      final content =
+          OnGenerateRouteBuilder(
+            routes: {
+              RouteConfig(
+                routeName: 'test',
+                routeWidget: const ImportableType(className: 'TestPage'),
+              ),
+            },
+          ).generate();
 
       expect(content.body is Block, true);
       final bodyStatements =
@@ -59,25 +58,24 @@ void main() {
     });
 
     test('2 test route with return', () {
-      final content = OnGenerateRouteBuilder(
-        routes: {
-          RouteConfig(
-            routeName: 'test_without_return',
-            routeWidget: const ImportableType(
-              className: 'TestPageWithoutReturn',
-            ),
-          ),
-          RouteConfig(
-            routeName: 'test_with_return',
-            routeWidget: const ImportableType(
-              className: 'TestPageWithReturn',
-            ),
-            returnType: const ImportableType(
-              className: 'ReturnType',
-            ),
-          ),
-        },
-      ).generate();
+      final content =
+          OnGenerateRouteBuilder(
+            routes: {
+              RouteConfig(
+                routeName: 'test_without_return',
+                routeWidget: const ImportableType(
+                  className: 'TestPageWithoutReturn',
+                ),
+              ),
+              RouteConfig(
+                routeName: 'test_with_return',
+                routeWidget: const ImportableType(
+                  className: 'TestPageWithReturn',
+                ),
+                returnType: const ImportableType(className: 'ReturnType'),
+              ),
+            },
+          ).generate();
 
       expect(content.body is Block, true);
       final bodyStatements =
@@ -95,28 +93,25 @@ void main() {
     });
 
     test('test route with return & unknownRoute', () {
-      final content = OnGenerateRouteBuilder(
-        unknownRoute: const ImportableType(
-          className: 'Route404',
-        ),
-        routes: {
-          RouteConfig(
-            routeName: 'test_without_return',
-            routeWidget: const ImportableType(
-              className: 'TestPageWithoutReturn',
-            ),
-          ),
-          RouteConfig(
-            routeName: 'test_with_return',
-            routeWidget: const ImportableType(
-              className: 'TestPageWithReturn',
-            ),
-            returnType: const ImportableType(
-              className: 'ReturnType',
-            ),
-          ),
-        },
-      ).generate();
+      final content =
+          OnGenerateRouteBuilder(
+            unknownRoute: const ImportableType(className: 'Route404'),
+            routes: {
+              RouteConfig(
+                routeName: 'test_without_return',
+                routeWidget: const ImportableType(
+                  className: 'TestPageWithoutReturn',
+                ),
+              ),
+              RouteConfig(
+                routeName: 'test_with_return',
+                routeWidget: const ImportableType(
+                  className: 'TestPageWithReturn',
+                ),
+                returnType: const ImportableType(className: 'ReturnType'),
+              ),
+            },
+          ).generate();
 
       expect(content.body is Block, true);
       final bodyStatements =
@@ -134,16 +129,15 @@ void main() {
     });
 
     test('test routename starting with a number', () {
-      final content = OnGenerateRouteBuilder(
-        routes: {
-          RouteConfig(
-            routeName: '404',
-            routeWidget: const ImportableType(
-              className: 'Route404',
-            ),
-          ),
-        },
-      ).generate();
+      final content =
+          OnGenerateRouteBuilder(
+            routes: {
+              RouteConfig(
+                routeName: '404',
+                routeWidget: const ImportableType(className: 'Route404'),
+              ),
+            },
+          ).generate();
 
       expect(content.body is Block, true);
       final bodyStatements =
@@ -161,17 +155,16 @@ void main() {
     });
 
     test('1 test route with constructorName', () {
-      final content = OnGenerateRouteBuilder(
-        routes: {
-          RouteConfig(
-            routeName: 'test',
-            routeWidget: const ImportableType(
-              className: 'TestPage',
-            ),
-            constructorName: 'constructorName',
-          ),
-        },
-      ).generate();
+      final content =
+          OnGenerateRouteBuilder(
+            routes: {
+              RouteConfig(
+                routeName: 'test',
+                routeWidget: const ImportableType(className: 'TestPage'),
+                constructorName: 'constructorName',
+              ),
+            },
+          ).generate();
 
       expect(content.body is Block, true);
       final bodyStatements =
@@ -189,16 +182,16 @@ void main() {
     });
 
     test('1 test route with isFullscreenDialog', () {
-      final content = OnGenerateRouteBuilder(
-        routes: {
-          RouteConfig(
-              routeName: 'test',
-              routeWidget: const ImportableType(
-                className: 'TestPage',
+      final content =
+          OnGenerateRouteBuilder(
+            routes: {
+              RouteConfig(
+                routeName: 'test',
+                routeWidget: const ImportableType(className: 'TestPage'),
+                isFullscreenDialog: true,
               ),
-              isFullscreenDialog: true),
-        },
-      ).generate();
+            },
+          ).generate();
 
       expect(content.body is Block, true);
       final bodyStatements =
@@ -216,19 +209,16 @@ void main() {
     });
 
     test('1 test route with CustomPageType', () {
-      final content = OnGenerateRouteBuilder(
-        routes: {
-          RouteConfig(
-            routeName: 'test',
-            routeWidget: const ImportableType(
-              className: 'TestPage',
-            ),
-            pageType: const ImportableType(
-              className: 'CustomPageType',
-            ),
-          ),
-        },
-      ).generate();
+      final content =
+          OnGenerateRouteBuilder(
+            routes: {
+              RouteConfig(
+                routeName: 'test',
+                routeWidget: const ImportableType(className: 'TestPage'),
+                pageType: const ImportableType(className: 'CustomPageType'),
+              ),
+            },
+          ).generate();
 
       expect(content.body is Block, true);
       final bodyStatements =
@@ -246,19 +236,16 @@ void main() {
     });
 
     test('1 test route with CustomPageType from navigator', () {
-      final content = OnGenerateRouteBuilder(
-        routes: {
-          RouteConfig(
-            routeName: 'test',
-            routeWidget: const ImportableType(
-              className: 'TestPage',
-            ),
-          ),
-        },
-        pageType: const ImportableType(
-          className: 'CustomPageType',
-        ),
-      ).generate();
+      final content =
+          OnGenerateRouteBuilder(
+            routes: {
+              RouteConfig(
+                routeName: 'test',
+                routeWidget: const ImportableType(className: 'TestPage'),
+              ),
+            },
+            pageType: const ImportableType(className: 'CustomPageType'),
+          ).generate();
 
       expect(content.body is Block, true);
       final bodyStatements =
@@ -276,33 +263,38 @@ void main() {
     });
 
     test('1 test route with parameters', () {
-      final content = OnGenerateRouteBuilder(
-        routes: {
-          RouteConfig(
-            routeName: 'test',
-            routeWidget: const ImportableType(
-              className: 'TestPage',
-            ),
-            parameters: [
-              RouteFieldConfig(
-                type: const ImportableType(
-                    className: 'bool', name: 'testBool', isNullable: true),
-                addToJson: true,
-                defaultValue: null,
-                ignore: false,
-                queryName: 'testBool',
+      final content =
+          OnGenerateRouteBuilder(
+            routes: {
+              RouteConfig(
+                routeName: 'test',
+                routeWidget: const ImportableType(className: 'TestPage'),
+                parameters: [
+                  RouteFieldConfig(
+                    type: const ImportableType(
+                      className: 'bool',
+                      name: 'testBool',
+                      isNullable: true,
+                    ),
+                    addToJson: true,
+                    defaultValue: null,
+                    ignore: false,
+                    queryName: 'testBool',
+                  ),
+                  RouteFieldConfig(
+                    type: const ImportableType(
+                      className: 'int',
+                      name: 'testInt',
+                    ),
+                    addToJson: true,
+                    defaultValue: null,
+                    ignore: false,
+                    queryName: 'testInt',
+                  ),
+                ],
               ),
-              RouteFieldConfig(
-                type: const ImportableType(className: 'int', name: 'testInt'),
-                addToJson: true,
-                defaultValue: null,
-                ignore: false,
-                queryName: 'testInt',
-              ),
-            ],
-          ),
-        },
-      ).generate();
+            },
+          ).generate();
 
       expect(content.body is Block, true);
       final bodyStatements =
@@ -320,33 +312,38 @@ void main() {
     });
 
     test('1 test route with parameters in routeName', () {
-      final content = OnGenerateRouteBuilder(
-        routes: {
-          RouteConfig(
-            routeName: 'test/:testBool',
-            routeWidget: const ImportableType(
-              className: 'TestPage',
-            ),
-            parameters: [
-              RouteFieldConfig(
-                type: const ImportableType(
-                    className: 'bool', name: 'testBool', isNullable: true),
-                addToJson: true,
-                defaultValue: null,
-                ignore: false,
-                queryName: 'testBool',
+      final content =
+          OnGenerateRouteBuilder(
+            routes: {
+              RouteConfig(
+                routeName: 'test/:testBool',
+                routeWidget: const ImportableType(className: 'TestPage'),
+                parameters: [
+                  RouteFieldConfig(
+                    type: const ImportableType(
+                      className: 'bool',
+                      name: 'testBool',
+                      isNullable: true,
+                    ),
+                    addToJson: true,
+                    defaultValue: null,
+                    ignore: false,
+                    queryName: 'testBool',
+                  ),
+                  RouteFieldConfig(
+                    type: const ImportableType(
+                      className: 'int',
+                      name: 'testInt',
+                    ),
+                    addToJson: true,
+                    defaultValue: null,
+                    ignore: false,
+                    queryName: 'testInt',
+                  ),
+                ],
               ),
-              RouteFieldConfig(
-                type: const ImportableType(className: 'int', name: 'testInt'),
-                addToJson: true,
-                defaultValue: null,
-                ignore: false,
-                queryName: 'testInt',
-              ),
-            ],
-          ),
-        },
-      ).generate();
+            },
+          ).generate();
 
       expect(content.body is Block, true);
       final bodyStatements =
@@ -366,34 +363,39 @@ void main() {
     });
 
     test('1 test route with routeName /', () {
-      final content = OnGenerateRouteBuilder(
-        routes: {
-          RouteConfig(
-            routeName: '/',
-            methodName: 'TestPage',
-            routeWidget: const ImportableType(
-              className: 'TestPage',
-            ),
-            parameters: [
-              RouteFieldConfig(
-                type: const ImportableType(
-                    className: 'bool', name: 'testBool', isNullable: true),
-                addToJson: true,
-                defaultValue: null,
-                ignore: false,
-                queryName: 'testBool',
+      final content =
+          OnGenerateRouteBuilder(
+            routes: {
+              RouteConfig(
+                routeName: '/',
+                methodName: 'TestPage',
+                routeWidget: const ImportableType(className: 'TestPage'),
+                parameters: [
+                  RouteFieldConfig(
+                    type: const ImportableType(
+                      className: 'bool',
+                      name: 'testBool',
+                      isNullable: true,
+                    ),
+                    addToJson: true,
+                    defaultValue: null,
+                    ignore: false,
+                    queryName: 'testBool',
+                  ),
+                  RouteFieldConfig(
+                    type: const ImportableType(
+                      className: 'int',
+                      name: 'testInt',
+                    ),
+                    addToJson: true,
+                    defaultValue: null,
+                    ignore: false,
+                    queryName: 'testInt',
+                  ),
+                ],
               ),
-              RouteFieldConfig(
-                type: const ImportableType(className: 'int', name: 'testInt'),
-                addToJson: true,
-                defaultValue: null,
-                ignore: false,
-                queryName: 'testInt',
-              ),
-            ],
-          ),
-        },
-      ).generate();
+            },
+          ).generate();
 
       expect(content.body is Block, true);
       final bodyStatements =
@@ -411,33 +413,38 @@ void main() {
     });
 
     test('1 test route with parameters in routeName ending with /', () {
-      final content = OnGenerateRouteBuilder(
-        routes: {
-          RouteConfig(
-            routeName: 'test/:testBool/',
-            routeWidget: const ImportableType(
-              className: 'TestPage',
-            ),
-            parameters: [
-              RouteFieldConfig(
-                type: const ImportableType(
-                    className: 'bool', name: 'testBool', isNullable: true),
-                addToJson: true,
-                defaultValue: null,
-                ignore: false,
-                queryName: 'testBool',
+      final content =
+          OnGenerateRouteBuilder(
+            routes: {
+              RouteConfig(
+                routeName: 'test/:testBool/',
+                routeWidget: const ImportableType(className: 'TestPage'),
+                parameters: [
+                  RouteFieldConfig(
+                    type: const ImportableType(
+                      className: 'bool',
+                      name: 'testBool',
+                      isNullable: true,
+                    ),
+                    addToJson: true,
+                    defaultValue: null,
+                    ignore: false,
+                    queryName: 'testBool',
+                  ),
+                  RouteFieldConfig(
+                    type: const ImportableType(
+                      className: 'int',
+                      name: 'testInt',
+                    ),
+                    addToJson: true,
+                    defaultValue: null,
+                    ignore: false,
+                    queryName: 'testInt',
+                  ),
+                ],
               ),
-              RouteFieldConfig(
-                type: const ImportableType(className: 'int', name: 'testInt'),
-                addToJson: true,
-                defaultValue: null,
-                ignore: false,
-                queryName: 'testInt',
-              ),
-            ],
-          ),
-        },
-      ).generate();
+            },
+          ).generate();
 
       expect(content.body is Block, true);
       final bodyStatements =
@@ -457,33 +464,38 @@ void main() {
     });
 
     test('1 test route with parameters and default values', () {
-      final content = OnGenerateRouteBuilder(
-        routes: {
-          RouteConfig(
-            routeName: 'test',
-            routeWidget: const ImportableType(
-              className: 'TestPage',
-            ),
-            parameters: [
-              RouteFieldConfig(
-                type: const ImportableType(
-                    className: 'bool', name: 'testBool', isNullable: true),
-                addToJson: true,
-                defaultValue: 'true',
-                ignore: false,
-                queryName: 'testBool',
+      final content =
+          OnGenerateRouteBuilder(
+            routes: {
+              RouteConfig(
+                routeName: 'test',
+                routeWidget: const ImportableType(className: 'TestPage'),
+                parameters: [
+                  RouteFieldConfig(
+                    type: const ImportableType(
+                      className: 'bool',
+                      name: 'testBool',
+                      isNullable: true,
+                    ),
+                    addToJson: true,
+                    defaultValue: 'true',
+                    ignore: false,
+                    queryName: 'testBool',
+                  ),
+                  RouteFieldConfig(
+                    type: const ImportableType(
+                      className: 'int',
+                      name: 'testInt',
+                    ),
+                    addToJson: true,
+                    defaultValue: '1',
+                    ignore: false,
+                    queryName: 'testInt',
+                  ),
+                ],
               ),
-              RouteFieldConfig(
-                type: const ImportableType(className: 'int', name: 'testInt'),
-                addToJson: true,
-                defaultValue: '1',
-                ignore: false,
-                queryName: 'testInt',
-              ),
-            ],
-          ),
-        },
-      ).generate();
+            },
+          ).generate();
 
       expect(content.body is Block, true);
       final bodyStatements =
@@ -501,82 +513,80 @@ void main() {
     });
 
     test('1 test route with generatePageRoute false', () {
-      final content = OnGenerateRouteBuilder(
-        routes: {
-          RouteConfig(
-            routeName: 'test',
-            routeWidget: const ImportableType(
-              className: 'TestPage',
-            ),
-            generatePageRoute: false,
-          ),
-        },
-      ).generate();
+      final content =
+          OnGenerateRouteBuilder(
+            routes: {
+              RouteConfig(
+                routeName: 'test',
+                routeWidget: const ImportableType(className: 'TestPage'),
+                generatePageRoute: false,
+              ),
+            },
+          ).generate();
 
       expect(content.body is Block, true);
       expect(
-          (content.body as Block).statements.first.toString(), 'return null;');
+        (content.body as Block).statements.first.toString(),
+        'return null;',
+      );
       expect((content.body as Block).statements.length, 1);
     });
 
     test('1 test route with dialog', () {
-      final content = OnGenerateRouteBuilder(
-        routes: {
-          RouteConfig(
-            routeName: 'test',
-            routeWidget: const ImportableType(
-              className: 'TestPage',
-            ),
-            navigationType: NavigationType.dialog,
-          ),
-        },
-      ).generate();
+      final content =
+          OnGenerateRouteBuilder(
+            routes: {
+              RouteConfig(
+                routeName: 'test',
+                routeWidget: const ImportableType(className: 'TestPage'),
+                navigationType: NavigationType.dialog,
+              ),
+            },
+          ).generate();
 
       expect(content.body is Block, true);
       expect(
-          (content.body as Block).statements.first.toString(), 'return null;');
+        (content.body as Block).statements.first.toString(),
+        'return null;',
+      );
       expect((content.body as Block).statements.length, 1);
     });
 
     test('1 test route with bottomsheet', () {
-      final content = OnGenerateRouteBuilder(
-        routes: {
-          RouteConfig(
-            routeName: 'test',
-            routeWidget: const ImportableType(
-              className: 'TestPage',
-            ),
-            navigationType: NavigationType.bottomSheet,
-          ),
-        },
-      ).generate();
+      final content =
+          OnGenerateRouteBuilder(
+            routes: {
+              RouteConfig(
+                routeName: 'test',
+                routeWidget: const ImportableType(className: 'TestPage'),
+                navigationType: NavigationType.bottomSheet,
+              ),
+            },
+          ).generate();
 
       expect(content.body is Block, true);
       expect(
-          (content.body as Block).statements.first.toString(), 'return null;');
+        (content.body as Block).statements.first.toString(),
+        'return null;',
+      );
       expect((content.body as Block).statements.length, 1);
     });
 
     test('guards', () {
-      final content = OnGenerateRouteBuilder(
-        routes: {
-          RouteConfig(
-            routeName: 'test',
-            routeWidget: const ImportableType(
-              className: 'TestPage',
-            ),
-            guards: const [
-              ImportableType(className: 'TestGuard'),
-            ],
-          ),
-          RouteConfig(
-            routeName: 'test2',
-            routeWidget: const ImportableType(
-              className: 'TestPage2',
-            ),
-          ),
-        },
-      ).generate();
+      final content =
+          OnGenerateRouteBuilder(
+            routes: {
+              RouteConfig(
+                routeName: 'test',
+                routeWidget: const ImportableType(className: 'TestPage'),
+                guards: const [ImportableType(className: 'TestGuard')],
+              ),
+              RouteConfig(
+                routeName: 'test2',
+                routeWidget: const ImportableType(className: 'TestPage2'),
+              ),
+            },
+          ).generate();
 
       expect(content.body is Block, true);
       final bodyStatements =
@@ -594,26 +604,21 @@ void main() {
     });
 
     test('defaultGuards', () {
-      final content = OnGenerateRouteBuilder(
-        routes: {
-          RouteConfig(
-            routeName: 'test',
-            routeWidget: const ImportableType(
-              className: 'TestPage',
-            ),
-          ),
-          RouteConfig(
-            routeName: 'test2',
-            routeWidget: const ImportableType(
-              className: 'TestPage2',
-            ),
-            guards: [],
-          ),
-        },
-        defaultGuards: [
-          const ImportableType(className: 'TestGuard'),
-        ],
-      ).generate();
+      final content =
+          OnGenerateRouteBuilder(
+            routes: {
+              RouteConfig(
+                routeName: 'test',
+                routeWidget: const ImportableType(className: 'TestPage'),
+              ),
+              RouteConfig(
+                routeName: 'test2',
+                routeWidget: const ImportableType(className: 'TestPage2'),
+                guards: [],
+              ),
+            },
+            defaultGuards: [const ImportableType(className: 'TestGuard')],
+          ).generate();
 
       expect(content.body is Block, true);
       final bodyStatements =

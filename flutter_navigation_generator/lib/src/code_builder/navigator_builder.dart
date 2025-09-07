@@ -30,53 +30,54 @@ class NavigatorBuilder {
 
   Field buildNavigatorKey() {
     return Field(
-      (f) => f
-        ..name = 'navigatorKey'
-        ..type = const Reference('GlobalKey<NavigatorState>')
-        ..modifier = FieldModifier.final$
-        ..assignment = const Code('GlobalKey<NavigatorState>()'),
+      (f) =>
+          f
+            ..name = 'navigatorKey'
+            ..type = const Reference('GlobalKey<NavigatorState>')
+            ..modifier = FieldModifier.final$
+            ..assignment = const Code('GlobalKey<NavigatorState>()'),
     );
   }
 
   Spec generate() {
-    final hasGuards = routes.any((route) => route.guards?.isNotEmpty == true) ||
+    final hasGuards =
+        routes.any((route) => route.guards?.isNotEmpty == true) ||
         defaultGuards.isNotEmpty;
     return Mixin(
-      (b) => b
-        ..name = className
-        ..fields.add(buildNavigatorKey())
-        ..methods.add(
-          OnGenerateRouteBuilder(
-            routes: routes,
-            pageType: pageType,
-            targetFile: targetFile,
-            unknownRoute: unknownRoute,
-            defaultGuards: defaultGuards,
-            ignoreKeysByDefault: ignoreKeysByDefault,
-          ).generate(),
-        )
-        ..methods.addAll(
-          hasGuards ? GuardsBuilder().generate() : [],
-        )
-        ..fields.addAll(
-          hasGuards
-              ? GuardsFieldBuilder(
-                  routes: routes,
-                  targetFile: targetFile,
-                  defaultGuards: defaultGuards,
-                ).generate()
-              : [],
-        )
-        ..methods.addAll(
-          RouteBuilder(
-            routes: routes,
-            pageType: pageType,
-            targetFile: targetFile,
-            ignoreKeysByDefault: ignoreKeysByDefault,
-            includeQueryParametersNavigatorConfig:
-                includeQueryParametersNavigatorConfig,
-          ).generate(),
-        ),
+      (b) =>
+          b
+            ..name = className
+            ..fields.add(buildNavigatorKey())
+            ..methods.add(
+              OnGenerateRouteBuilder(
+                routes: routes,
+                pageType: pageType,
+                targetFile: targetFile,
+                unknownRoute: unknownRoute,
+                defaultGuards: defaultGuards,
+                ignoreKeysByDefault: ignoreKeysByDefault,
+              ).generate(),
+            )
+            ..methods.addAll(hasGuards ? GuardsBuilder().generate() : [])
+            ..fields.addAll(
+              hasGuards
+                  ? GuardsFieldBuilder(
+                    routes: routes,
+                    targetFile: targetFile,
+                    defaultGuards: defaultGuards,
+                  ).generate()
+                  : [],
+            )
+            ..methods.addAll(
+              RouteBuilder(
+                routes: routes,
+                pageType: pageType,
+                targetFile: targetFile,
+                ignoreKeysByDefault: ignoreKeysByDefault,
+                includeQueryParametersNavigatorConfig:
+                    includeQueryParametersNavigatorConfig,
+              ).generate(),
+            ),
     );
   }
 }

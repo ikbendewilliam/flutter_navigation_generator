@@ -31,38 +31,37 @@ class LibraryGenerator {
 
   Library generate() {
     return Library(
-      (b) => b
-        ..ignoreForFile.addAll(['prefer_const_constructors'])
-        ..directives.addAll(
-          ImportBuilder(
-            routes: routes,
-            pageType: pageType,
-            targetFile: targetFile,
-            defaultGuards: defaultGuards,
-            ignoreKeysByDefault: ignoreKeysByDefault,
-            includeQueryParametersNavigatorConfig:
-                includeQueryParametersNavigatorConfig,
-          ).generate(),
-        )
-        ..body.addAll(
-          [
-            NavigatorBuilder(
-              className: className,
-              routes: routes,
-              pageType: pageType,
-              targetFile: targetFile,
-              unknownRoute: unknownRoute,
-              defaultGuards: defaultGuards,
-              ignoreKeysByDefault: ignoreKeysByDefault,
-              includeQueryParametersNavigatorConfig:
-                  includeQueryParametersNavigatorConfig,
-            ).generate(),
-            RouteNamesBuilder(
-              routes: routes,
-              removeSuffixes: removeSuffixes,
-            ).generate(),
-          ],
-        ),
+      (b) =>
+          b
+            ..ignoreForFile.addAll(['prefer_const_constructors'])
+            ..directives.addAll(
+              ImportBuilder(
+                routes: routes,
+                pageType: pageType,
+                targetFile: targetFile,
+                defaultGuards: defaultGuards,
+                ignoreKeysByDefault: ignoreKeysByDefault,
+                includeQueryParametersNavigatorConfig:
+                    includeQueryParametersNavigatorConfig,
+              ).generate(),
+            )
+            ..body.addAll([
+              NavigatorBuilder(
+                className: className,
+                routes: routes,
+                pageType: pageType,
+                targetFile: targetFile,
+                unknownRoute: unknownRoute,
+                defaultGuards: defaultGuards,
+                ignoreKeysByDefault: ignoreKeysByDefault,
+                includeQueryParametersNavigatorConfig:
+                    includeQueryParametersNavigatorConfig,
+              ).generate(),
+              RouteNamesBuilder(
+                routes: routes,
+                removeSuffixes: removeSuffixes,
+              ).generate(),
+            ]),
     );
   }
 }

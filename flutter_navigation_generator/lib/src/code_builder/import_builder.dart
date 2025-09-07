@@ -28,9 +28,11 @@ class ImportBuilder {
       if (routes.any((route) => route.guards?.isNotEmpty == true) ||
           defaultGuards.isNotEmpty)
         'package:flutter_navigation_generator_annotations/flutter_navigation_generator_annotations.dart',
-      if (routes.any((route) =>
-              route.includeQueryParameters ==
-              IncludeQueryParametersType.onlyOnWeb) ||
+      if (routes.any(
+            (route) =>
+                route.includeQueryParameters ==
+                IncludeQueryParametersType.onlyOnWeb,
+          ) ||
           (includeQueryParametersNavigatorConfig ==
                   IncludeQueryParametersType.onlyOnWeb &&
               routes.any((route) => route.includeQueryParameters == null)))
@@ -38,22 +40,30 @@ class ImportBuilder {
     };
     imports.add(typeRefer(pageType, targetFile: targetFile).url);
     imports.addAll(
-        defaultGuards.map((e) => typeRefer(e, targetFile: targetFile).url));
-    imports.addAll(routes.expand(
-      (route) => [
-        typeRefer(route.routeWidget, targetFile: targetFile).url,
-        typeRefer(route.pageType, targetFile: targetFile).url,
-        typeRefer(route.returnType, targetFile: targetFile).url,
-        ...route.parameters
-            .where((e) => !e.ignoreWithKeyCheck(ignoreKeysByDefault))
-            .expand((e) => [
+      defaultGuards.map((e) => typeRefer(e, targetFile: targetFile).url),
+    );
+    imports.addAll(
+      routes.expand(
+        (route) => [
+          typeRefer(route.routeWidget, targetFile: targetFile).url,
+          typeRefer(route.pageType, targetFile: targetFile).url,
+          typeRefer(route.returnType, targetFile: targetFile).url,
+          ...route.parameters
+              .where((e) => !e.ignoreWithKeyCheck(ignoreKeysByDefault))
+              .expand(
+                (e) => [
                   typeRefer(e.type, targetFile: targetFile).url,
-                  ...e.type.typeArguments
-                      .map((e) => typeRefer(e, targetFile: targetFile).url),
-                ]),
-        ...?route.guards?.map((e) => typeRefer(e, targetFile: targetFile).url),
-      ],
-    ));
+                  ...e.type.typeArguments.map(
+                    (e) => typeRefer(e, targetFile: targetFile).url,
+                  ),
+                ],
+              ),
+          ...?route.guards?.map(
+            (e) => typeRefer(e, targetFile: targetFile).url,
+          ),
+        ],
+      ),
+    );
     return imports.whereType<String>().map(Directive.import);
   }
 }

@@ -5,8 +5,11 @@ class CaseUtil {
   late String originalText;
   late List<String> _words;
 
-  CaseUtil(String text,
-      {String? alternativeText, List<String> removeSuffixes = const []}) {
+  CaseUtil(
+    String text, {
+    String? alternativeText,
+    List<String> removeSuffixes = const [],
+  }) {
     for (final removeSuffix in removeSuffixes) {
       if (text.toLowerCase().endsWith(removeSuffix.toLowerCase())) {
         text = text.substring(0, text.length - removeSuffix.length);
@@ -14,7 +17,9 @@ class CaseUtil {
       if (alternativeText != null &&
           alternativeText.toLowerCase().endsWith(removeSuffix.toLowerCase())) {
         alternativeText = alternativeText.substring(
-            0, alternativeText.length - removeSuffix.length);
+          0,
+          alternativeText.length - removeSuffix.length,
+        );
       }
     }
     originalText = text;
@@ -32,9 +37,10 @@ class CaseUtil {
 
     for (var i = 0; i < text.length; i++) {
       final char = String.fromCharCode(text.codeUnitAt(i));
-      final nextChar = i + 1 == text.length
-          ? null
-          : String.fromCharCode(text.codeUnitAt(i + 1));
+      final nextChar =
+          i + 1 == text.length
+              ? null
+              : String.fromCharCode(text.codeUnitAt(i + 1));
 
       if (_symbolRegex.hasMatch(char)) {
         continue;
@@ -42,7 +48,8 @@ class CaseUtil {
 
       sb.write(char);
 
-      final isEndOfWord = nextChar == null ||
+      final isEndOfWord =
+          nextChar == null ||
           (_upperAlphaRegex.hasMatch(nextChar) && !isAllCaps) ||
           _symbolRegex.hasMatch(nextChar);
 

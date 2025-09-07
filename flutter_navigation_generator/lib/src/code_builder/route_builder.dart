@@ -63,49 +63,61 @@ class RouteBuilder {
           '$namePrefix${CaseUtil(route.methodName.replaceAll(RegExp(':[a-zA-Z0-9]*'), '')).upperCamelCase}';
     }
     return Method(
-      (b) => b
-        ..name = name
-        ..lambda = isLambda
-        ..modifier = isAsync ? MethodModifier.async : null
-        ..optionalParameters.addAll(
-          route.parameters
-              .where((p) => !p.ignoreWithKeyCheck(ignoreKeysByDefault))
-              .map(
-                (p) => Parameter(
-                  (b) => b
-                    ..name = p.type.argumentName
-                    ..named = true
-                    ..required = p.type.isRequired && p.defaultValue == null
-                    ..defaultTo =
-                        p.defaultValue != null ? Code(p.defaultValue!) : null
-                    ..type = typeRefer(p.type),
-                ),
-              ),
-        )
-        ..returns = typeRefer(
-          route.returnType,
-          forceNullable: true,
-          forceFuture: isAsync,
-        )
-        ..body = body,
+      (b) =>
+          b
+            ..name = name
+            ..lambda = isLambda
+            ..modifier = isAsync ? MethodModifier.async : null
+            ..optionalParameters.addAll(
+              route.parameters
+                  .where((p) => !p.ignoreWithKeyCheck(ignoreKeysByDefault))
+                  .map(
+                    (p) => Parameter(
+                      (b) =>
+                          b
+                            ..name = p.type.argumentName
+                            ..named = true
+                            ..required =
+                                p.type.isRequired && p.defaultValue == null
+                            ..defaultTo =
+                                p.defaultValue != null
+                                    ? Code(p.defaultValue!)
+                                    : null
+                            ..type = typeRefer(p.type),
+                    ),
+                  ),
+            )
+            ..returns = typeRefer(
+              route.returnType,
+              forceNullable: true,
+              forceFuture: isAsync,
+            )
+            ..body = body,
     );
   }
 
   String _generateQueryParameters(
-      RouteConfig route, List<String> parametersInRouteName) {
+    RouteConfig route,
+    List<String> parametersInRouteName,
+  ) {
     final includeQueryParameters =
         route.includeQueryParameters ?? includeQueryParametersNavigatorConfig;
     if (includeQueryParameters == IncludeQueryParametersType.never) return '';
 
-    final filteredParameters = route.parameters.where((element) =>
-        !element.ignoreWithKeyCheck(ignoreKeysByDefault) &&
-        element.addToJson &&
-        !parametersInRouteName.contains(element.type.argumentName));
-    final queryParametersMap =
-        filteredParameters.toList().asMap().map((_, parameterConfig) {
+    final filteredParameters = route.parameters.where(
+      (element) =>
+          !element.ignoreWithKeyCheck(ignoreKeysByDefault) &&
+          element.addToJson &&
+          !parametersInRouteName.contains(element.type.argumentName),
+    );
+    final queryParametersMap = filteredParameters.toList().asMap().map((
+      _,
+      parameterConfig,
+    ) {
       final parameter = parameterConfig.type;
-      final stringValue =
-          ImportableTypeStringConverter.convertToString(parameter);
+      final stringValue = ImportableTypeStringConverter.convertToString(
+        parameter,
+      );
       return MapEntry(
         "'${parameterConfig.queryName}'",
         (parameter.isNullable && parameter.isCustomClass)
@@ -117,8 +129,9 @@ class RouteBuilder {
     if (queryParametersMap.isEmpty) return '';
     var queryParameters = queryParametersMap.toString();
 
-    var addRemoveWhere =
-        filteredParameters.any((element) => element.type.isNullable);
+    var addRemoveWhere = filteredParameters.any(
+      (element) => element.type.isNullable,
+    );
     if (addRemoveWhere) {
       queryParameters = '$queryParameters..removeWhere((_, v) => v == null)';
     }
@@ -132,46 +145,49 @@ class RouteBuilder {
   }
 
   Iterable<Method> _generatePageRoutes(List<RouteConfig> routes) {
-    return routes.map(
-      (route) {
-        if (route.navigationType == NavigationType.pushNotNamed) {
-          return _generateBottomSheetOrDialogRoute(
-            route: route,
-            namePrefix: 'goTo',
-            bodyCall: 'navigatorKey.currentState?.push',
-            useNamedWidgetArugment: false,
-            withPageType: true,
-          );
-        }
-        Expression path;
-        final parametersInRouteName = route.routeName.parametersFromRouteName;
-        if (route.routeNameContainsParameters) {
-          path = Reference('RouteNames.${route.asRouteName}').call(
-              [],
-              (parametersInRouteName.asMap().map((_, parameter) {
-                final argument = route.parameters.firstWhereOrNull(
-                    (element) => element.type.name == parameter);
-                if (argument == null) return MapEntry(parameter, null);
-                return MapEntry(
-                    parameter,
-                    Reference(ImportableTypeStringConverter.convertToString(
-                        argument.type)));
-              })
-                    ..removeWhere((key, value) => value == null))
-                  .cast());
-        } else {
-          path = Reference('RouteNames.${route.asRouteName}');
-        }
+    return routes.map((route) {
+      if (route.navigationType == NavigationType.pushNotNamed) {
+        return _generateBottomSheetOrDialogRoute(
+          route: route,
+          namePrefix: 'goTo',
+          bodyCall: 'navigatorKey.currentState?.push',
+          useNamedWidgetArugment: false,
+          withPageType: true,
+        );
+      }
+      Expression path;
+      final parametersInRouteName = route.routeName.parametersFromRouteName;
+      if (route.routeNameContainsParameters) {
+        path = Reference('RouteNames.${route.asRouteName}').call(
+          [],
+          (parametersInRouteName.asMap().map((_, parameter) {
+            final argument = route.parameters.firstWhereOrNull(
+              (element) => element.type.name == parameter,
+            );
+            if (argument == null) return MapEntry(parameter, null);
+            return MapEntry(
+              parameter,
+              Reference(
+                ImportableTypeStringConverter.convertToString(argument.type),
+              ),
+            );
+          })..removeWhere((key, value) => value == null)).cast(),
+        );
+      } else {
+        path = Reference('RouteNames.${route.asRouteName}');
+      }
 
-        var queryParameters =
-            _generateQueryParameters(route, parametersInRouteName);
+      var queryParameters = _generateQueryParameters(
+        route,
+        parametersInRouteName,
+      );
 
-        final bodyCall = TypeReference(
-          (b) => b
-            ..symbol =
-                'navigatorKey.currentState?.${route.navigationType.navigatorMethod}'
-            ..types.addAll(
-              [
+      final bodyCall = TypeReference(
+        (b) =>
+            b
+              ..symbol =
+                  'navigatorKey.currentState?.${route.navigationType.navigatorMethod}'
+              ..types.addAll([
                 const Reference('dynamic'),
                 if (route.navigationType == NavigationType.pushReplacement ||
                     route.navigationType == NavigationType.popAndPush ||
@@ -181,56 +197,58 @@ class RouteBuilder {
                         NavigationType.restorablePopAndPush) ...[
                   const Reference('dynamic'),
                 ],
-              ],
-            ),
-        ).call(
-          [
-            queryParameters.isEmpty
-                ? path
-                : const Reference(
-                    'Uri',
-                    'dart:core',
-                  ).call(
-                    [],
-                    {
-                      'path': path,
-                      'queryParameters': Reference(queryParameters),
-                    },
-                  ).property('toString()'),
-            if (route.navigationType == NavigationType.pushAndReplaceAll ||
-                route.navigationType ==
-                    NavigationType.restorablePushAndReplaceAll) ...[
-              const Reference('(_) => false'),
-            ],
+              ]),
+      ).call(
+        [
+          queryParameters.isEmpty
+              ? path
+              : const Reference('Uri', 'dart:core')
+                  .call([], {
+                    'path': path,
+                    'queryParameters': Reference(queryParameters),
+                  })
+                  .property('toString()'),
+          if (route.navigationType == NavigationType.pushAndReplaceAll ||
+              route.navigationType ==
+                  NavigationType.restorablePushAndReplaceAll) ...[
+            const Reference('(_) => false'),
           ],
-          {
-            'arguments': Reference(
-                '${route.parameters.where((p) => !p.ignoreWithKeyCheck(ignoreKeysByDefault)).toList().asMap().map((_, parameterConfig) => MapEntry("'${parameterConfig.type.argumentName}'", parameterConfig.type.argumentName))}'),
-          },
+        ],
+        {
+          'arguments': Reference(
+            '${route.parameters.where((p) => !p.ignoreWithKeyCheck(ignoreKeysByDefault)).toList().asMap().map((_, parameterConfig) => MapEntry("'${parameterConfig.type.argumentName}'", parameterConfig.type.argumentName))}',
+          ),
+        },
+      );
+      Code body;
+      if (route.returnType != null) {
+        body = Block(
+          (b) =>
+              b
+                ..statements.add(
+                  declareFinal(
+                    'result',
+                    type: const Reference('dynamic'),
+                  ).assign(bodyCall.awaited).statement,
+                )
+                ..statements.add(
+                  const Reference('result')
+                      .asA(typeRefer(route.returnType, forceNullable: true))
+                      .returned
+                      .statement,
+                ),
         );
-        Code body;
-        if (route.returnType != null) {
-          body = Block((b) => b
-            ..statements.add(
-                declareFinal('result', type: const Reference('dynamic'))
-                    .assign(bodyCall.awaited)
-                    .statement)
-            ..statements.add(const Reference('result')
-                .asA(typeRefer(route.returnType, forceNullable: true))
-                .returned
-                .statement));
-        } else {
-          body = bodyCall.code;
-        }
-        return _generateMethod(
-          route: route,
-          namePrefix: 'goTo',
-          isAsync: route.navigationType.isAsync || route.returnType != null,
-          isLambda: route.returnType == null,
-          body: body,
-        );
-      },
-    );
+      } else {
+        body = bodyCall.code;
+      }
+      return _generateMethod(
+        route: route,
+        namePrefix: 'goTo',
+        isAsync: route.navigationType.isAsync || route.returnType != null,
+        isLambda: route.returnType == null,
+        body: body,
+      );
+    });
   }
 
   Method _generateBottomSheetOrDialogRoute({
@@ -247,155 +265,207 @@ class RouteBuilder {
           : '${route.routeWidget.className}.${route.constructorName}',
       typeRefer(route.routeWidget).url,
     ).call(
-        [],
-        route.parameters
-            .where((p) => !p.ignoreWithKeyCheck(ignoreKeysByDefault))
-            .toList()
-            .asMap()
-            .map((_, p) =>
-                MapEntry(p.type.argumentName, Reference(p.type.argumentName))));
+      [],
+      route.parameters
+          .where((p) => !p.ignoreWithKeyCheck(ignoreKeysByDefault))
+          .toList()
+          .asMap()
+          .map(
+            (_, p) =>
+                MapEntry(p.type.argumentName, Reference(p.type.argumentName)),
+          ),
+    );
     if (withPageType) {
-      final pageClass = route.pageType != null
-          ? typeRefer(route.pageType)
-          : pageType != null
+      final pageClass =
+          route.pageType != null
+              ? typeRefer(route.pageType)
+              : pageType != null
               ? typeRefer(pageType)
               : const Reference('MaterialPageRoute');
-      argument = pageClass.call(
-        [],
-        {
-          'builder': Method(
-            (b) => b
-              ..body = argument.code
-              ..requiredParameters.add(Parameter((b) => b..name = 'context')),
-          ).genericClosure,
-          'fullscreenDialog':
-              Reference(route.isFullscreenDialog == true ? 'true' : 'false'),
-        },
-      );
+      argument = pageClass.call([], {
+        'builder':
+            Method(
+              (b) =>
+                  b
+                    ..body = argument.code
+                    ..requiredParameters.add(
+                      Parameter((b) => b..name = 'context'),
+                    ),
+            ).genericClosure,
+        'fullscreenDialog': Reference(
+          route.isFullscreenDialog == true ? 'true' : 'false',
+        ),
+      });
     }
     return _generateMethod(
       route: route,
       namePrefix: namePrefix,
-      body: TypeReference(
-        (b) => b
-          ..symbol = bodyCall
-          ..types.add(route.returnType == null
-              ? const Reference('dynamic')
-              : typeRefer(route.returnType!)),
-      )
-          .call(
-            useNamedWidgetArugment ? [] : [argument],
-            useNamedWidgetArugment ? {'widget': argument} : {},
-          )
-          .code,
+      body:
+          TypeReference(
+                (b) =>
+                    b
+                      ..symbol = bodyCall
+                      ..types.add(
+                        route.returnType == null
+                            ? const Reference('dynamic')
+                            : typeRefer(route.returnType!),
+                      ),
+              )
+              .call(
+                useNamedWidgetArugment ? [] : [argument],
+                useNamedWidgetArugment ? {'widget': argument} : {},
+              )
+              .code,
     );
   }
 
   Iterable<Method> _generateDialogRoutes(List<RouteConfig> routes) {
-    return routes.map((route) => _generateBottomSheetOrDialogRoute(
-          route: route,
-          namePrefix: 'showDialog',
-          bodyCall: 'showCustomDialog',
-        ));
+    return routes.map(
+      (route) => _generateBottomSheetOrDialogRoute(
+        route: route,
+        namePrefix: 'showDialog',
+        bodyCall: 'showCustomDialog',
+      ),
+    );
   }
 
   Iterable<Method> _generateBottomSheetRoutes(List<RouteConfig> routes) {
-    return routes.map((route) => _generateBottomSheetOrDialogRoute(
-          route: route,
-          namePrefix: 'showSheet',
-          bodyCall: 'showBottomSheet',
-        ));
+    return routes.map(
+      (route) => _generateBottomSheetOrDialogRoute(
+        route: route,
+        namePrefix: 'showSheet',
+        bodyCall: 'showBottomSheet',
+      ),
+    );
   }
 
   Iterable<Method> _generateGenericRoutes() => [
-        Method(
-          (b) => b
+    Method(
+      (b) =>
+          b
             ..name = 'goBack'
             ..lambda = true
             ..returns = const Reference('void')
             ..body =
                 const Reference('navigatorKey.currentState?.pop').call([]).code,
-        ),
-        Method(
-          (b) => b
+    ),
+    Method(
+      (b) =>
+          b
             ..name = 'goBackWithResult'
             ..lambda = true
             ..types.add(const Reference('T'))
-            ..optionalParameters.add(Parameter(
-              (b) => b
-                ..name = 'result'
-                ..named = true
-                ..type = const Reference('T?'),
-            ))
+            ..optionalParameters.add(
+              Parameter(
+                (b) =>
+                    b
+                      ..name = 'result'
+                      ..named = true
+                      ..type = const Reference('T?'),
+              ),
+            )
             ..returns = const Reference('void')
-            ..body = const Reference('navigatorKey.currentState?.pop')
-                .call([const Reference('result')]).code,
-        ),
-        Method(
-          (b) => b
+            ..body =
+                const Reference(
+                  'navigatorKey.currentState?.pop',
+                ).call([const Reference('result')]).code,
+    ),
+    Method(
+      (b) =>
+          b
             ..name = 'popUntil'
             ..lambda = true
-            ..requiredParameters.add(Parameter(
-              (b) => b
-                ..name = 'predicate'
-                ..type = FunctionType((b) => b
-                  ..returnType = const Reference('bool')
-                  ..requiredParameters.add(const Reference('Route<dynamic>'))),
-            ))
+            ..requiredParameters.add(
+              Parameter(
+                (b) =>
+                    b
+                      ..name = 'predicate'
+                      ..type = FunctionType(
+                        (b) =>
+                            b
+                              ..returnType = const Reference('bool')
+                              ..requiredParameters.add(
+                                const Reference('Route<dynamic>'),
+                              ),
+                      ),
+              ),
+            )
             ..returns = const Reference('void')
-            ..body = const Reference('navigatorKey.currentState?.popUntil')
-                .call([const Reference('predicate')]).code,
-        ),
-        Method(
-          (b) => b
+            ..body =
+                const Reference(
+                  'navigatorKey.currentState?.popUntil',
+                ).call([const Reference('predicate')]).code,
+    ),
+    Method(
+      (b) =>
+          b
             ..name = 'goBackTo'
             ..lambda = true
-            ..requiredParameters.add(Parameter((b) => b
-              ..name = 'routeName'
-              ..type = const Reference('String')))
+            ..requiredParameters.add(
+              Parameter(
+                (b) =>
+                    b
+                      ..name = 'routeName'
+                      ..type = const Reference('String'),
+              ),
+            )
             ..returns = const Reference('void')
-            ..body = const Reference('popUntil').call([
-              const Reference(
-                  '(route) => route.settings.name?.split(\'?\').first == routeName'),
-            ]).code,
-        ),
-        Method(
-          (b) => b
+            ..body =
+                const Reference('popUntil').call([
+                  const Reference(
+                    '(route) => route.settings.name?.split(\'?\').first == routeName',
+                  ),
+                ]).code,
+    ),
+    Method(
+      (b) =>
+          b
             ..name = 'showCustomDialog'
             ..lambda = true
             ..modifier = MethodModifier.async
             ..types.add(const Reference('T'))
-            ..optionalParameters.add(Parameter(
-              (b) => b
-                ..name = 'widget'
-                ..named = true
-                ..type = const Reference('Widget?'),
-            ))
+            ..optionalParameters.add(
+              Parameter(
+                (b) =>
+                    b
+                      ..name = 'widget'
+                      ..named = true
+                      ..type = const Reference('Widget?'),
+              ),
+            )
             ..returns = const Reference('Future<T?>')
-            ..body = const Reference('showDialog<T>').call([], {
-              'context': const Reference('navigatorKey.currentContext!'),
-              'builder':
-                  const Reference('(_) => widget ?? const SizedBox.shrink()'),
-            }).code,
-        ),
-        Method(
-          (b) => b
+            ..body =
+                const Reference('showDialog<T>').call([], {
+                  'context': const Reference('navigatorKey.currentContext!'),
+                  'builder': const Reference(
+                    '(_) => widget ?? const SizedBox.shrink()',
+                  ),
+                }).code,
+    ),
+    Method(
+      (b) =>
+          b
             ..name = 'showBottomSheet'
             ..lambda = true
             ..modifier = MethodModifier.async
             ..types.add(const Reference('T'))
-            ..optionalParameters.add(Parameter(
-              (b) => b
-                ..name = 'widget'
-                ..named = true
-                ..type = const Reference('Widget?'),
-            ))
+            ..optionalParameters.add(
+              Parameter(
+                (b) =>
+                    b
+                      ..name = 'widget'
+                      ..named = true
+                      ..type = const Reference('Widget?'),
+              ),
+            )
             ..returns = const Reference('Future<T?>')
-            ..body = const Reference('showModalBottomSheet<T>').call([], {
-              'context': const Reference('navigatorKey.currentContext!'),
-              'builder':
-                  const Reference('(_) => widget ?? const SizedBox.shrink()'),
-            }).code,
-        ),
-      ];
+            ..body =
+                const Reference('showModalBottomSheet<T>').call([], {
+                  'context': const Reference('navigatorKey.currentContext!'),
+                  'builder': const Reference(
+                    '(_) => widget ?? const SizedBox.shrink()',
+                  ),
+                }).code,
+    ),
+  ];
 }

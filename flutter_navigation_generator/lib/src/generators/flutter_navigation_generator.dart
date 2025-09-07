@@ -14,13 +14,16 @@ class FlutterRouteGenerator implements Generator {
   @override
   FutureOr<String?> generate(LibraryReader library, BuildStep buildStep) async {
     final routesInStep = (await Future.wait(
-      library.classes.where(_typeChecker.hasAnnotationOf).map(
+      library.classes
+          .where(_typeChecker.hasAnnotationOf)
+          .map(
             (e) async => RouteResolver(
               await buildStep.resolver.libraries.toList(),
             ).resolve(e),
           ),
-    ))
-        .expand((element) => element);
-    return routesInStep.isNotEmpty ? jsonEncode(routesInStep.map((e) => e.toMap()).toList()) : null;
+    )).expand((element) => element);
+    return routesInStep.isNotEmpty
+        ? jsonEncode(routesInStep.map((e) => e.toMap()).toList())
+        : null;
   }
 }
