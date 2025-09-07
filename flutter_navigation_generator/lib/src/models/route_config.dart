@@ -77,25 +77,39 @@ class RouteConfig {
       methodNameIsDefinedByAnnotation:
           map['methodNameIsDefinedByAnnotation'] ?? '',
       routeWidget: ImportableType.fromMap(map['routeWidget']),
-      returnType: map['returnType'] != null
-          ? ImportableType.fromMap(map['returnType'])
-          : null,
-      pageType: map['pageType'] != null
-          ? ImportableType.fromMap(map['pageType'])
-          : null,
+      returnType:
+          map['returnType'] != null
+              ? ImportableType.fromMap(map['returnType'])
+              : null,
+      pageType:
+          map['pageType'] != null
+              ? ImportableType.fromMap(map['pageType'])
+              : null,
       navigationType: NavigationType.values[map['navigationType']],
-      parameters: List<RouteFieldConfig>.from(map['parameters']?.map(
-          (dynamic x) =>
-              RouteFieldConfig.fromMap(x as Map<String, dynamic>)) as Iterable),
-      guards: map['guards'] == null
-          ? null
-          : List<ImportableType>.from(map['guards'].map((dynamic x) =>
-              ImportableType.fromMap(x as Map<String, dynamic>)) as Iterable),
+      parameters: List<RouteFieldConfig>.from(
+        map['parameters']?.map(
+              (dynamic x) =>
+                  RouteFieldConfig.fromMap(x as Map<String, dynamic>),
+            )
+            as Iterable,
+      ),
+      guards:
+          map['guards'] == null
+              ? null
+              : List<ImportableType>.from(
+                map['guards'].map(
+                      (dynamic x) =>
+                          ImportableType.fromMap(x as Map<String, dynamic>),
+                    )
+                    as Iterable,
+              ),
       defaultValues:
           map['defaultValues'] as Map<String, dynamic>? ?? <String, dynamic>{},
-      includeQueryParameters: map['includeQueryParameters'] == null
-          ? null
-          : IncludeQueryParametersType.values[map['includeQueryParameters']],
+      includeQueryParameters:
+          map['includeQueryParameters'] == null
+              ? null
+              : IncludeQueryParametersType
+                  .values[map['includeQueryParameters']],
     );
   }
 

@@ -32,9 +32,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
-@FlutterRoute(
-  routeName: '/',
-)
+@FlutterRoute(routeName: '/')
 @FlutterRoute(
   methodName: 'goToHomePageWithPathParameter',
   routeName: 'my-home-page-pop-all/',
@@ -46,9 +44,7 @@ class MyHomePage extends StatefulWidget {
     @FlutterRouteField(ignore: false) super.key, // Key is ignored by default
   });
 
-  @FlutterRouteConstructor(
-    routeName: 'MyHomePagePopAll',
-  )
+  @FlutterRouteConstructor(routeName: 'MyHomePagePopAll')
   const MyHomePage.popAll({super.key, this.title = 'Popped all pages'});
 
   @FlutterRouteField(queryName: 'page_title')
@@ -64,19 +60,19 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: widget.title == null
-          ? null
-          : AppBar(
-              backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-              title: Text(widget.title!),
-            ),
+      appBar:
+          widget.title == null
+              ? null
+              : AppBar(
+                backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+                title: Text(widget.title!),
+              ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          spacing: 8,
           children: [
-            Text(
-              'Result from page 2: $_result',
-            ),
+            Text('Result from page 2: $_result'),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -88,9 +84,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     mainNavigator.updateGuard<LoginGuard>();
                   },
                 ),
-                const Text(
-                  'Is user logged in?',
-                ),
+                const Text('Is user logged in?'),
                 const SizedBox(width: 8),
                 ElevatedButton(
                   onPressed: () => mainNavigator.goToLoggedInPage(),
@@ -106,46 +100,51 @@ class _MyHomePageState extends State<MyHomePage> {
               child: const Text("Go to page 2 (with fade animation)"),
             ),
             ElevatedButton(
-              onPressed: () => mainNavigator
-                  .goToExampleScreenWithRequiredArgument(data: [
-                const CustomModel('John', 25),
-                const CustomModel('Jeff', 27)
-              ]),
+              onPressed:
+                  () => mainNavigator.goToExampleScreenWithRequiredArgument(
+                    data: [
+                      const CustomModel('John', 25),
+                      const CustomModel('Jeff', 27),
+                    ],
+                  ),
               child: const Text("Go to ExampleScreenWithRequiredArgument"),
             ),
             ElevatedButton(
-              onPressed: () =>
-                  mainNavigator.customName(id: '1', name: 'John', age: 12),
+              onPressed:
+                  () =>
+                      mainNavigator.customName(id: '1', name: 'John', age: 12),
               child: const Text("Go to RouteNameWithArguments"),
             ),
             ElevatedButton(
-              onPressed: () => mainNavigator.goToRouteNameWithArguments2(
-                id: '3',
-                name: 'Will',
-                age: 43,
-                exampleEnum: ExampleEnum.first,
-                exampleEnum2: ExampleEnum.second,
-                exampleEnum3: ExampleEnum.third,
-                exampleEnums4: [ExampleEnum.first, ExampleEnum.second],
-                exampleEnumsMap5: {
-                  'first': ExampleEnum.first,
-                  'second': ExampleEnum.second,
-                },
-              ),
+              onPressed:
+                  () => mainNavigator.goToRouteNameWithArguments2(
+                    id: '3',
+                    name: 'Will',
+                    age: 43,
+                    exampleEnum: ExampleEnum.first,
+                    exampleEnum2: ExampleEnum.second,
+                    exampleEnum3: ExampleEnum.third,
+                    exampleEnums4: [ExampleEnum.first, ExampleEnum.second],
+                    exampleEnumsMap5: {
+                      'first': ExampleEnum.first,
+                      'second': ExampleEnum.second,
+                    },
+                  ),
               child: const Text("Go to RouteNameWithArguments2"),
             ),
             ElevatedButton(
-              onPressed: () =>
-                  mainNavigator.showSheetRecursiveNavigationBottomSheet(),
+              onPressed:
+                  () => mainNavigator.showSheetRecursiveNavigationBottomSheet(),
               child: const Text("Show a bottom sheet with its own navigator"),
             ),
             ElevatedButton(
-              onPressed: () =>
-                  mainNavigator.showDialogExampleDialog(text: 'hi there'),
+              onPressed:
+                  () => mainNavigator.showDialogExampleDialog(text: 'hi there'),
               child: const Text("Show a full screen dialog"),
             ),
             Text(
-                "Has a navigation blocked by a guard (not logged in): ${mainNavigator.canContinueNavigation()}"),
+              "Has a navigation blocked by a guard (not logged in): ${mainNavigator.canContinueNavigation()}",
+            ),
             if (mainNavigator.canContinueNavigation()) ...[
               ElevatedButton(
                 onPressed: () async {
@@ -163,10 +162,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-@FlutterRoute(
-  returnType: bool,
-  pageType: FadeInRouteAnimation,
-)
+@FlutterRoute(returnType: bool, pageType: FadeInRouteAnimation)
 @FlutterRoute(
   // If you don't specify another routeName, make sure the returnType and pagetype are the same
   navigationType: NavigationType.popAndPush,
@@ -188,9 +184,7 @@ class SecondPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text(
-              'Second page :raised_hands:',
-            ),
+            const Text('Second page :raised_hands:'),
             ElevatedButton(
               onPressed: () => mainNavigator.goBackWithResult(result: true),
               child: const Text("I return true"),
@@ -235,18 +229,10 @@ class RouteNameWithArguments extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text(
-              'RouteNameWithArguments:',
-            ),
-            Text(
-              'id: $id',
-            ),
-            Text(
-              'name: $name',
-            ),
-            Text(
-              'age: $age',
-            ),
+            const Text('RouteNameWithArguments:'),
+            Text('id: $id'),
+            Text('name: $name'),
+            Text('age: $age'),
             ElevatedButton(
               onPressed: mainNavigator.goBack,
               child: const Text("Back"),
@@ -258,9 +244,7 @@ class RouteNameWithArguments extends StatelessWidget {
   }
 }
 
-@FlutterRoute(
-  routeName: '/home/:id/example/:exampleEnum/:age',
-)
+@FlutterRoute(routeName: '/home/:id/example/:exampleEnum/:age')
 class RouteNameWithArguments2 extends StatelessWidget {
   final String id;
   final String? name;
@@ -294,33 +278,15 @@ class RouteNameWithArguments2 extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text(
-              'RouteNameWithArguments2:',
-            ),
-            Text(
-              'id: $id',
-            ),
-            Text(
-              'name: $name',
-            ),
-            Text(
-              'age: $age',
-            ),
-            Text(
-              'exampleEnum: $exampleEnum',
-            ),
-            Text(
-              'exampleEnum2: $exampleEnum2',
-            ),
-            Text(
-              'exampleEnum3: $exampleEnum3',
-            ),
-            Text(
-              'exampleEnums4: $exampleEnums4',
-            ),
-            Text(
-              'exampleEnumsMap5: $exampleEnumsMap5',
-            ),
+            const Text('RouteNameWithArguments2:'),
+            Text('id: $id'),
+            Text('name: $name'),
+            Text('age: $age'),
+            Text('exampleEnum: $exampleEnum'),
+            Text('exampleEnum2: $exampleEnum2'),
+            Text('exampleEnum3: $exampleEnum3'),
+            Text('exampleEnums4: $exampleEnums4'),
+            Text('exampleEnumsMap5: $exampleEnumsMap5'),
             ElevatedButton(
               onPressed: mainNavigator.goBack,
               child: const Text("Back"),
@@ -332,58 +298,53 @@ class RouteNameWithArguments2 extends StatelessWidget {
   }
 }
 
-@FlutterRoute(
-  navigationType: NavigationType.bottomSheet,
-)
+@FlutterRoute(navigationType: NavigationType.bottomSheet)
 class RecursiveNavigationBottomSheet extends StatelessWidget {
   final myNavigator = MainNavigator();
   final int layers;
 
-  RecursiveNavigationBottomSheet({
-    this.layers = 1,
-    super.key,
-  });
+  RecursiveNavigationBottomSheet({this.layers = 1, super.key});
 
   @override
   Widget build(BuildContext context) {
     return BottomSheet(
       onClosing: mainNavigator.goBack,
-      builder: (context) => Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            'layer $layers',
-          ),
-          const Text(
-            'I am a bottom sheet with my own navigator',
-          ),
-          Wrap(
+      builder:
+          (context) => Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              ElevatedButton(
-                onPressed: () => myNavigator.goToHomePageWithPathParameter(),
-                child: const Text("Pop all and show home page"),
+              Text('layer $layers'),
+              const Text('I am a bottom sheet with my own navigator'),
+              Wrap(
+                children: [
+                  ElevatedButton(
+                    onPressed:
+                        () => myNavigator.goToHomePageWithPathParameter(),
+                    child: const Text("Pop all and show home page"),
+                  ),
+                  ElevatedButton(
+                    onPressed: () => myNavigator.goToSecondPage(),
+                    child: const Text("Go to second page"),
+                  ),
+                  ElevatedButton(
+                    onPressed:
+                        () =>
+                            myNavigator.showSheetRecursiveNavigationBottomSheet(
+                              layers: layers + 1,
+                            ),
+                    child: const Text("Open another bottom sheet"),
+                  ),
+                ],
               ),
-              ElevatedButton(
-                onPressed: () => myNavigator.goToSecondPage(),
-                child: const Text("Go to second page"),
-              ),
-              ElevatedButton(
-                onPressed: () =>
-                    myNavigator.showSheetRecursiveNavigationBottomSheet(
-                        layers: layers + 1),
-                child: const Text("Open another bottom sheet"),
+              Expanded(
+                child: Navigator(
+                  key: myNavigator.navigatorKey,
+                  onGenerateRoute: myNavigator.onGenerateRoute,
+                  initialRoute: RouteNames.myHomePage,
+                ),
               ),
             ],
           ),
-          Expanded(
-            child: Navigator(
-              key: myNavigator.navigatorKey,
-              onGenerateRoute: myNavigator.onGenerateRoute,
-              initialRoute: RouteNames.myHomePage,
-            ),
-          ),
-        ],
-      ),
     );
   }
 }
@@ -392,20 +353,11 @@ class RecursiveNavigationBottomSheet extends StatelessWidget {
 class ExampleDialog extends StatelessWidget {
   final String text;
 
-  const ExampleDialog({
-    required this.text,
-    super.key,
-  });
+  const ExampleDialog({required this.text, super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      child: Center(
-        child: Text(
-          text,
-        ),
-      ),
-    );
+    return Dialog(child: Center(child: Text(text)));
   }
 }
 
@@ -413,10 +365,7 @@ class ExampleDialog extends StatelessWidget {
 class ExampleScreenWithRequiredArgument extends StatelessWidget {
   final List<CustomModel> data;
 
-  const ExampleScreenWithRequiredArgument({
-    required this.data,
-    super.key,
-  });
+  const ExampleScreenWithRequiredArgument({required this.data, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -431,14 +380,8 @@ class ExampleScreenWithRequiredArgument extends StatelessWidget {
               style: const TextStyle(fontSize: 40),
             ),
             for (final item in data) ...[
-              Text(
-                item.name,
-                style: const TextStyle(fontSize: 40),
-              ),
-              Text(
-                item.age.toString(),
-                style: const TextStyle(fontSize: 40),
-              ),
+              Text(item.name, style: const TextStyle(fontSize: 40)),
+              Text(item.age.toString(), style: const TextStyle(fontSize: 40)),
             ],
             ElevatedButton(
               onPressed: mainNavigator.goBack,
@@ -451,14 +394,9 @@ class ExampleScreenWithRequiredArgument extends StatelessWidget {
   }
 }
 
-@FlutterRoute(
-  routeName: '404',
-  generateMethod: false,
-)
+@FlutterRoute(routeName: '404', generateMethod: false)
 class Error404 extends StatelessWidget {
-  const Error404({
-    super.key,
-  });
+  const Error404({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -471,12 +409,11 @@ class Error404 extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text(
-              'We couldn\'t find this page, sorry :(',
-            ),
+            const Text('We couldn\'t find this page, sorry :('),
             ElevatedButton(
-              onPressed: () =>
-                  mainNavigator.goToMyHomePage(title: 'returning from 404'),
+              onPressed:
+                  () =>
+                      mainNavigator.goToMyHomePage(title: 'returning from 404'),
               child: const Text("go home"),
             ),
           ],
@@ -486,13 +423,9 @@ class Error404 extends StatelessWidget {
   }
 }
 
-@FlutterRoute(
-  generateMethod: false,
-)
+@FlutterRoute(generateMethod: false)
 class ErrorNotLoggedIn extends StatelessWidget {
-  const ErrorNotLoggedIn({
-    super.key,
-  });
+  const ErrorNotLoggedIn({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -505,12 +438,12 @@ class ErrorNotLoggedIn extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text(
-              'You are not logged in, sorry :(',
-            ),
+            const Text('You are not logged in, sorry :('),
             ElevatedButton(
-              onPressed: () => mainNavigator.goToMyHomePage(
-                  title: 'returning from not logged in'),
+              onPressed:
+                  () => mainNavigator.goToMyHomePage(
+                    title: 'returning from not logged in',
+                  ),
               child: const Text("go home"),
             ),
             ElevatedButton(
@@ -528,15 +461,9 @@ class ErrorNotLoggedIn extends StatelessWidget {
   }
 }
 
-@FlutterRoute(
-  guards: [
-    LoginGuard,
-  ],
-)
+@FlutterRoute(guards: [LoginGuard])
 class LoggedInPage extends StatelessWidget {
-  const LoggedInPage({
-    super.key,
-  });
+  const LoggedInPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -549,12 +476,12 @@ class LoggedInPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text(
-              'You are logged in, yay :)',
-            ),
+            const Text('You are logged in, yay :)'),
             ElevatedButton(
-              onPressed: () => mainNavigator.goToMyHomePage(
-                  title: 'returning from logged in'),
+              onPressed:
+                  () => mainNavigator.goToMyHomePage(
+                    title: 'returning from logged in',
+                  ),
               child: const Text("go home"),
             ),
           ],
@@ -611,8 +538,10 @@ class FieldValueTests extends StatelessWidget {
     this.nonNullableDoubleWithDefaultValue = 3.14,
     this.nonNullableListWithDefaultValue = const ['default'],
     this.nonNullableMapWithDefaultValue = const {'default': 'default'},
-    this.nonNullableCustomModelWithDefaultValue =
-        const CustomModel('default', 0),
+    this.nonNullableCustomModelWithDefaultValue = const CustomModel(
+      'default',
+      0,
+    ),
     this.nonNullableCustomModelWithDefaultValue2 = CustomModel.testDefault,
     super.key,
   });
@@ -628,9 +557,7 @@ class FieldValueTests extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text(
-              'Field value tests:',
-            ),
+            const Text('Field value tests:'),
             Text(
               'Strings: $nullableString, $nonNullableString, $nonNullableStringWithDefaultValue',
             ),
@@ -663,11 +590,7 @@ class FieldValueTests extends StatelessWidget {
   }
 }
 
-enum ExampleEnum {
-  first,
-  second,
-  third,
-}
+enum ExampleEnum { first, second, third }
 
 class LoginGuard extends NavigatorGuard {
   LoginGuard() : super(RouteNames.errorNotLoggedIn);

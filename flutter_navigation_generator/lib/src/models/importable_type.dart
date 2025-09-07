@@ -53,9 +53,12 @@ class ImportableType {
       isRequired: map['isRequired'] == true,
       isNullable: map['isNullable'] == true,
       isEnum: map['isEnum'] == true,
-      typeArguments: List<ImportableType>.from(map['typeArguments']?.map(
-              (dynamic x) => ImportableType.fromMap(x as Map<String, dynamic>))
-          as Iterable),
+      typeArguments: List<ImportableType>.from(
+        map['typeArguments']?.map(
+              (dynamic x) => ImportableType.fromMap(x as Map<String, dynamic>),
+            )
+            as Iterable,
+      ),
     );
   }
 }

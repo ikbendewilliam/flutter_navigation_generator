@@ -26,8 +26,7 @@ class ImportableTypeStringConverter {
       'double' ||
       'bool' ||
       'num' ||
-      'String' =>
-        'e as ${p.className}$suffix',
+      'String' => 'e as ${p.className}$suffix',
       'dynamic' => 'e',
       'Map' => convertMap(p, ('e')),
       'List' =>
@@ -65,13 +64,7 @@ class ImportableTypeStringConverter {
   }
 
   static bool _isAcceptableType(String className) {
-    return ([
-      'String',
-      'int',
-      'double',
-      'num',
-      'bool',
-    ].contains(className));
+    return (['String', 'int', 'double', 'num', 'bool'].contains(className));
   }
 
   static String convertToString(ImportableType argument) {
