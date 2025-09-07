@@ -1,3 +1,6 @@
+## 2.2.0 (2025-09-07)
+- Updated dependencies for flutter ^3.29
+
 ## 2.1.0 (2025-03-28)
 
 - Added FadeInRouteAnimation to animate the page with a fade in effect.

@@ -1,4 +1,4 @@
-import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/element2.dart';
 import 'package:code_builder/code_builder.dart';
 import 'package:flutter_navigation_generator/src/models/importable_type.dart';
 import 'package:flutter_navigation_generator/src/resolvers/importable_type_resolver.dart';
@@ -28,14 +28,14 @@ void throwSourceError(String message) {
   throw ("\n${pre.padRight(72, '-')}\n$message\n${''.padRight(72, '-')} \n");
 }
 
-void throwError(String message, {Element? element}) {
+void throwError(String message, {Element2? element}) {
   throw InvalidGenerationSourceError(
     message,
     element: element,
   );
 }
 
-void throwIf(bool condition, String message, {Element? element}) {
+void throwIf(bool condition, String message, {Element2? element}) {
   if (condition) {
     throw InvalidGenerationSourceError(
       message,
@@ -44,8 +44,7 @@ void throwIf(bool condition, String message, {Element? element}) {
   }
 }
 
-void printBoxed(String message,
-    {String header = '--------------------------'}) {
+void printBoxed(String message, {String header = '--------------------------'}) {
   final pre = header;
   // ignore: avoid_print
   print("$pre\n$message\n${''.padRight(72, '-')} \n");
@@ -62,15 +61,12 @@ Reference typeRefer(
   if (type == null) {
     typeReference = TypeReference((r) => r..symbol = 'void');
   } else {
-    final relativeImport = targetFile == null
-        ? ImportableTypeResolver.resolveAssetImport(type.import)
-        : ImportableTypeResolver.relative(type.import, targetFile);
+    final relativeImport = targetFile == null ? ImportableTypeResolver.resolveAssetImport(type.import) : ImportableTypeResolver.relative(type.import, targetFile);
     typeReference = TypeReference((reference) {
       reference
         ..symbol = type.className
         ..url = relativeImport
-        ..isNullable =
-            withNullabilitySuffix && (forceNullable || type.isNullable);
+        ..isNullable = withNullabilitySuffix && (forceNullable || type.isNullable);
       if (type.typeArguments.isNotEmpty) {
         reference.types.addAll(
           type.typeArguments.map((e) => typeRefer(
@@ -93,8 +89,5 @@ Reference typeRefer(
 extension StringExtension on String {
   List<String> get pathSegments => Uri.parse(this).pathSegments.toList();
 
-  List<String> get parametersFromRouteName => pathSegments
-      .where((element) => element.startsWith(':'))
-      .map((e) => e.substring(1))
-      .toList();
+  List<String> get parametersFromRouteName => pathSegments.where((element) => element.startsWith(':')).map((e) => e.substring(1)).toList();
 }
