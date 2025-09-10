@@ -20,6 +20,11 @@ import 'package:flutter_navigation_generator_annotations/flutter_navigation_gene
 
 import 'custom_model.dart';
 import 'main.dart';
+import 'miller_columns/depth_1.dart';
+import 'miller_columns/depth_2_1.dart';
+import 'miller_columns/depth_3_1_1.dart';
+import 'miller_columns/depth_3_1_2.dart';
+import 'miller_columns/parent.dart';
 
 mixin BaseNavigator {
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -387,6 +392,210 @@ mixin BaseNavigator {
                                 as CustomModel? ??
                             CustomModel.testDefault,
               ),
+          settings: settings,
+          fullscreenDialog: false,
+        );
+      case RouteNames.depth3Page121:
+        final exampleDefaultGuard =
+            guards.whereType<ExampleDefaultGuard>().first;
+        if (!exampleDefaultGuard.value) {
+          guardedRouteSettings = settings;
+          return onGenerateRoute(
+            RouteSettings(
+              arguments: settings.arguments,
+              name: exampleDefaultGuard.alternativeRoute,
+            ),
+          );
+        }
+        return NativeRouteAnimation<void>(
+          builder: (_) => Depth3Page121(),
+          settings: settings,
+          fullscreenDialog: false,
+        );
+      case RouteNames.depth3Page122:
+        final exampleDefaultGuard =
+            guards.whereType<ExampleDefaultGuard>().first;
+        if (!exampleDefaultGuard.value) {
+          guardedRouteSettings = settings;
+          return onGenerateRoute(
+            RouteSettings(
+              arguments: settings.arguments,
+              name: exampleDefaultGuard.alternativeRoute,
+            ),
+          );
+        }
+        return NativeRouteAnimation<void>(
+          builder: (_) => Depth3Page122(),
+          settings: settings,
+          fullscreenDialog: false,
+        );
+      case RouteNames.depth3Page123:
+        final exampleDefaultGuard =
+            guards.whereType<ExampleDefaultGuard>().first;
+        if (!exampleDefaultGuard.value) {
+          guardedRouteSettings = settings;
+          return onGenerateRoute(
+            RouteSettings(
+              arguments: settings.arguments,
+              name: exampleDefaultGuard.alternativeRoute,
+            ),
+          );
+        }
+        return NativeRouteAnimation<void>(
+          builder: (_) => Depth3Page123(),
+          settings: settings,
+          fullscreenDialog: false,
+        );
+      case RouteNames.depth2Page11:
+        final exampleDefaultGuard =
+            guards.whereType<ExampleDefaultGuard>().first;
+        if (!exampleDefaultGuard.value) {
+          guardedRouteSettings = settings;
+          return onGenerateRoute(
+            RouteSettings(
+              arguments: settings.arguments,
+              name: exampleDefaultGuard.alternativeRoute,
+            ),
+          );
+        }
+        return NativeRouteAnimation<void>(
+          builder: (_) => Depth2Page11(),
+          settings: settings,
+          fullscreenDialog: false,
+        );
+      case RouteNames.depth2Page12:
+        final exampleDefaultGuard =
+            guards.whereType<ExampleDefaultGuard>().first;
+        if (!exampleDefaultGuard.value) {
+          guardedRouteSettings = settings;
+          return onGenerateRoute(
+            RouteSettings(
+              arguments: settings.arguments,
+              name: exampleDefaultGuard.alternativeRoute,
+            ),
+          );
+        }
+        return NativeRouteAnimation<void>(
+          builder: (_) => Depth2Page12(),
+          settings: settings,
+          fullscreenDialog: false,
+        );
+      case RouteNames.depth1Page1:
+        final exampleDefaultGuard =
+            guards.whereType<ExampleDefaultGuard>().first;
+        if (!exampleDefaultGuard.value) {
+          guardedRouteSettings = settings;
+          return onGenerateRoute(
+            RouteSettings(
+              arguments: settings.arguments,
+              name: exampleDefaultGuard.alternativeRoute,
+            ),
+          );
+        }
+        return NativeRouteAnimation<void>(
+          builder: (_) => Depth1Page1(),
+          settings: settings,
+          fullscreenDialog: false,
+        );
+      case RouteNames.depth1Page2:
+        final exampleDefaultGuard =
+            guards.whereType<ExampleDefaultGuard>().first;
+        if (!exampleDefaultGuard.value) {
+          guardedRouteSettings = settings;
+          return onGenerateRoute(
+            RouteSettings(
+              arguments: settings.arguments,
+              name: exampleDefaultGuard.alternativeRoute,
+            ),
+          );
+        }
+        return NativeRouteAnimation<void>(
+          builder: (_) => Depth1Page2(),
+          settings: settings,
+          fullscreenDialog: false,
+        );
+      case RouteNames.depth1Page3:
+        final exampleDefaultGuard =
+            guards.whereType<ExampleDefaultGuard>().first;
+        if (!exampleDefaultGuard.value) {
+          guardedRouteSettings = settings;
+          return onGenerateRoute(
+            RouteSettings(
+              arguments: settings.arguments,
+              name: exampleDefaultGuard.alternativeRoute,
+            ),
+          );
+        }
+        return NativeRouteAnimation<void>(
+          builder: (_) => Depth1Page3(),
+          settings: settings,
+          fullscreenDialog: false,
+        );
+      case RouteNames.depth3Page111:
+        final exampleDefaultGuard =
+            guards.whereType<ExampleDefaultGuard>().first;
+        if (!exampleDefaultGuard.value) {
+          guardedRouteSettings = settings;
+          return onGenerateRoute(
+            RouteSettings(
+              arguments: settings.arguments,
+              name: exampleDefaultGuard.alternativeRoute,
+            ),
+          );
+        }
+        return NativeRouteAnimation<void>(
+          builder: (_) => Depth3Page111(),
+          settings: settings,
+          fullscreenDialog: false,
+        );
+      case RouteNames.depth3Page112:
+        final exampleDefaultGuard =
+            guards.whereType<ExampleDefaultGuard>().first;
+        if (!exampleDefaultGuard.value) {
+          guardedRouteSettings = settings;
+          return onGenerateRoute(
+            RouteSettings(
+              arguments: settings.arguments,
+              name: exampleDefaultGuard.alternativeRoute,
+            ),
+          );
+        }
+        return NativeRouteAnimation<void>(
+          builder: (_) => Depth3Page112(),
+          settings: settings,
+          fullscreenDialog: false,
+        );
+      case RouteNames.depth3Page113:
+        final exampleDefaultGuard =
+            guards.whereType<ExampleDefaultGuard>().first;
+        if (!exampleDefaultGuard.value) {
+          guardedRouteSettings = settings;
+          return onGenerateRoute(
+            RouteSettings(
+              arguments: settings.arguments,
+              name: exampleDefaultGuard.alternativeRoute,
+            ),
+          );
+        }
+        return NativeRouteAnimation<void>(
+          builder: (_) => Depth3Page113(),
+          settings: settings,
+          fullscreenDialog: false,
+        );
+      case RouteNames.parentPage:
+        final exampleDefaultGuard =
+            guards.whereType<ExampleDefaultGuard>().first;
+        if (!exampleDefaultGuard.value) {
+          guardedRouteSettings = settings;
+          return onGenerateRoute(
+            RouteSettings(
+              arguments: settings.arguments,
+              name: exampleDefaultGuard.alternativeRoute,
+            ),
+          );
+        }
+        return NativeRouteAnimation<void>(
+          builder: (_) => ParentPage(),
           settings: settings,
           fullscreenDialog: false,
         );
@@ -809,6 +1018,30 @@ mixin BaseNavigator {
           nonNullableCustomModelWithDefaultValue2,
     },
   );
+  Future<void> goToDepth3Page121() async => navigatorKey.currentState
+      ?.pushNamed<dynamic>(RouteNames.depth3Page121, arguments: {});
+  Future<void> goToDepth3Page122() async => navigatorKey.currentState
+      ?.pushNamed<dynamic>(RouteNames.depth3Page122, arguments: {});
+  Future<void> goToDepth3Page123() async => navigatorKey.currentState
+      ?.pushNamed<dynamic>(RouteNames.depth3Page123, arguments: {});
+  Future<void> goToDepth2Page11() async => navigatorKey.currentState
+      ?.pushNamed<dynamic>(RouteNames.depth2Page11, arguments: {});
+  Future<void> goToDepth2Page12() async => navigatorKey.currentState
+      ?.pushNamed<dynamic>(RouteNames.depth2Page12, arguments: {});
+  Future<void> goToDepth1Page1() async => navigatorKey.currentState
+      ?.pushNamed<dynamic>(RouteNames.depth1Page1, arguments: {});
+  Future<void> goToDepth1Page2() async => navigatorKey.currentState
+      ?.pushNamed<dynamic>(RouteNames.depth1Page2, arguments: {});
+  Future<void> goToDepth1Page3() async => navigatorKey.currentState
+      ?.pushNamed<dynamic>(RouteNames.depth1Page3, arguments: {});
+  Future<void> goToDepth3Page111() async => navigatorKey.currentState
+      ?.pushNamed<dynamic>(RouteNames.depth3Page111, arguments: {});
+  Future<void> goToDepth3Page112() async => navigatorKey.currentState
+      ?.pushNamed<dynamic>(RouteNames.depth3Page112, arguments: {});
+  Future<void> goToDepth3Page113() async => navigatorKey.currentState
+      ?.pushNamed<dynamic>(RouteNames.depth3Page113, arguments: {});
+  Future<void> goToParentPage() async => navigatorKey.currentState
+      ?.pushNamed<dynamic>(RouteNames.parentPage, arguments: {});
   Future<void> showDialogExampleDialog({required String text}) async =>
       showCustomDialog<dynamic>(widget: _i3.ExampleDialog(text: text));
   Future<void> showSheetRecursiveNavigationBottomSheet({
@@ -859,6 +1092,42 @@ class RouteNames {
 
   /// /field-value-tests
   static const fieldValueTests = '/field-value-tests';
+
+  /// /depth3-page121
+  static const depth3Page121 = '/depth3-page121';
+
+  /// /depth3-page122
+  static const depth3Page122 = '/depth3-page122';
+
+  /// /depth3-page123
+  static const depth3Page123 = '/depth3-page123';
+
+  /// /depth2-page11
+  static const depth2Page11 = '/depth2-page11';
+
+  /// /depth2-page12
+  static const depth2Page12 = '/depth2-page12';
+
+  /// /depth1-page1
+  static const depth1Page1 = '/depth1-page1';
+
+  /// /depth1-page2
+  static const depth1Page2 = '/depth1-page2';
+
+  /// /depth1-page3
+  static const depth1Page3 = '/depth1-page3';
+
+  /// /depth3-page111
+  static const depth3Page111 = '/depth3-page111';
+
+  /// /depth3-page112
+  static const depth3Page112 = '/depth3-page112';
+
+  /// /depth3-page113
+  static const depth3Page113 = '/depth3-page113';
+
+  /// /parent
+  static const parentPage = '/parent';
 
   /// /home/:id/:name/:nonExistingName/number1/
   static String homeIdNameNonExistingNameNumber1({
