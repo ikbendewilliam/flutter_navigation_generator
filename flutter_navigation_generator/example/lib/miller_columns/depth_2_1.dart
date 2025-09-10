@@ -1,15 +1,12 @@
 import 'package:example/main.dart' show mainNavigator;
+import 'package:example/miller_columns/depth_1.dart';
 import 'package:example/miller_columns/optional_sub_navigator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_navigation_generator_annotations/flutter_navigation_generator_annotations.dart';
 
 @FlutterRoute(
-    // childRoutes: [
-    //   Depth3Page111,
-    //   Depth3Page112,
-    //   Depth3Page113,
-    // ],
-    )
+  parentScreen: Depth1Page1,
+)
 class Depth2Page11 extends StatelessWidget {
   const Depth2Page11({super.key});
 
@@ -50,12 +47,8 @@ class Depth2Page11 extends StatelessWidget {
 }
 
 @FlutterRoute(
-    // childRoutes: [
-    //   Depth3Page121,
-    //   Depth3Page122,
-    //   Depth3Page123,
-    // ],
-    )
+  parentScreen: Depth1Page1,
+)
 class Depth2Page12 extends StatelessWidget {
   const Depth2Page12({super.key});
 

@@ -1,7 +1,10 @@
+import 'package:example/miller_columns/depth_2_1.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_navigation_generator_annotations/flutter_navigation_generator_annotations.dart';
 
-@flutterRoute
+@FlutterRoute(
+  parentScreen: Depth2Page12,
+)
 class Depth3Page121 extends StatelessWidget {
   const Depth3Page121({super.key});
 
@@ -19,7 +22,9 @@ class Depth3Page121 extends StatelessWidget {
   }
 }
 
-@flutterRoute
+@FlutterRoute(
+  parentScreen: Depth2Page12,
+)
 class Depth3Page122 extends StatelessWidget {
   const Depth3Page122({super.key});
 
@@ -37,7 +42,9 @@ class Depth3Page122 extends StatelessWidget {
   }
 }
 
-@flutterRoute
+@FlutterRoute(
+  parentScreen: Depth2Page12,
+)
 class Depth3Page123 extends StatelessWidget {
   const Depth3Page123({super.key});
 

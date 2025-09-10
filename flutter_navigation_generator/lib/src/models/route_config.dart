@@ -14,6 +14,7 @@ class RouteConfig {
   final String methodName;
   final String constructorName;
   final ImportableType routeWidget;
+  final ImportableType? parentScreen;
   final ImportableType? returnType;
   final ImportableType? pageType;
   final NavigationType navigationType;
@@ -35,6 +36,7 @@ class RouteConfig {
     this.generateMethod = true,
     this.routeNameIsDefinedByAnnotation = false,
     this.methodNameIsDefinedByAnnotation = false,
+    this.parentScreen,
     this.returnType,
     this.navigationType = NavigationType.push,
     this.parameters = const [],
@@ -53,6 +55,7 @@ class RouteConfig {
       'methodName': methodName,
       'routeNameIsDefinedByAnnotation': routeNameIsDefinedByAnnotation,
       'methodNameIsDefinedByAnnotation': methodNameIsDefinedByAnnotation,
+      'parentScreen': parentScreen?.toMap(),
       'returnType': returnType?.toMap(),
       'pageType': pageType?.toMap(),
       'routeWidget': routeWidget.toMap(),
@@ -72,49 +75,21 @@ class RouteConfig {
       constructorName: map['constructorName'] ?? '',
       routeName: map['routeName'] ?? '',
       methodName: map['methodName'] ?? '',
-      routeNameIsDefinedByAnnotation:
-          map['routeNameIsDefinedByAnnotation'] ?? '',
-      methodNameIsDefinedByAnnotation:
-          map['methodNameIsDefinedByAnnotation'] ?? '',
+      routeNameIsDefinedByAnnotation: map['routeNameIsDefinedByAnnotation'] ?? '',
+      methodNameIsDefinedByAnnotation: map['methodNameIsDefinedByAnnotation'] ?? '',
       routeWidget: ImportableType.fromMap(map['routeWidget']),
-      returnType:
-          map['returnType'] != null
-              ? ImportableType.fromMap(map['returnType'])
-              : null,
-      pageType:
-          map['pageType'] != null
-              ? ImportableType.fromMap(map['pageType'])
-              : null,
+      parentScreen: map['parentScreen'] != null ? ImportableType.fromMap(map['parentScreen']) : null,
+      returnType: map['returnType'] != null ? ImportableType.fromMap(map['returnType']) : null,
+      pageType: map['pageType'] != null ? ImportableType.fromMap(map['pageType']) : null,
       navigationType: NavigationType.values[map['navigationType']],
-      parameters: List<RouteFieldConfig>.from(
-        map['parameters']?.map(
-              (dynamic x) =>
-                  RouteFieldConfig.fromMap(x as Map<String, dynamic>),
-            )
-            as Iterable,
-      ),
-      guards:
-          map['guards'] == null
-              ? null
-              : List<ImportableType>.from(
-                map['guards'].map(
-                      (dynamic x) =>
-                          ImportableType.fromMap(x as Map<String, dynamic>),
-                    )
-                    as Iterable,
-              ),
-      defaultValues:
-          map['defaultValues'] as Map<String, dynamic>? ?? <String, dynamic>{},
-      includeQueryParameters:
-          map['includeQueryParameters'] == null
-              ? null
-              : IncludeQueryParametersType
-                  .values[map['includeQueryParameters']],
+      parameters: List<RouteFieldConfig>.from(map['parameters']?.map((dynamic x) => RouteFieldConfig.fromMap(x as Map<String, dynamic>)) as Iterable),
+      guards: map['guards'] == null ? null : List<ImportableType>.from(map['guards'].map((dynamic x) => ImportableType.fromMap(x as Map<String, dynamic>)) as Iterable),
+      defaultValues: map['defaultValues'] as Map<String, dynamic>? ?? <String, dynamic>{},
+      includeQueryParameters: map['includeQueryParameters'] == null ? null : IncludeQueryParametersType.values[map['includeQueryParameters']],
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory RouteConfig.fromJson(String source) =>
-      RouteConfig.fromMap(json.decode(source));
+  factory RouteConfig.fromJson(String source) => RouteConfig.fromMap(json.decode(source));
 }

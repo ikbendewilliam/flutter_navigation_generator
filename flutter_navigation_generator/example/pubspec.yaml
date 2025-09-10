@@ -5,7 +5,7 @@ publish_to: 'none'
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.7.0 <4.0.0'
+  sdk: '>=3.8.0 <4.0.0'
 
 dependencies:
   analyzer: '^7.0.0'
@@ -24,11 +24,11 @@ dev_dependencies:
     path: ../
 
 # Comment when publishing
-# dependency_overrides: 
-  # flutter_navigation_generator_animations:
-  #   path: ../../flutter_navigation_generator_animations
-  # flutter_navigation_generator_annotations:
-  #   path: ../../flutter_navigation_generator_annotations
+dependency_overrides: 
+  flutter_navigation_generator_animations:
+    path: ../../flutter_navigation_generator_animations
+  flutter_navigation_generator_annotations:
+    path: ../../flutter_navigation_generator_annotations
 
 flutter:
   uses-material-design: true

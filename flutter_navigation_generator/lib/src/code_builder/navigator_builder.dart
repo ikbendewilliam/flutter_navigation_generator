@@ -40,14 +40,34 @@ class NavigatorBuilder {
   }
 
   Spec generate() {
-    final hasGuards =
-        routes.any((route) => route.guards?.isNotEmpty == true) ||
-        defaultGuards.isNotEmpty;
+    final hasGuards = routes.any((route) => route.guards?.isNotEmpty == true) || defaultGuards.isNotEmpty;
     return Mixin(
       (b) =>
           b
             ..name = className
             ..fields.add(buildNavigatorKey())
+            ..fields.addAll([
+              Field(
+                (f) =>
+                    f
+                      ..name = 'parentScreen'
+                      ..type = refer('Type?'),
+              ),
+              Field(
+                (f) =>
+                    f
+                      ..name = 'parentNavigator'
+                      ..type = refer('$className?'),
+              ),
+              Field(
+                (f) =>
+                    f
+                      ..name = 'subNavigators'
+                      ..modifier = FieldModifier.final$
+                      ..type = refer('Map<Type, $className>')
+                      ..assignment = const Code('{}'),
+              ),
+            ])
             ..methods.add(
               OnGenerateRouteBuilder(
                 routes: routes,
@@ -59,23 +79,14 @@ class NavigatorBuilder {
               ).generate(),
             )
             ..methods.addAll(hasGuards ? GuardsBuilder().generate() : [])
-            ..fields.addAll(
-              hasGuards
-                  ? GuardsFieldBuilder(
-                    routes: routes,
-                    targetFile: targetFile,
-                    defaultGuards: defaultGuards,
-                  ).generate()
-                  : [],
-            )
+            ..fields.addAll(hasGuards ? GuardsFieldBuilder(routes: routes, targetFile: targetFile, defaultGuards: defaultGuards).generate() : [])
             ..methods.addAll(
               RouteBuilder(
                 routes: routes,
                 pageType: pageType,
                 targetFile: targetFile,
                 ignoreKeysByDefault: ignoreKeysByDefault,
-                includeQueryParametersNavigatorConfig:
-                    includeQueryParametersNavigatorConfig,
+                includeQueryParametersNavigatorConfig: includeQueryParametersNavigatorConfig,
               ).generate(),
             ),
     );

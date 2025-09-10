@@ -16,6 +16,12 @@ class FlutterRoute {
   /// Set the type returned by the goTo method.
   final Type? returnType;
 
+  /// Set a parent screen for this route. This allows
+  /// you to use subNavigators which navigate within
+  /// a parent screen. Note: use the type of the parent screen
+  /// not an instance.
+  final Type? parentScreen;
+
   /// Override the default page type [MaterialPageRoute] or
   /// the Navigator [pageType] to use a custom page type so
   /// you can customize the transition. Must extend [PageRoute]
@@ -69,6 +75,7 @@ class FlutterRoute {
     this.navigationType = NavigationType.push,
     this.routeName,
     this.methodName,
+    this.parentScreen,
     this.pageType,
     this.returnType,
     this.isFullscreenDialog = false,

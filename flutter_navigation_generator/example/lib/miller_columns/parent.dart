@@ -3,14 +3,7 @@ import 'package:example/main.dart' show mainNavigator;
 import 'package:flutter/material.dart';
 import 'package:flutter_navigation_generator_annotations/flutter_navigation_generator_annotations.dart';
 
-@FlutterRoute(
-    // initialChildRoute: Depth1Page1, // TODO: Is this even possible?
-    // childRoutes: [
-    //   Depth1Page1,
-    //   Depth1Page2,
-    //   Depth1Page3,
-    // ],
-    )
+@flutterRoute
 class ParentPage extends StatefulWidget {
   const ParentPage({super.key});
 
