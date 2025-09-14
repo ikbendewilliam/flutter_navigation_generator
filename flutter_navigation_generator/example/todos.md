@@ -1,0 +1,15 @@
+- [x] Navigator that has multiple panels
+- [x] Show last panels (can be 1)
+- [x] Auto refresh / gobackto based on hierarchy
+- [x] Axis
+- [ ] Generate code in navigator
+- [ ] Add widget to exports or generate it
+- [ ] Generate routeNames
+- [ ] Add popping of panels
+- [ ] Add double navigation?
+- [ ] Return correct value
+- [ ] Add animations
+- [ ] Initialroute? Add routename on classes?
+- [ ] Add documentation
+- [ ] Add example
+- [ ] Add tests
