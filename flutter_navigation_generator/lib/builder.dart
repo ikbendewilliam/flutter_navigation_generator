@@ -6,18 +6,10 @@ import 'src/generators/flutter_navigator_generator.dart';
 
 /// A builder that generates a json file for one or more routes.
 Builder flutterRouteBuilder(BuilderOptions options) {
-  return LibraryBuilder(
-    const FlutterRouteGenerator(),
-    formatOutput:
-        (generated, version) => generated.replaceAll(RegExp(r'//.*|\s'), ''),
-    generatedExtension: '.navigator.json',
-  );
+  return LibraryBuilder(const FlutterRouteGenerator(), formatOutput: (generated, version) => generated.replaceAll(RegExp(r'//.*|\s'), ''), generatedExtension: '.navigator.json');
 }
 
 /// A builder that generates the navigator class.
 Builder flutterNavigatorBuilder(BuilderOptions options) {
-  return LibraryBuilder(
-    FlutterNavigatorGenerator(),
-    generatedExtension: '.navigator.dart',
-  );
+  return LibraryBuilder(FlutterNavigatorGenerator(), generatedExtension: '.navigator.dart');
 }

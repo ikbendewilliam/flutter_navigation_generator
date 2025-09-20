@@ -89,7 +89,6 @@ class _ParentPageState extends State<ParentPage> {
 
 @FlutterRoute(
   parentScreen: ParentPage,
-  routeName: '/parent/depth0',
 )
 class Depth0Page extends StatelessWidget {
   const Depth0Page({super.key});

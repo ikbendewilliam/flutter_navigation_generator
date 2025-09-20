@@ -1,7 +1,9 @@
 import 'dart:convert';
 
+import 'package:collection/collection.dart';
 import 'package:flutter_navigation_generator/src/models/importable_type.dart';
 import 'package:flutter_navigation_generator/src/models/route_field_config.dart';
+import 'package:flutter_navigation_generator/src/utils/case_utils.dart';
 import 'package:flutter_navigation_generator_annotations/flutter_navigation_generator_annotations.dart';
 
 class RouteConfig {
@@ -24,6 +26,13 @@ class RouteConfig {
   final IncludeQueryParametersType? includeQueryParameters;
 
   bool get routeNameContainsParameters => routeName.contains(':');
+
+  String fullRouteName(Set<RouteConfig> routes, List<String> removeSuffixes) {
+    final parentScreenRouteName = parentScreen?.fullRouteName(routes);
+    final divider = routeName.startsWith('/') ? '' : '/';
+    final fullRouteName = parentScreenRouteName == null ? routeName : '$parentScreenRouteName$divider$routeName';
+    return "${fullRouteName.startsWith('/') ? '' : '/'}${routeNameIsDefinedByAnnotation ? fullRouteName : CaseUtil(fullRouteName, removeSuffixes: removeSuffixes).textWithoutSuffix}";
+  }
 
   RouteConfig({
     required this.routeWidget,
@@ -92,4 +101,15 @@ class RouteConfig {
   String toJson() => json.encode(toMap());
 
   factory RouteConfig.fromJson(String source) => RouteConfig.fromMap(json.decode(source));
+}
+
+extension ImportableTypeExtension on ImportableType {
+  String fullRouteName(Set<RouteConfig> typesConfig, [int d = 0]) {
+    final config = typesConfig.firstWhereOrNull((element) => element.routeWidget.className == className);
+    if (config == null) return '';
+    final parent = config.parentScreen;
+    if (parent == null) return config.routeName;
+    final divider = config.routeName.startsWith('/') ? '' : '/';
+    return '${parent.fullRouteName(typesConfig, d + 1)}$divider${config.routeName}';
+  }
 }

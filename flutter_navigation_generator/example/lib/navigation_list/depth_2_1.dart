@@ -5,7 +5,6 @@ import 'package:flutter_navigation_generator_annotations/flutter_navigation_gene
 
 @FlutterRoute(
   parentScreen: Depth1Page1,
-  routeName: '/parent/depth0/depth1-page1/depth2-page1',
 )
 class Depth2Page11 extends StatelessWidget {
   const Depth2Page11({super.key});
@@ -40,7 +39,6 @@ class Depth2Page11 extends StatelessWidget {
 
 @FlutterRoute(
   parentScreen: Depth1Page1,
-  routeName: '/parent/depth0/depth1-page1/depth2-page2',
 )
 class Depth2Page12 extends StatelessWidget {
   const Depth2Page12({super.key});

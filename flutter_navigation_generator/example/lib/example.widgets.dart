@@ -138,29 +138,29 @@ mixin MultiPanelNavigation on BaseNavigator {
   }
 
   @override
-  Future<void> goToDepth0Page() => navigateInMultiPanelOr(super.goToDepth0Page, RouteNames.parentDepth0);
+  Future<void> goToDepth0Page() => navigateInMultiPanelOr(super.goToDepth0Page, RouteNames.depth0Page);
   @override
-  Future<void> goToDepth1Page1() => navigateInMultiPanelOr(super.goToDepth1Page1, RouteNames.parentDepth0Depth1Page1);
+  Future<void> goToDepth1Page1() => navigateInMultiPanelOr(super.goToDepth1Page1, RouteNames.depth1Page1);
   @override
-  Future<void> goToDepth1Page2() => navigateInMultiPanelOr(super.goToDepth1Page2, RouteNames.parentDepth0Depth1Page2);
+  Future<void> goToDepth1Page2() => navigateInMultiPanelOr(super.goToDepth1Page2, RouteNames.depth1Page2);
   @override
-  Future<void> goToDepth1Page3() => navigateInMultiPanelOr(super.goToDepth1Page3, RouteNames.parentDepth0Depth1Page3);
+  Future<void> goToDepth1Page3() => navigateInMultiPanelOr(super.goToDepth1Page3, RouteNames.depth1Page3);
   @override
-  Future<void> goToDepth2Page11() => navigateInMultiPanelOr(super.goToDepth2Page11, RouteNames.parentDepth0Depth1Page1Depth2Page1);
+  Future<void> goToDepth2Page11() => navigateInMultiPanelOr(super.goToDepth2Page11, RouteNames.depth2Page11);
   @override
-  Future<void> goToDepth2Page12() => navigateInMultiPanelOr(super.goToDepth2Page12, RouteNames.parentDepth0Depth1Page1Depth2Page2);
+  Future<void> goToDepth2Page12() => navigateInMultiPanelOr(super.goToDepth2Page12, RouteNames.depth2Page12);
   @override
-  Future<void> goToDepth3Page111() => navigateInMultiPanelOr(super.goToDepth3Page111, RouteNames.parentDepth0Depth1Page1Depth2Page1Depth3Page1);
+  Future<void> goToDepth3Page111() => navigateInMultiPanelOr(super.goToDepth3Page111, RouteNames.depth3Page111);
   @override
-  Future<void> goToDepth3Page112() => navigateInMultiPanelOr(super.goToDepth3Page112, RouteNames.parentDepth0Depth1Page1Depth2Page1Depth3Page2);
+  Future<void> goToDepth3Page112() => navigateInMultiPanelOr(super.goToDepth3Page112, RouteNames.depth3Page112);
   @override
-  Future<void> goToDepth3Page113() => navigateInMultiPanelOr(super.goToDepth3Page113, RouteNames.parentDepth0Depth1Page1Depth2Page1Depth3Page3);
+  Future<void> goToDepth3Page113() => navigateInMultiPanelOr(super.goToDepth3Page113, RouteNames.depth3Page113);
   @override
-  Future<void> goToDepth3Page121() => navigateInMultiPanelOr(super.goToDepth3Page121, RouteNames.parentDepth0Depth1Page1Depth2Page2Depth3Page1);
+  Future<void> goToDepth3Page121() => navigateInMultiPanelOr(super.goToDepth3Page121, RouteNames.depth3Page121);
   @override
-  Future<void> goToDepth3Page122() => navigateInMultiPanelOr(super.goToDepth3Page122, RouteNames.parentDepth0Depth1Page1Depth2Page2Depth3Page2);
+  Future<void> goToDepth3Page122() => navigateInMultiPanelOr(super.goToDepth3Page122, RouteNames.depth3Page122);
   @override
-  Future<void> goToDepth3Page123() => navigateInMultiPanelOr(super.goToDepth3Page123, RouteNames.parentDepth0Depth1Page1Depth2Page2Depth3Page3);
+  Future<void> goToDepth3Page123() => navigateInMultiPanelOr(super.goToDepth3Page123, RouteNames.depth3Page123);
 }
 
 mixin MultiPanelListener {
