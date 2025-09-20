@@ -29,11 +29,7 @@ import 'navigation_list/parent.dart';
 mixin BaseNavigator {
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-  Type? parentScreen;
-
-  BaseNavigator? parentNavigator;
-
-  final Map<Type, BaseNavigator> subNavigators = {};
+  final Map<MultiPanelListener, String> multiPanels = {};
 
   final Set<NavigatorGuard> guards = <NavigatorGuard>{
     ExampleDefaultGuard(),
@@ -41,6 +37,45 @@ mixin BaseNavigator {
   };
 
   RouteSettings? guardedRouteSettings;
+
+  /// Registers a panel. When navigating to a route that matches
+  /// a child route of [screen], the [listener] will be notified
+  /// to add the panel and navigation in the main navigator will be prevented.
+  ///
+  /// Make sure to call [removePanel] when the panel is disposed.
+  void registerMultiPanel({
+    required String screen,
+    required MultiPanelListener listener,
+  }) {
+    multiPanels[listener] = screen;
+  }
+
+  /// Removes a panel. Call this when the panel is disposed.
+  void removePanel(MultiPanelListener listener) {
+    multiPanels.remove(listener);
+  }
+
+  /// Internal method to execute nativation
+  /// either inside a multipanel or regular.
+  dynamic _navigateInMultiPanelOr(dynamic Function() action, String routeName) {
+    for (final multiPanel in multiPanels.entries) {
+      if (routeName == multiPanel.value ||
+          routeName.startsWith('${multiPanel.value}/') == true) {
+        final route = onGenerateRoute(RouteSettings(name: routeName));
+        if (route is! PageRouteBuilder) continue;
+        multiPanel.key.addPanel(
+          route.pageBuilder(
+            navigatorKey.currentContext!,
+            const AlwaysStoppedAnimation(1),
+            const AlwaysStoppedAnimation(1),
+          ),
+          routeName,
+        );
+        return route.popped;
+      }
+    }
+    return action();
+  }
 
   Route<dynamic>? onGenerateRoute(RouteSettings settings) {
     final arguments = settings.arguments is Map
@@ -50,10 +85,6 @@ mixin BaseNavigator {
     final queryParameters = Map.from(settingsUri.queryParameters);
     switch (settingsUri.path) {
       case RouteNames.depth3Page121:
-        if (subNavigators[Depth2Page12] != null) {
-          subNavigators[Depth2Page12]!.goToDepth1Page1();
-          return null;
-        }
         final exampleDefaultGuard = guards
             .whereType<ExampleDefaultGuard>()
             .first;
@@ -72,10 +103,6 @@ mixin BaseNavigator {
           fullscreenDialog: false,
         );
       case RouteNames.depth3Page122:
-        if (subNavigators[Depth2Page12] != null) {
-          subNavigators[Depth2Page12]!.goToDepth1Page1();
-          return null;
-        }
         final exampleDefaultGuard = guards
             .whereType<ExampleDefaultGuard>()
             .first;
@@ -94,10 +121,6 @@ mixin BaseNavigator {
           fullscreenDialog: false,
         );
       case RouteNames.depth3Page123:
-        if (subNavigators[Depth2Page12] != null) {
-          subNavigators[Depth2Page12]!.goToDepth1Page1();
-          return null;
-        }
         final exampleDefaultGuard = guards
             .whereType<ExampleDefaultGuard>()
             .first;
@@ -116,10 +139,6 @@ mixin BaseNavigator {
           fullscreenDialog: false,
         );
       case RouteNames.depth2Page11:
-        if (subNavigators[Depth1Page1] != null) {
-          subNavigators[Depth1Page1]!.goToDepth1Page1();
-          return null;
-        }
         final exampleDefaultGuard = guards
             .whereType<ExampleDefaultGuard>()
             .first;
@@ -138,10 +157,6 @@ mixin BaseNavigator {
           fullscreenDialog: false,
         );
       case RouteNames.depth2Page12:
-        if (subNavigators[Depth1Page1] != null) {
-          subNavigators[Depth1Page1]!.goToDepth1Page1();
-          return null;
-        }
         final exampleDefaultGuard = guards
             .whereType<ExampleDefaultGuard>()
             .first;
@@ -160,10 +175,6 @@ mixin BaseNavigator {
           fullscreenDialog: false,
         );
       case RouteNames.depth1Page1:
-        if (subNavigators[Depth0Page] != null) {
-          subNavigators[Depth0Page]!.goToDepth1Page1();
-          return null;
-        }
         final exampleDefaultGuard = guards
             .whereType<ExampleDefaultGuard>()
             .first;
@@ -182,10 +193,6 @@ mixin BaseNavigator {
           fullscreenDialog: false,
         );
       case RouteNames.depth1Page2:
-        if (subNavigators[Depth0Page] != null) {
-          subNavigators[Depth0Page]!.goToDepth1Page1();
-          return null;
-        }
         final exampleDefaultGuard = guards
             .whereType<ExampleDefaultGuard>()
             .first;
@@ -204,10 +211,6 @@ mixin BaseNavigator {
           fullscreenDialog: false,
         );
       case RouteNames.depth1Page3:
-        if (subNavigators[Depth0Page] != null) {
-          subNavigators[Depth0Page]!.goToDepth1Page1();
-          return null;
-        }
         final exampleDefaultGuard = guards
             .whereType<ExampleDefaultGuard>()
             .first;
@@ -226,10 +229,6 @@ mixin BaseNavigator {
           fullscreenDialog: false,
         );
       case RouteNames.depth3Page111:
-        if (subNavigators[Depth2Page11] != null) {
-          subNavigators[Depth2Page11]!.goToDepth1Page1();
-          return null;
-        }
         final exampleDefaultGuard = guards
             .whereType<ExampleDefaultGuard>()
             .first;
@@ -248,10 +247,6 @@ mixin BaseNavigator {
           fullscreenDialog: false,
         );
       case RouteNames.depth3Page112:
-        if (subNavigators[Depth2Page11] != null) {
-          subNavigators[Depth2Page11]!.goToDepth1Page1();
-          return null;
-        }
         final exampleDefaultGuard = guards
             .whereType<ExampleDefaultGuard>()
             .first;
@@ -270,10 +265,6 @@ mixin BaseNavigator {
           fullscreenDialog: false,
         );
       case RouteNames.depth3Page113:
-        if (subNavigators[Depth2Page11] != null) {
-          subNavigators[Depth2Page11]!.goToDepth1Page1();
-          return null;
-        }
         final exampleDefaultGuard = guards
             .whereType<ExampleDefaultGuard>()
             .first;
@@ -310,10 +301,6 @@ mixin BaseNavigator {
           fullscreenDialog: false,
         );
       case RouteNames.depth0Page:
-        if (subNavigators[ParentPage] != null) {
-          subNavigators[ParentPage]!.goToDepth1Page1();
-          return null;
-        }
         final exampleDefaultGuard = guards
             .whereType<ExampleDefaultGuard>()
             .first;
@@ -805,77 +792,153 @@ mixin BaseNavigator {
   /// }
   /// ```
   bool canContinueNavigation() => guardedRouteSettings != null;
-  Future<void> goToDepth3Page121() async => navigatorKey.currentState
-      ?.pushNamed<dynamic>(RouteNames.depth3Page121, arguments: {});
-  Future<void> goToDepth3Page122() async => navigatorKey.currentState
-      ?.pushNamed<dynamic>(RouteNames.depth3Page122, arguments: {});
-  Future<void> goToDepth3Page123() async => navigatorKey.currentState
-      ?.pushNamed<dynamic>(RouteNames.depth3Page123, arguments: {});
-  Future<void> goToDepth2Page11() async => navigatorKey.currentState
-      ?.pushNamed<dynamic>(RouteNames.depth2Page11, arguments: {});
-  Future<void> goToDepth2Page12() async => navigatorKey.currentState
-      ?.pushNamed<dynamic>(RouteNames.depth2Page12, arguments: {});
-  Future<void> goToDepth1Page1() async => navigatorKey.currentState
-      ?.pushNamed<dynamic>(RouteNames.depth1Page1, arguments: {});
-  Future<void> goToDepth1Page2() async => navigatorKey.currentState
-      ?.pushNamed<dynamic>(RouteNames.depth1Page2, arguments: {});
-  Future<void> goToDepth1Page3() async => navigatorKey.currentState
-      ?.pushNamed<dynamic>(RouteNames.depth1Page3, arguments: {});
-  Future<void> goToDepth3Page111() async => navigatorKey.currentState
-      ?.pushNamed<dynamic>(RouteNames.depth3Page111, arguments: {});
-  Future<void> goToDepth3Page112() async => navigatorKey.currentState
-      ?.pushNamed<dynamic>(RouteNames.depth3Page112, arguments: {});
-  Future<void> goToDepth3Page113() async => navigatorKey.currentState
-      ?.pushNamed<dynamic>(RouteNames.depth3Page113, arguments: {});
-  Future<void> goToParentPage() async => navigatorKey.currentState
-      ?.pushNamed<dynamic>(RouteNames.parentPage, arguments: {});
-  Future<void> goToDepth0Page() async => navigatorKey.currentState
-      ?.pushNamed<dynamic>(RouteNames.depth0Page, arguments: {});
+  Future<void> goToDepth3Page121() async => _navigateInMultiPanelOr(
+    () async => navigatorKey.currentState?.pushNamed<dynamic>(
+      RouteNames.depth3Page121,
+      arguments: {},
+    ),
+    RouteNames.depth3Page121,
+  );
+  Future<void> goToDepth3Page122() async => _navigateInMultiPanelOr(
+    () async => navigatorKey.currentState?.pushNamed<dynamic>(
+      RouteNames.depth3Page122,
+      arguments: {},
+    ),
+    RouteNames.depth3Page122,
+  );
+  Future<void> goToDepth3Page123() async => _navigateInMultiPanelOr(
+    () async => navigatorKey.currentState?.pushNamed<dynamic>(
+      RouteNames.depth3Page123,
+      arguments: {},
+    ),
+    RouteNames.depth3Page123,
+  );
+  Future<void> goToDepth2Page11() async => _navigateInMultiPanelOr(
+    () async => navigatorKey.currentState?.pushNamed<dynamic>(
+      RouteNames.depth2Page11,
+      arguments: {},
+    ),
+    RouteNames.depth2Page11,
+  );
+  Future<void> goToDepth2Page12() async => _navigateInMultiPanelOr(
+    () async => navigatorKey.currentState?.pushNamed<dynamic>(
+      RouteNames.depth2Page12,
+      arguments: {},
+    ),
+    RouteNames.depth2Page12,
+  );
+  Future<void> goToDepth1Page1() async => _navigateInMultiPanelOr(
+    () async => navigatorKey.currentState?.pushNamed<dynamic>(
+      RouteNames.depth1Page1,
+      arguments: {},
+    ),
+    RouteNames.depth1Page1,
+  );
+  Future<void> goToDepth1Page2() async => _navigateInMultiPanelOr(
+    () async => navigatorKey.currentState?.pushNamed<dynamic>(
+      RouteNames.depth1Page2,
+      arguments: {},
+    ),
+    RouteNames.depth1Page2,
+  );
+  Future<void> goToDepth1Page3() async => _navigateInMultiPanelOr(
+    () async => navigatorKey.currentState?.pushNamed<dynamic>(
+      RouteNames.depth1Page3,
+      arguments: {},
+    ),
+    RouteNames.depth1Page3,
+  );
+  Future<void> goToDepth3Page111() async => _navigateInMultiPanelOr(
+    () async => navigatorKey.currentState?.pushNamed<dynamic>(
+      RouteNames.depth3Page111,
+      arguments: {},
+    ),
+    RouteNames.depth3Page111,
+  );
+  Future<void> goToDepth3Page112() async => _navigateInMultiPanelOr(
+    () async => navigatorKey.currentState?.pushNamed<dynamic>(
+      RouteNames.depth3Page112,
+      arguments: {},
+    ),
+    RouteNames.depth3Page112,
+  );
+  Future<void> goToDepth3Page113() async => _navigateInMultiPanelOr(
+    () async => navigatorKey.currentState?.pushNamed<dynamic>(
+      RouteNames.depth3Page113,
+      arguments: {},
+    ),
+    RouteNames.depth3Page113,
+  );
+  Future<void> goToParentPage() async => _navigateInMultiPanelOr(
+    () async => navigatorKey.currentState?.pushNamed<dynamic>(
+      RouteNames.parentPage,
+      arguments: {},
+    ),
+    RouteNames.parentPage,
+  );
+  Future<void> goToDepth0Page() async => _navigateInMultiPanelOr(
+    () async => navigatorKey.currentState?.pushNamed<dynamic>(
+      RouteNames.depth0Page,
+      arguments: {},
+    ),
+    RouteNames.depth0Page,
+  );
   Future<void> goToMyHomePage({String? title, _i1.Key? key}) async =>
-      navigatorKey.currentState?.pushNamed<dynamic>(
-        Uri(
-          path: RouteNames.myHomePage,
-          queryParameters: kIsWeb
-              ? ({
-                  'page_title': title,
-                  'key': key == null
-                      ? null
-                      : base64Encode(utf8.encode(jsonEncode(key))),
-                }..removeWhere((_, v) => v == null))
-              : null,
-        ).toString(),
-        arguments: {'title': title, 'key': key},
+      _navigateInMultiPanelOr(
+        () async => navigatorKey.currentState?.pushNamed<dynamic>(
+          Uri(
+            path: RouteNames.myHomePage,
+            queryParameters: kIsWeb
+                ? ({
+                    'page_title': title,
+                    'key': key == null
+                        ? null
+                        : base64Encode(utf8.encode(jsonEncode(key))),
+                  }..removeWhere((_, v) => v == null))
+                : null,
+          ).toString(),
+          arguments: {'title': title, 'key': key},
+        ),
+        RouteNames.myHomePage,
       );
   void goToHomePageWithPathParameter({String? title, _i1.Key? key}) =>
-      navigatorKey.currentState?.pushNamedAndRemoveUntil<dynamic>(
-        Uri(
-          path: RouteNames.myHomePagePopAll,
-          queryParameters: kIsWeb
-              ? ({
-                  'page_title': title,
-                  'key': key == null
-                      ? null
-                      : base64Encode(utf8.encode(jsonEncode(key))),
-                }..removeWhere((_, v) => v == null))
-              : null,
-        ).toString(),
-        (_) => false,
-        arguments: {'title': title, 'key': key},
+      _navigateInMultiPanelOr(
+        () async => navigatorKey.currentState?.pushNamedAndRemoveUntil<dynamic>(
+          Uri(
+            path: RouteNames.myHomePagePopAll,
+            queryParameters: kIsWeb
+                ? ({
+                    'page_title': title,
+                    'key': key == null
+                        ? null
+                        : base64Encode(utf8.encode(jsonEncode(key))),
+                  }..removeWhere((_, v) => v == null))
+                : null,
+          ).toString(),
+          (_) => false,
+          arguments: {'title': title, 'key': key},
+        ),
+        RouteNames.myHomePagePopAll,
       );
   Future<bool?> goToSecondPage() async {
-    final dynamic result = await navigatorKey.currentState?.pushNamed<dynamic>(
+    final dynamic result = await _navigateInMultiPanelOr(
+      () async => navigatorKey.currentState?.pushNamed<dynamic>(
+        RouteNames.secondPage,
+        arguments: {},
+      ),
       RouteNames.secondPage,
-      arguments: {},
     );
     return (result as bool?);
   }
 
   Future<bool?> popAndGoToSecondPage() async {
-    final dynamic result = await navigatorKey.currentState
-        ?.popAndPushNamed<dynamic, dynamic>(
-          RouteNames.secondPage,
-          arguments: {},
-        );
+    final dynamic result = await _navigateInMultiPanelOr(
+      () async => navigatorKey.currentState?.popAndPushNamed<dynamic, dynamic>(
+        RouteNames.secondPage,
+        arguments: {},
+      ),
+      RouteNames.secondPage,
+    );
     return (result as bool?);
   }
 
@@ -884,19 +947,22 @@ mixin BaseNavigator {
     _i2.CustomModel? model,
     String? name,
     int? age,
-  }) async => navigatorKey.currentState?.pushNamed<dynamic>(
-    Uri(
-      path: RouteNames.homeIdNameNonExistingNameNumber1(id: id, name: name),
-      queryParameters: kIsWeb
-          ? ({
-              'model': model == null
-                  ? null
-                  : base64Encode(utf8.encode(jsonEncode(model))),
-              'age': age?.toString(),
-            }..removeWhere((_, v) => v == null))
-          : null,
-    ).toString(),
-    arguments: {'id': id, 'model': model, 'name': name, 'age': age},
+  }) async => _navigateInMultiPanelOr(
+    () async => navigatorKey.currentState?.pushNamed<dynamic>(
+      Uri(
+        path: RouteNames.homeIdNameNonExistingNameNumber1(id: id, name: name),
+        queryParameters: kIsWeb
+            ? ({
+                'model': model == null
+                    ? null
+                    : base64Encode(utf8.encode(jsonEncode(model))),
+                'age': age?.toString(),
+              }..removeWhere((_, v) => v == null))
+            : null,
+      ).toString(),
+      arguments: {'id': id, 'model': model, 'name': name, 'age': age},
+    ),
+    RouteNames.homeIdNameNonExistingNameNumber1(id: id, name: name),
   );
   Future<void> goToRouteNameWithArguments2({
     required String id,
@@ -907,57 +973,72 @@ mixin BaseNavigator {
     _i3.ExampleEnum? exampleEnum3,
     List<_i3.ExampleEnum>? exampleEnums4,
     Map<String, _i3.ExampleEnum>? exampleEnumsMap5,
-  }) async => navigatorKey.currentState?.pushNamed<dynamic>(
-    Uri(
-      path: RouteNames.homeIdExampleExampleEnumAge(
-        id: id,
-        exampleEnum: exampleEnum.index.toString(),
-        age: age?.toString(),
-      ),
-      queryParameters: kIsWeb
-          ? ({
-              'exampleEnum2': exampleEnum2.index.toString(),
-              'name': name,
-              'exampleEnum3': exampleEnum3?.index.toString(),
-              'exampleEnums4': base64Encode(
-                utf8.encode(
-                  jsonEncode(exampleEnums4?.map((e) => e.index).toList()),
-                ),
-              ),
-              'exampleEnumsMap5': base64Encode(
-                utf8.encode(
-                  jsonEncode(
-                    exampleEnumsMap5?.map((k, v) => MapEntry(k, v.index)),
+  }) async => _navigateInMultiPanelOr(
+    () async => navigatorKey.currentState?.pushNamed<dynamic>(
+      Uri(
+        path: RouteNames.homeIdExampleExampleEnumAge(
+          id: id,
+          exampleEnum: exampleEnum.index.toString(),
+          age: age?.toString(),
+        ),
+        queryParameters: kIsWeb
+            ? ({
+                'exampleEnum2': exampleEnum2.index.toString(),
+                'name': name,
+                'exampleEnum3': exampleEnum3?.index.toString(),
+                'exampleEnums4': base64Encode(
+                  utf8.encode(
+                    jsonEncode(exampleEnums4?.map((e) => e.index).toList()),
                   ),
                 ),
-              ),
-            }..removeWhere((_, v) => v == null))
-          : null,
-    ).toString(),
-    arguments: {
-      'id': id,
-      'exampleEnum': exampleEnum,
-      'exampleEnum2': exampleEnum2,
-      'name': name,
-      'age': age,
-      'exampleEnum3': exampleEnum3,
-      'exampleEnums4': exampleEnums4,
-      'exampleEnumsMap5': exampleEnumsMap5,
-    },
+                'exampleEnumsMap5': base64Encode(
+                  utf8.encode(
+                    jsonEncode(
+                      exampleEnumsMap5?.map((k, v) => MapEntry(k, v.index)),
+                    ),
+                  ),
+                ),
+              }..removeWhere((_, v) => v == null))
+            : null,
+      ).toString(),
+      arguments: {
+        'id': id,
+        'exampleEnum': exampleEnum,
+        'exampleEnum2': exampleEnum2,
+        'name': name,
+        'age': age,
+        'exampleEnum3': exampleEnum3,
+        'exampleEnums4': exampleEnums4,
+        'exampleEnumsMap5': exampleEnumsMap5,
+      },
+    ),
+    RouteNames.homeIdExampleExampleEnumAge(
+      id: id,
+      exampleEnum: exampleEnum.index.toString(),
+      age: age?.toString(),
+    ),
   );
   Future<void> goToExampleScreenWithRequiredArgument({
     required List<_i2.CustomModel> data,
-  }) async => navigatorKey.currentState?.pushNamed<dynamic>(
-    Uri(
-      path: RouteNames.exampleScreenWithRequiredArgument,
-      queryParameters: kIsWeb
-          ? {'data': base64Encode(utf8.encode(jsonEncode(data)))}
-          : null,
-    ).toString(),
-    arguments: {'data': data},
+  }) async => _navigateInMultiPanelOr(
+    () async => navigatorKey.currentState?.pushNamed<dynamic>(
+      Uri(
+        path: RouteNames.exampleScreenWithRequiredArgument,
+        queryParameters: kIsWeb
+            ? {'data': base64Encode(utf8.encode(jsonEncode(data)))}
+            : null,
+      ).toString(),
+      arguments: {'data': data},
+    ),
+    RouteNames.exampleScreenWithRequiredArgument,
   );
-  Future<void> goToLoggedInPage() async => navigatorKey.currentState
-      ?.pushNamed<dynamic>(RouteNames.loggedInPage, arguments: {});
+  Future<void> goToLoggedInPage() async => _navigateInMultiPanelOr(
+    () async => navigatorKey.currentState?.pushNamed<dynamic>(
+      RouteNames.loggedInPage,
+      arguments: {},
+    ),
+    RouteNames.loggedInPage,
+  );
   Future<void> goToFieldValueTests({
     required String nonNullableString,
     required int nonNullableInt,
@@ -987,86 +1068,95 @@ mixin BaseNavigator {
     ),
     _i2.CustomModel nonNullableCustomModelWithDefaultValue2 =
         CustomModel.testDefault,
-  }) async => navigatorKey.currentState?.pushNamed<dynamic>(
-    Uri(
-      path: RouteNames.fieldValueTests,
-      queryParameters: kIsWeb
-          ? ({
-              'nonNullableString': nonNullableString,
-              'nonNullableInt': nonNullableInt.toString(),
-              'nonNullableBool': nonNullableBool.toString(),
-              'nonNullableDouble': nonNullableDouble.toString(),
-              'nonNullableList': base64Encode(
-                utf8.encode(jsonEncode(nonNullableList)),
-              ),
-              'nonNullableMap': base64Encode(
-                utf8.encode(jsonEncode(nonNullableMap)),
-              ),
-              'nonNullableCustomModel': base64Encode(
-                utf8.encode(jsonEncode(nonNullableCustomModel)),
-              ),
-              'nullableString': nullableString,
-              'nullableInt': nullableInt?.toString(),
-              'nullableBool': nullableBool?.toString(),
-              'nullableDouble': nullableDouble?.toString(),
-              'nullableList': base64Encode(
-                utf8.encode(jsonEncode(nullableList)),
-              ),
-              'nullableMap': base64Encode(utf8.encode(jsonEncode(nullableMap))),
-              'nullableCustomModel': nullableCustomModel == null
-                  ? null
-                  : base64Encode(utf8.encode(jsonEncode(nullableCustomModel))),
-              'nonNullableStringWithDefaultValue':
-                  nonNullableStringWithDefaultValue,
-              'nonNullableIntWithDefaultValue': nonNullableIntWithDefaultValue
-                  .toString(),
-              'nonNullableBoolWithDefaultValue': nonNullableBoolWithDefaultValue
-                  .toString(),
-              'nonNullableDoubleWithDefaultValue':
-                  nonNullableDoubleWithDefaultValue.toString(),
-              'nonNullableListWithDefaultValue': base64Encode(
-                utf8.encode(jsonEncode(nonNullableListWithDefaultValue)),
-              ),
-              'nonNullableMapWithDefaultValue': base64Encode(
-                utf8.encode(jsonEncode(nonNullableMapWithDefaultValue)),
-              ),
-              'nonNullableCustomModelWithDefaultValue': base64Encode(
-                utf8.encode(jsonEncode(nonNullableCustomModelWithDefaultValue)),
-              ),
-              'nonNullableCustomModelWithDefaultValue2': base64Encode(
-                utf8.encode(
-                  jsonEncode(nonNullableCustomModelWithDefaultValue2),
+  }) async => _navigateInMultiPanelOr(
+    () async => navigatorKey.currentState?.pushNamed<dynamic>(
+      Uri(
+        path: RouteNames.fieldValueTests,
+        queryParameters: kIsWeb
+            ? ({
+                'nonNullableString': nonNullableString,
+                'nonNullableInt': nonNullableInt.toString(),
+                'nonNullableBool': nonNullableBool.toString(),
+                'nonNullableDouble': nonNullableDouble.toString(),
+                'nonNullableList': base64Encode(
+                  utf8.encode(jsonEncode(nonNullableList)),
                 ),
-              ),
-            }..removeWhere((_, v) => v == null))
-          : null,
-    ).toString(),
-    arguments: {
-      'nonNullableString': nonNullableString,
-      'nonNullableInt': nonNullableInt,
-      'nonNullableBool': nonNullableBool,
-      'nonNullableDouble': nonNullableDouble,
-      'nonNullableList': nonNullableList,
-      'nonNullableMap': nonNullableMap,
-      'nonNullableCustomModel': nonNullableCustomModel,
-      'nullableString': nullableString,
-      'nullableInt': nullableInt,
-      'nullableBool': nullableBool,
-      'nullableDouble': nullableDouble,
-      'nullableList': nullableList,
-      'nullableMap': nullableMap,
-      'nullableCustomModel': nullableCustomModel,
-      'nonNullableStringWithDefaultValue': nonNullableStringWithDefaultValue,
-      'nonNullableIntWithDefaultValue': nonNullableIntWithDefaultValue,
-      'nonNullableBoolWithDefaultValue': nonNullableBoolWithDefaultValue,
-      'nonNullableDoubleWithDefaultValue': nonNullableDoubleWithDefaultValue,
-      'nonNullableListWithDefaultValue': nonNullableListWithDefaultValue,
-      'nonNullableMapWithDefaultValue': nonNullableMapWithDefaultValue,
-      'nonNullableCustomModelWithDefaultValue':
-          nonNullableCustomModelWithDefaultValue,
-      'nonNullableCustomModelWithDefaultValue2':
-          nonNullableCustomModelWithDefaultValue2,
-    },
+                'nonNullableMap': base64Encode(
+                  utf8.encode(jsonEncode(nonNullableMap)),
+                ),
+                'nonNullableCustomModel': base64Encode(
+                  utf8.encode(jsonEncode(nonNullableCustomModel)),
+                ),
+                'nullableString': nullableString,
+                'nullableInt': nullableInt?.toString(),
+                'nullableBool': nullableBool?.toString(),
+                'nullableDouble': nullableDouble?.toString(),
+                'nullableList': base64Encode(
+                  utf8.encode(jsonEncode(nullableList)),
+                ),
+                'nullableMap': base64Encode(
+                  utf8.encode(jsonEncode(nullableMap)),
+                ),
+                'nullableCustomModel': nullableCustomModel == null
+                    ? null
+                    : base64Encode(
+                        utf8.encode(jsonEncode(nullableCustomModel)),
+                      ),
+                'nonNullableStringWithDefaultValue':
+                    nonNullableStringWithDefaultValue,
+                'nonNullableIntWithDefaultValue': nonNullableIntWithDefaultValue
+                    .toString(),
+                'nonNullableBoolWithDefaultValue':
+                    nonNullableBoolWithDefaultValue.toString(),
+                'nonNullableDoubleWithDefaultValue':
+                    nonNullableDoubleWithDefaultValue.toString(),
+                'nonNullableListWithDefaultValue': base64Encode(
+                  utf8.encode(jsonEncode(nonNullableListWithDefaultValue)),
+                ),
+                'nonNullableMapWithDefaultValue': base64Encode(
+                  utf8.encode(jsonEncode(nonNullableMapWithDefaultValue)),
+                ),
+                'nonNullableCustomModelWithDefaultValue': base64Encode(
+                  utf8.encode(
+                    jsonEncode(nonNullableCustomModelWithDefaultValue),
+                  ),
+                ),
+                'nonNullableCustomModelWithDefaultValue2': base64Encode(
+                  utf8.encode(
+                    jsonEncode(nonNullableCustomModelWithDefaultValue2),
+                  ),
+                ),
+              }..removeWhere((_, v) => v == null))
+            : null,
+      ).toString(),
+      arguments: {
+        'nonNullableString': nonNullableString,
+        'nonNullableInt': nonNullableInt,
+        'nonNullableBool': nonNullableBool,
+        'nonNullableDouble': nonNullableDouble,
+        'nonNullableList': nonNullableList,
+        'nonNullableMap': nonNullableMap,
+        'nonNullableCustomModel': nonNullableCustomModel,
+        'nullableString': nullableString,
+        'nullableInt': nullableInt,
+        'nullableBool': nullableBool,
+        'nullableDouble': nullableDouble,
+        'nullableList': nullableList,
+        'nullableMap': nullableMap,
+        'nullableCustomModel': nullableCustomModel,
+        'nonNullableStringWithDefaultValue': nonNullableStringWithDefaultValue,
+        'nonNullableIntWithDefaultValue': nonNullableIntWithDefaultValue,
+        'nonNullableBoolWithDefaultValue': nonNullableBoolWithDefaultValue,
+        'nonNullableDoubleWithDefaultValue': nonNullableDoubleWithDefaultValue,
+        'nonNullableListWithDefaultValue': nonNullableListWithDefaultValue,
+        'nonNullableMapWithDefaultValue': nonNullableMapWithDefaultValue,
+        'nonNullableCustomModelWithDefaultValue':
+            nonNullableCustomModelWithDefaultValue,
+        'nonNullableCustomModelWithDefaultValue2':
+            nonNullableCustomModelWithDefaultValue2,
+      },
+    ),
+    RouteNames.fieldValueTests,
   );
   Future<void> showDialogExampleDialog({required String text}) async =>
       showCustomDialog<dynamic>(widget: _i3.ExampleDialog(text: text));
@@ -1092,54 +1182,146 @@ mixin BaseNavigator {
         builder: (_) => widget ?? const SizedBox.shrink(),
       );
 }
+mixin MultiPanelListener {
+  void addPanel(Widget route, String routeName);
+}
+
+class _MultiPanelItem {
+  _MultiPanelItem({required this.route, required this.routeName});
+
+  final Widget route;
+
+  final String routeName;
+}
+
+extension I<T> on Iterable<T> {
+  bool startsWith(Iterable<T> other) {
+    for (final (i, element) in indexed) {
+      if (i >= other.length) return true;
+      if (element != other.elementAt(i)) return false;
+    }
+    return false;
+  }
+}
+
+class MultiPanelNavigator extends StatefulWidget {
+  const MultiPanelNavigator({
+    required this.navigator,
+    required this.parentRoute,
+    required this.panels,
+    required this.builder,
+    super.key,
+  });
+
+  final BaseNavigator navigator;
+
+  final String parentRoute;
+
+  final int panels;
+
+  final Widget Function(List<Widget?> screens) builder;
+
+  @override
+  State<MultiPanelNavigator> createState() => MultiPanelNavigatorState();
+}
+
+class MultiPanelNavigatorState extends State<MultiPanelNavigator>
+    with MultiPanelListener {
+  final List<_MultiPanelItem> _navigationStack = <_MultiPanelItem>[];
+
+  @override
+  void initState() {
+    super.initState();
+    widget.navigator.registerMultiPanel(
+      screen: widget.parentRoute,
+      listener: this,
+    );
+  }
+
+  @override
+  void dispose() {
+    widget.navigator.removePanel(this);
+    super.dispose();
+  }
+
+  @override
+  void addPanel(Widget route, String routeName) {
+    final splittedRouteName = routeName.split('/');
+    final firstDifferentIndex = _navigationStack.indexWhere((r) {
+      return !splittedRouteName.startsWith(r.routeName.split('/'));
+    });
+    if (firstDifferentIndex != -1) {
+      _navigationStack.removeRange(
+        firstDifferentIndex,
+        _navigationStack.length,
+      );
+    }
+    _navigationStack.add(_MultiPanelItem(route: route, routeName: routeName));
+    setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final renderStack =
+        _navigationStack.length <= widget.panels
+              ? _navigationStack.cast<_MultiPanelItem?>().toList()
+              : _navigationStack
+                    .cast<_MultiPanelItem?>()
+                    .skip(_navigationStack.length - widget.panels)
+                    .toList()
+          ..addAll([
+            for (var i = 0; i < widget.panels - _navigationStack.length; i++)
+              null,
+          ]);
+    return widget.builder(renderStack.map<Widget?>((e) => e?.route).toList());
+  }
+}
 
 class RouteNames {
-  /// /parent-page/depth0-page/depth1-page1/depth2-page12/depth3-page121
+  /// /parent/depth0/depth1-page1/depth2-page12/depth3-page121
   static const depth3Page121 =
-      '/parent-page/depth0-page/depth1-page1/depth2-page12/depth3-page121';
+      '/parent/depth0/depth1-page1/depth2-page12/depth3-page121';
 
-  /// /parent-page/depth0-page/depth1-page1/depth2-page12/depth3-page122
+  /// /parent/depth0/depth1-page1/depth2-page12/depth3-page122
   static const depth3Page122 =
-      '/parent-page/depth0-page/depth1-page1/depth2-page12/depth3-page122';
+      '/parent/depth0/depth1-page1/depth2-page12/depth3-page122';
 
-  /// /parent-page/depth0-page/depth1-page1/depth2-page12/depth3-page123
+  /// /parent/depth0/depth1-page1/depth2-page12/depth3-page123
   static const depth3Page123 =
-      '/parent-page/depth0-page/depth1-page1/depth2-page12/depth3-page123';
+      '/parent/depth0/depth1-page1/depth2-page12/depth3-page123';
 
-  /// /parent-page/depth0-page/depth1-page1/depth2-page11
-  static const depth2Page11 =
-      '/parent-page/depth0-page/depth1-page1/depth2-page11';
+  /// /parent/depth0/depth1-page1/depth2-page11
+  static const depth2Page11 = '/parent/depth0/depth1-page1/depth2-page11';
 
-  /// /parent-page/depth0-page/depth1-page1/depth2-page12
-  static const depth2Page12 =
-      '/parent-page/depth0-page/depth1-page1/depth2-page12';
+  /// /parent/depth0/depth1-page1/depth2-page12
+  static const depth2Page12 = '/parent/depth0/depth1-page1/depth2-page12';
 
-  /// /parent-page/depth0-page/depth1-page1
-  static const depth1Page1 = '/parent-page/depth0-page/depth1-page1';
+  /// /parent/depth0/depth1-page1
+  static const depth1Page1 = '/parent/depth0/depth1-page1';
 
-  /// /parent-page/depth0-page/depth1-page2
-  static const depth1Page2 = '/parent-page/depth0-page/depth1-page2';
+  /// /parent/depth0/depth1-page2
+  static const depth1Page2 = '/parent/depth0/depth1-page2';
 
-  /// /parent-page/depth0-page/depth1-page3
-  static const depth1Page3 = '/parent-page/depth0-page/depth1-page3';
+  /// /parent/depth0/depth1-page3
+  static const depth1Page3 = '/parent/depth0/depth1-page3';
 
-  /// /parent-page/depth0-page/depth1-page1/depth2-page11/depth3-page111
+  /// /parent/depth0/depth1-page1/depth2-page11/depth3-page111
   static const depth3Page111 =
-      '/parent-page/depth0-page/depth1-page1/depth2-page11/depth3-page111';
+      '/parent/depth0/depth1-page1/depth2-page11/depth3-page111';
 
-  /// /parent-page/depth0-page/depth1-page1/depth2-page11/depth3-page112
+  /// /parent/depth0/depth1-page1/depth2-page11/depth3-page112
   static const depth3Page112 =
-      '/parent-page/depth0-page/depth1-page1/depth2-page11/depth3-page112';
+      '/parent/depth0/depth1-page1/depth2-page11/depth3-page112';
 
-  /// /parent-page/depth0-page/depth1-page1/depth2-page11/depth3-page113
+  /// /parent/depth0/depth1-page1/depth2-page11/depth3-page113
   static const depth3Page113 =
-      '/parent-page/depth0-page/depth1-page1/depth2-page11/depth3-page113';
+      '/parent/depth0/depth1-page1/depth2-page11/depth3-page113';
 
   /// /parent
   static const parentPage = '/parent';
 
-  /// /parent-page/depth0
-  static const depth0Page = '/parent-page/depth0';
+  /// /parent/depth0
+  static const depth0Page = '/parent/depth0';
 
   /// /
   static const myHomePage = '/';

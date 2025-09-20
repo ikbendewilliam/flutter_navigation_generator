@@ -14,22 +14,18 @@ class Depth2Page11 extends StatelessWidget {
     return Scaffold(
       body: Column(
         children: [
-          const Text('Depth 2 Page 1 > 1'),
-          ListTile(
-            onTap: () => mainNavigator.goToDepth2Page12(),
-            title: const Text('Change this page to page 2'),
-          ),
+          const Text('Week 1 > Monday'),
           ListTile(
             onTap: () => mainNavigator.goToDepth3Page111(),
-            title: const Text('Go to 1 > 1 > 1'),
+            title: const Text('Breakfast'),
           ),
           ListTile(
             onTap: () => mainNavigator.goToDepth3Page112(),
-            title: const Text('Go to 1 > 1 > 2'),
+            title: const Text('Lunch'),
           ),
           ListTile(
             onTap: () => mainNavigator.goToDepth3Page113(),
-            title: const Text('Go to 1 > 1 > 3'),
+            title: const Text('Dinner'),
           ),
         ],
       ),
@@ -48,18 +44,18 @@ class Depth2Page12 extends StatelessWidget {
     return Scaffold(
       body: Column(
         children: [
-          const Text('Depth 2 Page 1 > 2'),
-          ListTile(
-            onTap: () => mainNavigator.goToDepth2Page11(),
-            title: const Text('Change this page to page 1'),
-          ),
+          const Text('Week 1 > Tuesday'),
           ListTile(
             onTap: () => mainNavigator.goToDepth3Page121(),
-            title: const Text('Go to 1 > 2 > 1'),
+            title: const Text('Breakfast'),
           ),
           ListTile(
             onTap: () => mainNavigator.goToDepth3Page122(),
-            title: const Text('Go to 1 > 2 > 2'),
+            title: const Text('Lunch'),
+          ),
+          const ListTile(
+            textColor: Colors.grey,
+            title: Text('Dinner'),
           ),
         ],
       ),

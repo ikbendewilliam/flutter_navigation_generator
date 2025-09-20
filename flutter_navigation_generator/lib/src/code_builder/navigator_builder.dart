@@ -1,6 +1,7 @@
 import 'package:code_builder/code_builder.dart';
 import 'package:flutter_navigation_generator/src/code_builder/guards_builder.dart';
 import 'package:flutter_navigation_generator/src/code_builder/guards_field_builder.dart';
+import 'package:flutter_navigation_generator/src/code_builder/multi_panel_navigation_builder.dart';
 import 'package:flutter_navigation_generator/src/code_builder/on_generate_route_builder.dart';
 import 'package:flutter_navigation_generator/src/code_builder/route_builder.dart';
 import 'package:flutter_navigation_generator/src/models/importable_type.dart';
@@ -15,6 +16,7 @@ class NavigatorBuilder {
   final ImportableType? unknownRoute;
   final List<ImportableType> defaultGuards;
   final bool ignoreKeysByDefault;
+  final MultiPanelNavigationBuilder multiPanelNavigationBuilder;
   final IncludeQueryParametersType includeQueryParametersNavigatorConfig;
 
   NavigatorBuilder({
@@ -24,6 +26,7 @@ class NavigatorBuilder {
     required this.unknownRoute,
     required this.pageType,
     required this.defaultGuards,
+    required this.multiPanelNavigationBuilder,
     required this.includeQueryParametersNavigatorConfig,
     this.ignoreKeysByDefault = true,
   });
@@ -46,28 +49,8 @@ class NavigatorBuilder {
           b
             ..name = className
             ..fields.add(buildNavigatorKey())
-            ..fields.addAll([
-              Field(
-                (f) =>
-                    f
-                      ..name = 'parentScreen'
-                      ..type = refer('Type?'),
-              ),
-              Field(
-                (f) =>
-                    f
-                      ..name = 'parentNavigator'
-                      ..type = refer('$className?'),
-              ),
-              Field(
-                (f) =>
-                    f
-                      ..name = 'subNavigators'
-                      ..modifier = FieldModifier.final$
-                      ..type = refer('Map<Type, $className>')
-                      ..assignment = const Code('{}'),
-              ),
-            ])
+            ..fields.addAll(multiPanelNavigationBuilder.generateFields())
+            ..methods.addAll(multiPanelNavigationBuilder.generateMethods())
             ..methods.add(
               OnGenerateRouteBuilder(
                 routes: routes,

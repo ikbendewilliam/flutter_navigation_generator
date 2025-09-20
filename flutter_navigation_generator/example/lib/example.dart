@@ -1,5 +1,4 @@
 import 'package:example/example.navigator.dart';
-import 'package:example/example.widgets.dart';
 import 'package:example/main.dart';
 import 'package:flutter_navigation_generator_animations/flutter_navigation_generator_animations.dart';
 import 'package:flutter_navigation_generator_annotations/flutter_navigation_generator_annotations.dart';
@@ -9,4 +8,4 @@ import 'package:flutter_navigation_generator_annotations/flutter_navigation_gene
   unknownRoute: Error404,
   defaultGuards: [ExampleDefaultGuard],
 )
-class MainNavigator with BaseNavigator, MultiPanelNavigation {}
+class MainNavigator with BaseNavigator {}

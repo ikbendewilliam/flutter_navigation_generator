@@ -37,14 +37,6 @@ class OnGenerateRouteBuilder {
     final constructorCall =
         '$constructor(${route.parameters.asMap().map((_, parameterConfig) => MapEntry(parameterConfig.type.argumentName, _getParameterValue(parameterConfig))).entries.where((e) => e.value != null).map((e) => '${e.key}: ${e.value},').join('')})';
 
-    var subNavigatorCode = '';
-    if (route.parentScreen != null) {
-      subNavigatorCode += 'if (subNavigators[${typeRefer(route.parentScreen).symbol}] != null) {\n';
-      subNavigatorCode += '  subNavigators[${typeRefer(route.parentScreen).symbol}]!.goToDepth1Page1();\n';
-      subNavigatorCode += '  return null;\n';
-      subNavigatorCode += '}\n';
-    }
-
     var guardsCode = '';
     if ((route.guards ?? defaultGuards).isNotEmpty) {
       for (final guard in route.guards ?? defaultGuards) {
@@ -59,7 +51,7 @@ class OnGenerateRouteBuilder {
         guardsCode += '}\n';
       }
     }
-    return '$subNavigatorCode${guardsCode}return ${_withPageType(route, constructorCall)};';
+    return '${guardsCode}return ${_withPageType(route, constructorCall)};';
   }
 
   String? _getParameterValue(RouteFieldConfig parameterConfig) {

@@ -19,22 +19,38 @@ class _Depth1Page1State extends State<Depth1Page1> {
     return Scaffold(
       body: Column(
         children: [
-          const Text('Depth 1 Page 1'),
-          ListTile(
-            onTap: () => mainNavigator.goToDepth1Page2(),
-            title: const Text('Change this page to page 2'),
-          ),
-          ListTile(
-            onTap: () => mainNavigator.goToDepth1Page3(),
-            title: const Text('Change this page to page 3'),
-          ),
+          const Text('Week 1'),
           ListTile(
             onTap: () => mainNavigator.goToDepth2Page11(),
-            title: const Text('Go to 1 > 1'),
+            title: const Text('Monday'),
           ),
           ListTile(
             onTap: () => mainNavigator.goToDepth2Page12(),
-            title: const Text('Go to 1 > 2'),
+            title: const Text('Tuesday'),
+          ),
+          const ListTile(
+            textColor: Colors.grey,
+            title: Text('Wednesday'),
+          ),
+          const ListTile(
+            textColor: Colors.grey,
+            title: Text('Thursday'),
+          ),
+          const ListTile(
+            textColor: Colors.grey,
+            title: Text('Friday'),
+          ),
+          const ListTile(
+            textColor: Colors.grey,
+            title: Text('Saterday'),
+          ),
+          const ListTile(
+            textColor: Colors.grey,
+            title: Text('Sunday'),
+          ),
+          ListTile(
+            onTap: () => mainNavigator.goToDepth1Page2(),
+            title: const Text('Week 2'),
           ),
         ],
       ),
@@ -58,14 +74,42 @@ class _Depth1Page2State extends State<Depth1Page2> {
     return Scaffold(
       body: Column(
         children: [
-          const Text('Depth 1 Page 2'),
+          const Text('Week 2'),
           ListTile(
             onTap: () => mainNavigator.goToDepth1Page1(),
-            title: const Text('Change this page to page 1'),
+            title: const Text('< Week 1'),
+          ),
+          const ListTile(
+            textColor: Colors.grey,
+            title: Text('Monday'),
+          ),
+          const ListTile(
+            textColor: Colors.grey,
+            title: Text('Tuesday'),
+          ),
+          const ListTile(
+            textColor: Colors.grey,
+            title: Text('Wednesday'),
+          ),
+          const ListTile(
+            textColor: Colors.grey,
+            title: Text('Thursday'),
+          ),
+          const ListTile(
+            textColor: Colors.grey,
+            title: Text('Friday'),
+          ),
+          const ListTile(
+            textColor: Colors.grey,
+            title: Text('Saterday'),
+          ),
+          const ListTile(
+            textColor: Colors.grey,
+            title: Text('Sunday'),
           ),
           ListTile(
             onTap: () => mainNavigator.goToDepth1Page3(),
-            title: const Text('Change this page to page 3'),
+            title: const Text('Week 3 >'),
           ),
         ],
       ),
@@ -89,14 +133,42 @@ class _Depth1Page3State extends State<Depth1Page3> {
     return Scaffold(
       body: Column(
         children: [
-          const Text('Depth 1 Page 3'),
-          ListTile(
-            onTap: () => mainNavigator.goToDepth1Page1(),
-            title: const Text('Change this page to page 1'),
-          ),
+          const Text('Week 3'),
           ListTile(
             onTap: () => mainNavigator.goToDepth1Page2(),
-            title: const Text('Change this page to page 2'),
+            title: const Text('< Week 2'),
+          ),
+          const ListTile(
+            textColor: Colors.grey,
+            title: Text('Monday'),
+          ),
+          const ListTile(
+            textColor: Colors.grey,
+            title: Text('Tuesday'),
+          ),
+          const ListTile(
+            textColor: Colors.grey,
+            title: Text('Wednesday'),
+          ),
+          const ListTile(
+            textColor: Colors.grey,
+            title: Text('Thursday'),
+          ),
+          const ListTile(
+            textColor: Colors.grey,
+            title: Text('Friday'),
+          ),
+          const ListTile(
+            textColor: Colors.grey,
+            title: Text('Saterday'),
+          ),
+          const ListTile(
+            textColor: Colors.grey,
+            title: Text('Sunday'),
+          ),
+          const ListTile(
+            textColor: Colors.grey,
+            title: Text('Week 4 >'),
           ),
         ],
       ),

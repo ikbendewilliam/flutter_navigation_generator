@@ -1,6 +1,5 @@
-import 'package:example/example.navigator.dart';
-import 'package:example/example.widgets.dart';
 import 'package:example/main.dart';
+import 'package:example/navigation_list/parent_navigator_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_navigation_generator_annotations/flutter_navigation_generator_annotations.dart';
 
@@ -14,7 +13,6 @@ class ParentPage extends StatefulWidget {
 
 class _ParentPageState extends State<ParentPage> {
   var _panels = 3;
-  var _direction = Axis.horizontal;
 
   @override
   void initState() {
@@ -51,33 +49,12 @@ class _ParentPageState extends State<ParentPage> {
               ),
               Text('$_panels panels'),
               const SizedBox(width: 16),
-              if (_direction == Axis.horizontal) ...[
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      _direction = Axis.vertical;
-                    });
-                  },
-                  child: const Text('Switch to vertical'),
-                ),
-              ] else ...[
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      _direction = Axis.horizontal;
-                    });
-                  },
-                  child: const Text('Switch to horizontal'),
-                ),
-              ],
             ],
           ),
           const Divider(),
           Expanded(
-            child: MultiPanelNavigator(
-              parentRoute: RouteNames.parentPage,
+            child: ParentNavigatorWidget(
               panels: _panels,
-              direction: _direction,
               navigator: mainNavigator,
             ),
           ),
@@ -101,31 +78,36 @@ class Depth0Page extends StatelessWidget {
           Expanded(
             child: Column(
               children: [
+                const Text(
+                  '''Welcome to an example of a multipanel navigation.
+The goal is to have multiple panels that work with parentScreens to know whether to add a screen and/or push one away, or to replace one or more screens.
+To make the use case clearer The example shows a menu screen where you can select a week, then select a day, then select breakfast/lunch/dinner and finally see the details for that meal.''',
+                ),
                 ListTile(
                   onTap: () => mainNavigator.goToDepth1Page1(),
-                  title: const Text('Go to Depth 1 Page 1'),
+                  title: const Text('Week 1'),
                 ),
                 ListTile(
                   onTap: () => mainNavigator.goToDepth2Page11(),
                   title: const Padding(
                     padding: EdgeInsets.only(left: 32),
-                    child: Text('Go to Depth 2 Page 1 > 1'),
+                    child: Text('Today'),
                   ),
                 ),
                 ListTile(
                   onTap: () => mainNavigator.goToDepth2Page12(),
                   title: const Padding(
                     padding: EdgeInsets.only(left: 32),
-                    child: Text('Go to Depth 2 Page 1 > 2'),
+                    child: Text('Tomorrow'),
                   ),
                 ),
                 ListTile(
                   onTap: () => mainNavigator.goToDepth1Page2(),
-                  title: const Text('Go to Depth 1 Page 2'),
+                  title: const Text('Week 2'),
                 ),
                 ListTile(
                   onTap: () => mainNavigator.goToDepth1Page3(),
-                  title: const Text('Go to Depth 1 Page 3'),
+                  title: const Text('Week 3'),
                 ),
               ],
             ),

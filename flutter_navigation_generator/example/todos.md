@@ -2,14 +2,16 @@
 - [x] Show last panels (can be 1)
 - [x] Auto refresh / gobackto based on hierarchy
 - [x] Axis
-- [ ] Generate code in navigator
-- [ ] Add widget to exports or generate it
-- [ ] Generate routeNames
+- [x] Generate code in navigator
+- [x] Add widget to exports or generate it
+- [x] Generate routeNames
 - [ ] Add popping of panels
-- [ ] Add double navigation?
-- [ ] Return correct value
-- [ ] Add animations
+- [ ] Add popping of panels automatically on navigator.pop?
+- [ ] Support routenames with parameters
+- [/] Return correct value
+- [x] Add (basic) animations
 - [ ] Initialroute? Add routename on classes?
 - [ ] Add documentation
-- [ ] Add example
+- [/] Rework examples
+- [/] Add example
 - [ ] Add tests

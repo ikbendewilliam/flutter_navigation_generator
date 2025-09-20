@@ -12,7 +12,7 @@ class Depth3Page121 extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Center(
-        child: Text('Depth 3 Page 1 > 2 > 1'),
+        child: Text('Week 1 > Tuesday > Breakfast'),
       ),
     );
   }
@@ -28,7 +28,7 @@ class Depth3Page122 extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Center(
-        child: Text('Depth 3 Page 1 > 2 > 2'),
+        child: Text('Week 1 > Tuesday > Lunch'),
       ),
     );
   }
@@ -44,7 +44,7 @@ class Depth3Page123 extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Center(
-        child: Text('Depth 3 Page 1 > 2 > 3'),
+        child: Text('Week 1 > Tuesday > Dinner'),
       ),
     );
   }

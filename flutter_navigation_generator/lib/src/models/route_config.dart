@@ -28,10 +28,11 @@ class RouteConfig {
   bool get routeNameContainsParameters => routeName.contains(':');
 
   String fullRouteName(Set<RouteConfig> routes, List<String> removeSuffixes) {
-    final parentScreenRouteName = parentScreen?.fullRouteName(routes);
+    final parentScreenRouteName = parentScreen?.fullRouteName(routes, removeSuffixes);
+    final routeNameSuffixless = routeNameIsDefinedByAnnotation ? routeName : CaseUtil(routeName, removeSuffixes: removeSuffixes).textWithoutSuffix;
     final divider = routeName.startsWith('/') ? '' : '/';
-    final fullRouteName = parentScreenRouteName == null ? routeName : '$parentScreenRouteName$divider$routeName';
-    return "${fullRouteName.startsWith('/') ? '' : '/'}${routeNameIsDefinedByAnnotation ? fullRouteName : CaseUtil(fullRouteName, removeSuffixes: removeSuffixes).textWithoutSuffix}";
+    final fullRouteName = parentScreenRouteName == null ? routeNameSuffixless : '$parentScreenRouteName$divider$routeNameSuffixless';
+    return "${fullRouteName.startsWith('/') ? '' : '/'}$fullRouteName";
   }
 
   RouteConfig({
@@ -104,12 +105,13 @@ class RouteConfig {
 }
 
 extension ImportableTypeExtension on ImportableType {
-  String fullRouteName(Set<RouteConfig> typesConfig, [int d = 0]) {
+  String fullRouteName(Set<RouteConfig> typesConfig, List<String> removeSuffixes) {
     final config = typesConfig.firstWhereOrNull((element) => element.routeWidget.className == className);
     if (config == null) return '';
     final parent = config.parentScreen;
-    if (parent == null) return config.routeName;
-    final divider = config.routeName.startsWith('/') ? '' : '/';
-    return '${parent.fullRouteName(typesConfig, d + 1)}$divider${config.routeName}';
+    final routeName = config.routeNameIsDefinedByAnnotation ? config.routeName : CaseUtil(config.routeName, removeSuffixes: removeSuffixes).textWithoutSuffix;
+    if (parent == null) return routeName;
+    final divider = routeName.startsWith('/') ? '' : '/';
+    return '${parent.fullRouteName(typesConfig, removeSuffixes)}$divider$routeName';
   }
 }
