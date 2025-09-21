@@ -75,7 +75,7 @@ class MultiPanelNavigationBuilder {
             b
               ..name = '_navigateInMultiPanelOr'
               ..returns = refer('dynamic')
-              ..docs.addAll(['/// Internal method to execute nativation ', '/// either inside a multipanel or regular.'])
+              ..docs.addAll(['/// Internal method to execute navigation ', '/// either inside a multipanel or regular.'])
               ..requiredParameters.addAll([
                 Parameter(
                   (p) =>
@@ -100,15 +100,50 @@ class MultiPanelNavigationBuilder {
   if (routeName == multiPanel.value || routeName.startsWith('\${multiPanel.value}/') == true) {
     final route = onGenerateRoute(RouteSettings(name: routeName, arguments: arguments));
     if (route is! PageRouteBuilder) continue;
+    final completer = Completer<dynamic>();
     multiPanel.key.addPanel(
-      route.pageBuilder(navigatorKey.currentContext!, const AlwaysStoppedAnimation(1), const AlwaysStoppedAnimation(1)),
+      route.pageBuilder(
+        navigatorKey.currentContext!,
+        const AlwaysStoppedAnimation(1),
+        const AlwaysStoppedAnimation(1),
+      ),
       routeName,
+      (result) => completer.complete(result),
     );
-    return route.popped;
+    return completer.future;
   }
 }
 return action();
 '''),
+      ),
+      Method(
+        (b) =>
+            b
+              ..name = '_popMultiPanelOr'
+              ..returns = refer('void')
+              ..docs.addAll(['/// Internal method to execute popping navigation ', '/// either inside a multipanel or regular.'])
+              ..requiredParameters.addAll([
+                Parameter(
+                  (p) =>
+                      p
+                        ..name = 'action'
+                        ..type = refer('dynamic Function()'),
+                ),
+              ])
+              ..optionalParameters.addAll([
+                Parameter(
+                  (p) =>
+                      p
+                        ..name = 'result'
+                        ..type = refer('dynamic'),
+                ),
+              ])
+              ..body = const Code('''for (final multiPanel in multiPanels.keys) {
+  if (multiPanel.removePanel(result)) {
+    return;
+  }
+}
+action();'''),
       ),
     ];
   }
@@ -139,6 +174,26 @@ return action();
                                   ..name = 'routeName'
                                   ..type = refer('String'),
                           ),
+                          Parameter(
+                            (p) =>
+                                p
+                                  ..name = 'onPop'
+                                  ..type = refer('ValueChanged'),
+                          ),
+                        ]),
+                ),
+                Method(
+                  (b) =>
+                      b
+                        ..name = 'removePanel'
+                        ..returns = refer('bool')
+                        ..requiredParameters.addAll([
+                          Parameter(
+                            (p) =>
+                                p
+                                  ..name = 'result'
+                                  ..type = refer('dynamic'),
+                          ),
                         ]),
                 ),
               ]),
@@ -162,8 +217,15 @@ return action();
                         ..type = refer('String')
                         ..modifier = FieldModifier.final$,
                 ),
+                Field(
+                  (f) =>
+                      f
+                        ..name = 'onPop'
+                        ..type = refer('void Function(dynamic)')
+                        ..modifier = FieldModifier.final$,
+                ),
               ])
-              ..constructors.add(Constructor((c) => c..optionalParameters.addAll([_parameter('route'), _parameter('routeName')]))),
+              ..constructors.add(Constructor((c) => c..optionalParameters.addAll([_parameter('route'), _parameter('routeName'), _parameter('onPop')]))),
       ),
       Extension(
         (b) =>
@@ -279,7 +341,11 @@ super.dispose();'''),
                         ..annotations.add(const Reference('override'))
                         ..name = 'addPanel'
                         ..returns = refer('void')
-                        ..requiredParameters.addAll([_typedParameter(refer('Widget'), 'route'), _typedParameter(refer('String'), 'routeName')])
+                        ..requiredParameters.addAll([
+                          _typedParameter(refer('Widget'), 'route'),
+                          _typedParameter(refer('String'), 'routeName'),
+                          _typedParameter(refer('ValueChanged'), 'onPop'),
+                        ])
                         ..body = const Code('''final splittedRouteName = routeName.split('/');
 final firstDifferentIndex = _navigationStack.indexWhere((r) {
   return !splittedRouteName.startsWith(r.routeName.split('/'));
@@ -291,9 +357,31 @@ _navigationStack.add(
   _MultiPanelItem(
     route: route,
     routeName: routeName,
+    onPop: onPop,
   ),
 );
 setState(() {});'''),
+                ),
+                Method(
+                  (b) =>
+                      b
+                        ..annotations.add(const Reference('override'))
+                        ..name = 'removePanel'
+                        ..returns = refer('bool')
+                        ..requiredParameters.addAll([
+                          Parameter(
+                            (p) =>
+                                p
+                                  ..name = 'result'
+                                  ..type = refer('dynamic'),
+                          ),
+                        ])
+                        ..body = const Code('''if (_navigationStack.isEmpty) return false;
+final screen = _navigationStack.removeLast();
+screen.onPop(result);
+if (_navigationStack.isEmpty) return false;
+setState(() {});
+return true;'''),
                 ),
                 Method(
                   (b) =>
@@ -317,6 +405,12 @@ return widget.builder(renderStack.map<Widget?>((e) => e?.route).toList());'''),
                 ),
               ]),
       ),
+    ];
+  }
+
+  Iterable<Directive> generateImports() {
+    return [
+      if (createMultipanelNavigation) ...[Directive.import('dart:async')],
     ];
   }
 }

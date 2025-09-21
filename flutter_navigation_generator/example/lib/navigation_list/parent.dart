@@ -30,6 +30,7 @@ class _ParentPageState extends State<ParentPage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text('parent page'),
+        leading: IconButton(onPressed: () => mainNavigator.goBack(), icon: const Icon(Icons.arrow_back)),
       ),
       body: Column(
         children: [

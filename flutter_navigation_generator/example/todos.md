@@ -5,15 +5,15 @@
 - [x] Generate code in navigator
 - [x] Add widget to exports or generate it
 - [x] Generate routeNames
-- [ ] Add popping of panels
-- [ ] Add popping of panels automatically on navigator.pop?
+- [x] Add popping of panels
+- [x] Add popping of panels with result
 - [x] Support routenames with parameters
-- [/] Return correct value
+- [x] Return correct value
 - [x] Add (basic) animations
-- [ ] Add more animations?
-- [ ] Initialroute? Add routename on classes?
 - [ ] Add config to disable multipanel
 - [ ] Add documentation
 - [/] Rework examples
 - [/] Add example
 - [ ] Add tests
+- [ ] Add more animations?
+- [ ] Initialroute? Add routename on classes?

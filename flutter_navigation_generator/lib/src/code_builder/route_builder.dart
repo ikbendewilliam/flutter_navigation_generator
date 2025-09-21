@@ -225,7 +225,7 @@ class RouteBuilder {
             ..name = 'goBack'
             ..lambda = true
             ..returns = const Reference('void')
-            ..body = const Reference('navigatorKey.currentState?.pop').call([]).code,
+            ..body = const Reference('_popMultiPanelOr').call([Method((b) => b..body = const Reference('navigatorKey.currentState?.pop').call([]).code).closure]).code,
     ),
     Method(
       (b) =>
@@ -243,7 +243,11 @@ class RouteBuilder {
               ),
             )
             ..returns = const Reference('void')
-            ..body = const Reference('navigatorKey.currentState?.pop').call([const Reference('result')]).code,
+            ..body =
+                const Reference('_popMultiPanelOr').call([
+                  Method((b) => b..body = const Reference('navigatorKey.currentState?.pop').call([const Reference('result')]).code).closure,
+                  const Reference('result'),
+                ]).code,
     ),
     Method(
       (b) =>

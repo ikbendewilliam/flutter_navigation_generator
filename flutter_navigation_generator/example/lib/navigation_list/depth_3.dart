@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 
 @FlutterRoute(
   parentScreen: Depth2Page,
+  returnType: String,
 )
 class Depth3PageBreakfast extends StatelessWidget {
   final int week;
@@ -25,7 +26,7 @@ class Depth3PageBreakfast extends StatelessWidget {
           Text('Week $week > ${DateFormat('EEEE').format(DateTime(2025, 9, day))} > Breakfast'),
           ElevatedButton(
             child: const Text('Pop a screen'),
-            onPressed: () => mainNavigator.goBack(),
+            onPressed: () => mainNavigator.goBackWithResult(result: 'Breakfast'),
           ),
         ],
       ),
@@ -35,6 +36,7 @@ class Depth3PageBreakfast extends StatelessWidget {
 
 @FlutterRoute(
   parentScreen: Depth2Page,
+  returnType: String,
 )
 class Depth3PageLunch extends StatelessWidget {
   final int week;
@@ -54,7 +56,7 @@ class Depth3PageLunch extends StatelessWidget {
           Text('Week $week > ${DateFormat('EEEE').format(DateTime(2025, 9, day))} > Lunch'),
           ElevatedButton(
             child: const Text('Pop a screen'),
-            onPressed: () => mainNavigator.goBack(),
+            onPressed: () => mainNavigator.goBackWithResult(result: 'Lunch'),
           ),
         ],
       ),
@@ -64,6 +66,7 @@ class Depth3PageLunch extends StatelessWidget {
 
 @FlutterRoute(
   parentScreen: Depth2Page,
+  returnType: String,
 )
 class Depth3PageDinner extends StatelessWidget {
   final int week;
@@ -83,7 +86,7 @@ class Depth3PageDinner extends StatelessWidget {
           Text('Week $week > ${DateFormat('EEEE').format(DateTime(2025, 9, day))} > Dinner'),
           ElevatedButton(
             child: const Text('Pop a screen'),
-            onPressed: () => mainNavigator.goBack(),
+            onPressed: () => mainNavigator.goBackWithResult(result: 'Dinner'),
           ),
         ],
       ),

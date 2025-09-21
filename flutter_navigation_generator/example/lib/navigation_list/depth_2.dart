@@ -8,7 +8,7 @@ import 'package:intl/intl.dart';
   parentScreen: Depth1Page,
   routeName: 'day/:day',
 )
-class Depth2Page extends StatelessWidget {
+class Depth2Page extends StatefulWidget {
   final int day;
   final int week;
 
@@ -19,21 +19,38 @@ class Depth2Page extends StatelessWidget {
   });
 
   @override
+  State<Depth2Page> createState() => _Depth2PageState();
+}
+
+class _Depth2PageState extends State<Depth2Page> {
+  String? _result = 'No result yet';
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
         children: [
-          Text('Week $week > ${DateFormat('EEEE').format(DateTime(2025, 9, day))}'),
+          Text('Week ${widget.week} > ${DateFormat('EEEE').format(DateTime(2025, 9, widget.day))}'),
+          Text('Result: $_result'),
           ListTile(
-            onTap: () => mainNavigator.goToDepth3PageBreakfast(day: day, week: week),
+            onTap: () async {
+              _result = await mainNavigator.goToDepth3PageBreakfast(day: widget.day, week: widget.week);
+              setState(() {});
+            },
             title: const Text('Breakfast'),
           ),
           ListTile(
-            onTap: () => mainNavigator.goToDepth3PageLunch(day: day, week: week),
+            onTap: () async {
+              _result = await mainNavigator.goToDepth3PageLunch(day: widget.day, week: widget.week);
+              setState(() {});
+            },
             title: const Text('Lunch'),
           ),
           ListTile(
-            onTap: () => mainNavigator.goToDepth3PageDinner(day: day, week: week),
+            onTap: () async {
+              _result = await mainNavigator.goToDepth3PageDinner(day: widget.day, week: widget.week);
+              setState(() {});
+            },
             title: const Text('Dinner'),
           ),
           ElevatedButton(

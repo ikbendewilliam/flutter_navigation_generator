@@ -8,6 +8,7 @@
 // ignore_for_file: prefer_const_constructors
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:example/custom_model.dart' as _i2;
@@ -54,7 +55,7 @@ mixin BaseNavigator {
     multiPanels.remove(listener);
   }
 
-  /// Internal method to execute nativation
+  /// Internal method to execute navigation
   /// either inside a multipanel or regular.
   dynamic _navigateInMultiPanelOr(
     dynamic Function() action,
@@ -68,6 +69,7 @@ mixin BaseNavigator {
           RouteSettings(name: routeName, arguments: arguments),
         );
         if (route is! PageRouteBuilder) continue;
+        final completer = Completer<dynamic>();
         multiPanel.key.addPanel(
           route.pageBuilder(
             navigatorKey.currentContext!,
@@ -75,11 +77,23 @@ mixin BaseNavigator {
             const AlwaysStoppedAnimation(1),
           ),
           routeName,
+          (result) => completer.complete(result),
         );
-        return route.popped;
+        return completer.future;
       }
     }
     return action();
+  }
+
+  /// Internal method to execute popping navigation
+  /// either inside a multipanel or regular.
+  void _popMultiPanelOr(dynamic Function() action, [dynamic result]) {
+    for (final multiPanel in multiPanels.keys) {
+      if (multiPanel.removePanel(result)) {
+        return;
+      }
+    }
+    action();
   }
 
   Route<dynamic>? onGenerateRoute(RouteSettings settings) {
@@ -470,7 +484,7 @@ mixin BaseNavigator {
             ),
           );
         }
-        return NativeRouteAnimation<void>(
+        return NativeRouteAnimation<String>(
           builder: (_) => Depth3PageBreakfast(
             week: queryParameters['week'] != null
                 ? int.parse(queryParameters['week']!)
@@ -502,7 +516,7 @@ mixin BaseNavigator {
             ),
           );
         }
-        return NativeRouteAnimation<void>(
+        return NativeRouteAnimation<String>(
           builder: (_) => Depth3PageLunch(
             week: queryParameters['week'] != null
                 ? int.parse(queryParameters['week']!)
@@ -534,7 +548,7 @@ mixin BaseNavigator {
             ),
           );
         }
-        return NativeRouteAnimation<void>(
+        return NativeRouteAnimation<String>(
           builder: (_) => Depth3PageDinner(
             week: queryParameters['week'] != null
                 ? int.parse(queryParameters['week']!)
@@ -756,42 +770,57 @@ mixin BaseNavigator {
   /// }
   /// ```
   bool canContinueNavigation() => guardedRouteSettings != null;
-  Future<void> goToDepth3PageBreakfast({
+  Future<String?> goToDepth3PageBreakfast({
     required int week,
     required int day,
-  }) async => _navigateInMultiPanelOr(
-    () async => navigatorKey.currentState?.pushNamed<dynamic>(
+  }) async {
+    final dynamic result = await _navigateInMultiPanelOr(
+      () async => navigatorKey.currentState?.pushNamed<dynamic>(
+        RouteNames.depth3PageBreakfast(
+          week: week.toString(),
+          day: day.toString(),
+        ),
+        arguments: {'week': week, 'day': day},
+      ),
       RouteNames.depth3PageBreakfast(
         week: week.toString(),
         day: day.toString(),
       ),
-      arguments: {'week': week, 'day': day},
-    ),
-    RouteNames.depth3PageBreakfast(week: week.toString(), day: day.toString()),
-    {'week': week, 'day': day},
-  );
-  Future<void> goToDepth3PageLunch({
+      {'week': week, 'day': day},
+    );
+    return (result as String?);
+  }
+
+  Future<String?> goToDepth3PageLunch({
     required int week,
     required int day,
-  }) async => _navigateInMultiPanelOr(
-    () async => navigatorKey.currentState?.pushNamed<dynamic>(
+  }) async {
+    final dynamic result = await _navigateInMultiPanelOr(
+      () async => navigatorKey.currentState?.pushNamed<dynamic>(
+        RouteNames.depth3PageLunch(week: week.toString(), day: day.toString()),
+        arguments: {'week': week, 'day': day},
+      ),
       RouteNames.depth3PageLunch(week: week.toString(), day: day.toString()),
-      arguments: {'week': week, 'day': day},
-    ),
-    RouteNames.depth3PageLunch(week: week.toString(), day: day.toString()),
-    {'week': week, 'day': day},
-  );
-  Future<void> goToDepth3PageDinner({
+      {'week': week, 'day': day},
+    );
+    return (result as String?);
+  }
+
+  Future<String?> goToDepth3PageDinner({
     required int week,
     required int day,
-  }) async => _navigateInMultiPanelOr(
-    () async => navigatorKey.currentState?.pushNamed<dynamic>(
+  }) async {
+    final dynamic result = await _navigateInMultiPanelOr(
+      () async => navigatorKey.currentState?.pushNamed<dynamic>(
+        RouteNames.depth3PageDinner(week: week.toString(), day: day.toString()),
+        arguments: {'week': week, 'day': day},
+      ),
       RouteNames.depth3PageDinner(week: week.toString(), day: day.toString()),
-      arguments: {'week': week, 'day': day},
-    ),
-    RouteNames.depth3PageDinner(week: week.toString(), day: day.toString()),
-    {'week': week, 'day': day},
-  );
+      {'week': week, 'day': day},
+    );
+    return (result as String?);
+  }
+
   Future<void> goToDepth2Page({required int day, required int week}) async =>
       _navigateInMultiPanelOr(
         () async => navigatorKey.currentState?.pushNamed<dynamic>(
@@ -1151,9 +1180,9 @@ mixin BaseNavigator {
   }) async => showBottomSheet<dynamic>(
     widget: _i3.RecursiveNavigationBottomSheet(layers: layers),
   );
-  void goBack() => navigatorKey.currentState?.pop();
+  void goBack() => _popMultiPanelOr(() => navigatorKey.currentState?.pop());
   void goBackWithResult<T>({T? result}) =>
-      navigatorKey.currentState?.pop(result);
+      _popMultiPanelOr(() => navigatorKey.currentState?.pop(result), result);
   void popUntil(bool Function(Route<dynamic>) predicate) =>
       navigatorKey.currentState?.popUntil(predicate);
   void goBackTo(String routeName) =>
@@ -1169,15 +1198,22 @@ mixin BaseNavigator {
       );
 }
 mixin MultiPanelListener {
-  void addPanel(Widget route, String routeName);
+  void addPanel(Widget route, String routeName, ValueChanged onPop);
+  bool removePanel(dynamic result);
 }
 
 class _MultiPanelItem {
-  _MultiPanelItem({required this.route, required this.routeName});
+  _MultiPanelItem({
+    required this.route,
+    required this.routeName,
+    required this.onPop,
+  });
 
   final Widget route;
 
   final String routeName;
+
+  final void Function(dynamic) onPop;
 }
 
 extension I<T> on Iterable<T> {
@@ -1231,7 +1267,7 @@ class MultiPanelNavigatorState extends State<MultiPanelNavigator>
   }
 
   @override
-  void addPanel(Widget route, String routeName) {
+  void addPanel(Widget route, String routeName, ValueChanged onPop) {
     final splittedRouteName = routeName.split('/');
     final firstDifferentIndex = _navigationStack.indexWhere((r) {
       return !splittedRouteName.startsWith(r.routeName.split('/'));
@@ -1242,8 +1278,20 @@ class MultiPanelNavigatorState extends State<MultiPanelNavigator>
         _navigationStack.length,
       );
     }
-    _navigationStack.add(_MultiPanelItem(route: route, routeName: routeName));
+    _navigationStack.add(
+      _MultiPanelItem(route: route, routeName: routeName, onPop: onPop),
+    );
     setState(() {});
+  }
+
+  @override
+  bool removePanel(dynamic result) {
+    if (_navigationStack.isEmpty) return false;
+    final screen = _navigationStack.removeLast();
+    screen.onPop(result);
+    if (_navigationStack.isEmpty) return false;
+    setState(() {});
+    return true;
   }
 
   @override

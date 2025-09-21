@@ -38,8 +38,8 @@ class LibraryGenerator {
       (b) =>
           b
             ..ignoreForFile.addAll(['prefer_const_constructors'])
-            ..directives.addAll(
-              ImportBuilder(
+            ..directives.addAll([
+              ...ImportBuilder(
                 routes: routes,
                 pageType: pageType,
                 targetFile: targetFile,
@@ -47,7 +47,8 @@ class LibraryGenerator {
                 ignoreKeysByDefault: ignoreKeysByDefault,
                 includeQueryParametersNavigatorConfig: includeQueryParametersNavigatorConfig,
               ).generate(),
-            )
+              ...multiPanelNavigationBuilder.generateImports(),
+            ])
             ..body.addAll([
               NavigatorBuilder(
                 className: className,
