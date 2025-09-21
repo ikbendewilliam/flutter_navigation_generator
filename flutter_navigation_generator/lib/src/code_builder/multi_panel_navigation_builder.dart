@@ -89,10 +89,16 @@ class MultiPanelNavigationBuilder {
                         ..name = 'routeName'
                         ..type = refer('String'),
                 ),
+                Parameter(
+                  (p) =>
+                      p
+                        ..name = 'arguments'
+                        ..type = refer('Object?'),
+                ),
               ])
               ..body = const Code('''for (final multiPanel in multiPanels.entries) {
   if (routeName == multiPanel.value || routeName.startsWith('\${multiPanel.value}/') == true) {
-    final route = onGenerateRoute(RouteSettings(name: routeName));
+    final route = onGenerateRoute(RouteSettings(name: routeName, arguments: arguments));
     if (route is! PageRouteBuilder) continue;
     multiPanel.key.addPanel(
       route.pageBuilder(navigatorKey.currentContext!, const AlwaysStoppedAnimation(1), const AlwaysStoppedAnimation(1)),

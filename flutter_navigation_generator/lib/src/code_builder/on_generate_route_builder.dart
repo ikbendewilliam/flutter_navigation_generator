@@ -14,10 +14,19 @@ class OnGenerateRouteBuilder {
   final ImportableType? pageType;
   final ImportableType? unknownRoute;
   final List<ImportableType> defaultGuards;
+  final List<String> removeSuffixes;
   final Uri? targetFile;
   final bool ignoreKeysByDefault;
 
-  OnGenerateRouteBuilder({required this.routes, this.pageType, this.unknownRoute, this.targetFile, this.ignoreKeysByDefault = true, this.defaultGuards = const []});
+  OnGenerateRouteBuilder({
+    required this.routes,
+    this.pageType,
+    this.unknownRoute,
+    this.targetFile,
+    this.ignoreKeysByDefault = true,
+    this.defaultGuards = const [],
+    this.removeSuffixes = const [],
+  });
 
   String _withPageType(RouteConfig? route, String screen) {
     final pageClass =
@@ -98,34 +107,34 @@ class OnGenerateRouteBuilder {
                       ..type = const Reference('RouteSettings'),
               ),
             )
-            ..body = _generateBody(pageRoutes),
+            ..body = _generateBody(pageRoutes, removeSuffixes),
     );
   }
 
-  Block _generateBody(List<RouteConfig> pageRoutes) {
+  Block _generateBody(List<RouteConfig> pageRoutes, List<String> removeSuffixes) {
     return Block.of([
       if (pageRoutes.isNotEmpty) ...[
         const Code('''final arguments = settings.arguments is Map ? (settings.arguments as Map).cast<String, dynamic>() : <String, dynamic>{};
     final settingsUri = Uri.parse(settings.name ?? '');
     final queryParameters = Map.from(settingsUri.queryParameters);'''),
         Code(
-          'switch (settingsUri.path) {${pageRoutes.where((route) => !route.routeNameContainsParameters).map((route) => 'case RouteNames.${route.asRouteName}: ${_generateRoute(route)}').join('')}}',
+          'switch (settingsUri.path) {${pageRoutes.where((route) => !route.routeNameContainsParameters(routes)).map((route) => 'case RouteNames.${route.asRouteName}: ${_generateRoute(route)}').join('')}}',
         ),
       ],
-      if (pageRoutes.any((element) => element.routeNameContainsParameters)) ...[
+      if (pageRoutes.any((element) => element.routeNameContainsParameters(routes))) ...[
         const Code('final pathSegments = settingsUri.pathSegments;'),
         ...pageRoutes
-            .where((pageRoute) => pageRoute.routeNameContainsParameters)
-            .groupListsBy((pageRoute) => pageRoute.routeName.pathSegments.length)
+            .where((pageRoute) => pageRoute.routeNameContainsParameters(routes))
+            .groupListsBy((pageRoute) => pageRoute.fullRouteName(routes, []).pathSegments.length)
             .entries
             .sorted((a, b) => -a.key.compareTo(b.key))
             .map((group) {
               final pathSegments = group.key;
               var code = 'if (pathSegments.length == $pathSegments) {';
-              final pageRoutesMap = group.value.asMap().map((key, value) => MapEntry(value, value.routeName.parametersFromRouteName.length));
+              final pageRoutesMap = group.value.asMap().map((key, value) => MapEntry(value, value.fullRouteName(routes, []).parametersFromRouteName.length));
               final pageRoutes = pageRoutesMap.entries.sorted((a, b) => a.value.compareTo(b.value)).map((e) => e.key).toList();
               for (final pageRoute in pageRoutes) {
-                final pathSegments = pageRoute.routeName.pathSegments;
+                final pathSegments = pageRoute.fullRouteName(routes, removeSuffixes).pathSegments;
                 final hasRigidSegments = pathSegments.any((element) => !element.startsWith(':'));
                 if (hasRigidSegments) {
                   code += 'if (';

@@ -108,10 +108,14 @@ class RouteBuilder {
       if (route.navigationType == NavigationType.pushNotNamed) {
         return _generateBottomSheetOrDialogRoute(route: route, namePrefix: 'goTo', bodyCall: 'navigatorKey.currentState?.push', useNamedWidgetArugment: false, withPageType: true);
       }
-      final parametersInRouteName = route.routeName.parametersFromRouteName;
-      final path = route.asRouteNameExpression;
+      final parametersInRouteName = route.fullRouteName(routes, []).parametersFromRouteName;
+      var path = route.asRouteNameExpression;
+      if (parametersInRouteName.isNotEmpty) path = route.callRouteNameExpression(path, parametersInRouteName);
 
       var queryParameters = _generateQueryParameters(route, parametersInRouteName);
+      final arguments = Reference(
+        '${route.parameters.where((p) => !p.ignoreWithKeyCheck(ignoreKeysByDefault)).toList().asMap().map((_, parameterConfig) => MapEntry("'${parameterConfig.type.argumentName}'", parameterConfig.type.argumentName))}',
+      );
 
       var bodyCall = TypeReference(
         (b) =>
@@ -131,11 +135,7 @@ class RouteBuilder {
           queryParameters.isEmpty ? path : const Reference('Uri', 'dart:core').call([], {'path': path, 'queryParameters': Reference(queryParameters)}).property('toString()'),
           if (route.navigationType == NavigationType.pushAndReplaceAll || route.navigationType == NavigationType.restorablePushAndReplaceAll) ...[const Reference('(_) => false')],
         ],
-        {
-          'arguments': Reference(
-            '${route.parameters.where((p) => !p.ignoreWithKeyCheck(ignoreKeysByDefault)).toList().asMap().map((_, parameterConfig) => MapEntry("'${parameterConfig.type.argumentName}'", parameterConfig.type.argumentName))}',
-          ),
-        },
+        {'arguments': arguments},
       );
       bodyCall = TypeReference((b) => b..symbol = '_navigateInMultiPanelOr').call([
         Method(
@@ -145,7 +145,8 @@ class RouteBuilder {
                 ..modifier = MethodModifier.async
                 ..body = bodyCall.code,
         ).closure,
-        route.asRouteNameExpression,
+        path,
+        arguments,
       ]);
       Code body;
       if (route.returnType != null) {

@@ -59,6 +59,7 @@ class LibraryGenerator {
                 ignoreKeysByDefault: ignoreKeysByDefault,
                 includeQueryParametersNavigatorConfig: includeQueryParametersNavigatorConfig,
                 multiPanelNavigationBuilder: multiPanelNavigationBuilder,
+                removeSuffixes: removeSuffixes,
               ).generate(),
               ...multiPanelNavigationBuilder.generateClasses(className),
               RouteNamesBuilder(routes: routes, removeSuffixes: removeSuffixes).generate(),

@@ -20,7 +20,7 @@ class _ParentPageState extends State<ParentPage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       mainNavigator
         ..goToDepth0Page()
-        ..goToDepth1Page1();
+        ..goToDepth1Page(week: 1);
     });
   }
 
@@ -76,7 +76,7 @@ class Depth0Page extends StatelessWidget {
       body: Row(
         children: [
           Expanded(
-            child: Column(
+            child: ListView(
               children: [
                 const Text(
                   '''Welcome to an example of a multipanel navigation.
@@ -84,31 +84,36 @@ The goal is to have multiple panels that work with parentScreens to know whether
 To make the use case clearer The example shows a menu screen where you can select a week, then select a day, then select breakfast/lunch/dinner and finally see the details for that meal.''',
                 ),
                 ListTile(
-                  onTap: () => mainNavigator.goToDepth1Page1(),
+                  onTap: () => mainNavigator.goToDepth1Page(week: 1),
                   title: const Text('Week 1'),
                 ),
                 ListTile(
-                  onTap: () => mainNavigator.goToDepth2Page11(),
+                  onTap: () => mainNavigator.goToDepth2Page(week: 1, day: 1),
                   title: const Padding(
                     padding: EdgeInsets.only(left: 32),
-                    child: Text('Today'),
+                    child: Text('Today (just week 1 day 1)'),
                   ),
                 ),
                 ListTile(
-                  onTap: () => mainNavigator.goToDepth2Page12(),
+                  onTap: () => mainNavigator.goToDepth2Page(week: 1, day: 2),
                   title: const Padding(
                     padding: EdgeInsets.only(left: 32),
-                    child: Text('Tomorrow'),
+                    child: Text('Tomorrow (just week 1 day 2)'),
                   ),
                 ),
                 ListTile(
-                  onTap: () => mainNavigator.goToDepth1Page2(),
-                  title: const Text('Week 2'),
+                  onTap: () => mainNavigator.goToDepth3PageBreakfast(week: 1, day: 2),
+                  title: const Padding(
+                    padding: EdgeInsets.only(left: 64),
+                    child: Text('Tomorrow breakfast'),
+                  ),
                 ),
-                ListTile(
-                  onTap: () => mainNavigator.goToDepth1Page3(),
-                  title: const Text('Week 3'),
-                ),
+                for (var week = 2; week <= 20; week++) ...[
+                  ListTile(
+                    onTap: () => mainNavigator.goToDepth1Page(week: week),
+                    title: Text('Week $week'),
+                  ),
+                ],
               ],
             ),
           ),

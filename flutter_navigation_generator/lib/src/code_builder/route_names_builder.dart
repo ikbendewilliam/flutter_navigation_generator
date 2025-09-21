@@ -20,12 +20,21 @@ class RouteNamesBuilder {
         pageRoutes.remove(pageRoute);
       }
     }
+    final pageRoutesWithParameters = <RouteConfig>[];
+    final pageRoutesWithoutParameters = <RouteConfig>[];
+    for (final pageRoute in pageRoutes) {
+      if (pageRoute.routeNameContainsParameters(routes)) {
+        pageRoutesWithParameters.add(pageRoute);
+      } else {
+        pageRoutesWithoutParameters.add(pageRoute);
+      }
+    }
     return Class(
       (b) =>
           b
             ..name = 'RouteNames'
             ..fields.addAll(
-              pageRoutes.where((pageRoute) => !pageRoute.routeNameContainsParameters).map((pageRoute) {
+              pageRoutesWithoutParameters.map((pageRoute) {
                 final url = pageRoute.fullRouteName(routes, removeSuffixes);
                 return Field(
                   (b) =>
@@ -39,12 +48,13 @@ class RouteNamesBuilder {
               }),
             )
             ..methods.addAll(
-              pageRoutes.where((pageRoute) => pageRoute.routeNameContainsParameters).map((pageRoute) {
+              pageRoutesWithParameters.map((pageRoute) {
+                final url = pageRoute.fullRouteName(routes, removeSuffixes);
                 final parameters =
-                    pageRoute.routeName.parametersFromRouteName.map((parameter) {
+                    url.parametersFromRouteName.map((parameter) {
                       final argument = pageRoute.parameters.firstWhereOrNull((element) => element.type.name == parameter);
                       if (argument == null) {
-                        printBoxed('Parameter $parameter is not defined in the constructor of ${pageRoute.routeWidget.className}, but is in the routeName ${pageRoute.routeName}');
+                        printBoxed('Parameter $parameter is not defined in the constructor of ${pageRoute.routeWidget.className}, but is in the routeName $url');
                       }
                       return Parameter(
                         (b) =>
@@ -55,7 +65,6 @@ class RouteNamesBuilder {
                               ..required = argument?.type.isRequired == true,
                       );
                     }).nonNulls;
-                final url = pageRoute.fullRouteName(routes, removeSuffixes);
                 return Method(
                   (b) =>
                       b

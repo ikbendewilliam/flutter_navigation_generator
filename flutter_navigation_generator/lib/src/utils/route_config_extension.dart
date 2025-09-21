@@ -3,7 +3,6 @@ import 'package:collection/collection.dart';
 import 'package:flutter_navigation_generator/src/models/route_config.dart';
 import 'package:flutter_navigation_generator/src/utils/case_utils.dart';
 import 'package:flutter_navigation_generator/src/utils/importable_type_string_converter.dart';
-import 'package:flutter_navigation_generator/src/utils/utils.dart';
 
 extension RouteConfigExtension on RouteConfig {
   String get asRouteName {
@@ -12,19 +11,16 @@ extension RouteConfigExtension on RouteConfig {
     return name;
   }
 
-  Expression get asRouteNameExpression {
-    final parametersInRouteName = routeName.parametersFromRouteName;
-    if (routeNameContainsParameters) {
-      return Reference('RouteNames.$asRouteName').call(
-        [],
-        (parametersInRouteName.asMap().map((_, parameter) {
-          final argument = parameters.firstWhereOrNull((element) => element.type.name == parameter);
-          if (argument == null) return MapEntry(parameter, null);
-          return MapEntry(parameter, Reference(ImportableTypeStringConverter.convertToString(argument.type)));
-        })..removeWhere((key, value) => value == null)).cast(),
-      );
-    } else {
-      return Reference('RouteNames.$asRouteName');
-    }
+  Expression get asRouteNameExpression => Reference('RouteNames.$asRouteName');
+
+  Expression callRouteNameExpression(Expression expression, List<String> parametersFromRouteName) {
+    return expression.call(
+      [],
+      (parametersFromRouteName.asMap().map((_, parameter) {
+        final argument = parameters.firstWhereOrNull((element) => element.type.name == parameter);
+        if (argument == null) return MapEntry(parameter, null);
+        return MapEntry(parameter, Reference(ImportableTypeStringConverter.convertToString(argument.type)));
+      })..removeWhere((key, value) => value == null)).cast(),
+    );
   }
 }

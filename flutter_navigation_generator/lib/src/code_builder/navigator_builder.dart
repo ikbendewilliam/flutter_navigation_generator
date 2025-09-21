@@ -15,6 +15,7 @@ class NavigatorBuilder {
   final ImportableType? pageType;
   final ImportableType? unknownRoute;
   final List<ImportableType> defaultGuards;
+  final List<String> removeSuffixes;
   final bool ignoreKeysByDefault;
   final MultiPanelNavigationBuilder multiPanelNavigationBuilder;
   final IncludeQueryParametersType includeQueryParametersNavigatorConfig;
@@ -28,6 +29,7 @@ class NavigatorBuilder {
     required this.defaultGuards,
     required this.multiPanelNavigationBuilder,
     required this.includeQueryParametersNavigatorConfig,
+    required this.removeSuffixes,
     this.ignoreKeysByDefault = true,
   });
 
@@ -59,6 +61,7 @@ class NavigatorBuilder {
                 unknownRoute: unknownRoute,
                 defaultGuards: defaultGuards,
                 ignoreKeysByDefault: ignoreKeysByDefault,
+                removeSuffixes: removeSuffixes,
               ).generate(),
             )
             ..methods.addAll(hasGuards ? GuardsBuilder().generate() : [])
