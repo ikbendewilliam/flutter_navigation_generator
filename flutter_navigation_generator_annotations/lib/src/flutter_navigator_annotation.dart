@@ -35,6 +35,10 @@ class FlutterNavigator {
   /// Ignore `Key? key` argument by default, override single fields with [FlutterRouteField]
   final bool ignoreKeysByDefault;
 
+  /// Force enable/disable multi panel navigator
+  /// if null, it will be generated if you have any parentscreens defined
+  final bool? generateMultiPanelNavigator;
+
   /// Whether to use query parameters to provide the arguments
   /// Default is [IncludeQueryParametersType.onlyOnWeb]
   final IncludeQueryParametersType includeQueryParameters;
@@ -44,6 +48,7 @@ class FlutterNavigator {
     this.pageType,
     this.unknownRoute,
     this.ignoreKeysByDefault = true,
+    this.generateMultiPanelNavigator,
     this.includeQueryParameters = IncludeQueryParametersType.onlyOnWeb,
     this.defaultGuards = const [],
     this.removeSuffixes = const ['Page', 'Screen', 'View', 'Widget'],

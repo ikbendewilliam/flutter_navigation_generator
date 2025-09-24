@@ -21,6 +21,7 @@ class FlutterNavigatorGenerator extends GeneratorForAnnotation<FlutterNavigator>
     final pageTypeAsDartType = annotation.peek('pageType')?.typeValue;
     final unknownRouteAsDartType = annotation.peek('unknownRoute')?.typeValue;
     final ignoreKeysByDefault = annotation.peek('ignoreKeysByDefault')?.boolValue ?? true;
+    var generateMultiPanelNavigator = annotation.peek('generateMultiPanelNavigator')?.boolValue;
     final removeSuffixes = annotation.peek('removeSuffixes')?.listValue.map((e) => e.toStringValue()).whereType<String>().toList() ?? [];
     final defaultGuards = annotation.peek('defaultGuards')?.listValue.map((e) => e.toTypeValue()).nonNulls.map(typeResolver.resolveType).toList() ?? [];
     final pageType = pageTypeAsDartType == null ? null : typeResolver.resolveType(pageTypeAsDartType);
@@ -39,14 +40,6 @@ class FlutterNavigatorGenerator extends GeneratorForAnnotation<FlutterNavigator>
       routes.add(RouteConfig.fromMap(json as Map<String, dynamic>));
     }
 
-    // print('routes: ${routes.map((e) => [e.routeName, e.parentScreen?.className])}');
-
-    // for (final route in routes) {
-    //   print('oldRoutename: ${route.routeName}');
-    //   route.routeName = route.routeWidget.fullRouteName(routes);
-    //   print('fullRouteName: ${route.routeName}');
-    // }
-
     final generator = LibraryGenerator(
       routes: routes,
       className: navigatorClassName ?? _navigatorClassNameDefault,
@@ -57,6 +50,7 @@ class FlutterNavigatorGenerator extends GeneratorForAnnotation<FlutterNavigator>
       defaultGuards: defaultGuards,
       ignoreKeysByDefault: ignoreKeysByDefault,
       includeQueryParametersNavigatorConfig: includeQueryParametersNavigatorConfig,
+      createMultipanelNavigation: generateMultiPanelNavigator ?? routes.any((e) => e.parentScreen != null),
     );
 
     final generatedLib = generator.generate();

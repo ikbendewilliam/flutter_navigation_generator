@@ -73,6 +73,7 @@ class NavigatorBuilder {
                 targetFile: targetFile,
                 ignoreKeysByDefault: ignoreKeysByDefault,
                 includeQueryParametersNavigatorConfig: includeQueryParametersNavigatorConfig,
+                createMultipanelNavigation: multiPanelNavigationBuilder.createMultipanelNavigation,
               ).generate(),
             ),
     );

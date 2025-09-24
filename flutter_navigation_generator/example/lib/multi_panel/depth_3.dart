@@ -1,5 +1,5 @@
 import 'package:example/main.dart';
-import 'package:example/navigation_list/depth_2.dart';
+import 'package:example/multi_panel/depth_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_navigation_generator_annotations/flutter_navigation_generator_annotations.dart';
 import 'package:intl/intl.dart';

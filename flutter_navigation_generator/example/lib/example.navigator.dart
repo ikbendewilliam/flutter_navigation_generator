@@ -21,10 +21,10 @@ import 'package:flutter_navigation_generator_annotations/flutter_navigation_gene
 
 import 'custom_model.dart';
 import 'main.dart';
-import 'navigation_list/depth_1.dart';
-import 'navigation_list/depth_2.dart';
-import 'navigation_list/depth_3.dart';
-import 'navigation_list/parent.dart';
+import 'multi_panel/depth_1.dart';
+import 'multi_panel/depth_2.dart';
+import 'multi_panel/depth_3.dart';
+import 'multi_panel/parent.dart';
 
 mixin BaseNavigator {
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();

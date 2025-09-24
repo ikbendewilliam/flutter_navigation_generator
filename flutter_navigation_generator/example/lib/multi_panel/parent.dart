@@ -1,5 +1,5 @@
 import 'package:example/main.dart';
-import 'package:example/navigation_list/parent_navigator_widget.dart';
+import 'package:example/multi_panel/parent_navigator_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_navigation_generator_annotations/flutter_navigation_generator_annotations.dart';
 

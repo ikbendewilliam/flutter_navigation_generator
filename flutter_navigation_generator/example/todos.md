@@ -10,10 +10,12 @@
 - [x] Support routenames with parameters
 - [x] Return correct value
 - [x] Add (basic) animations
-- [ ] Add config to disable multipanel
-- [ ] Add documentation
+- [x] Add config to disable multipanel
+- [ ] Convert to childPackages
+- [ ] Add multiple routes for same page when multiple parants
+- [ ] Initialroute? Add routename on classes?
 - [/] Rework examples
 - [/] Add example
 - [ ] Add tests
+- [ ] Add documentation
 - [ ] Add more animations?
-- [ ] Initialroute? Add routename on classes?

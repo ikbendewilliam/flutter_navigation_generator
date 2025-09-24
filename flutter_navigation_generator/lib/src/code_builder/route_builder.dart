@@ -14,8 +14,16 @@ class RouteBuilder {
   final ImportableType? pageType;
   final Uri? targetFile;
   final bool ignoreKeysByDefault;
+  final bool createMultipanelNavigation;
 
-  RouteBuilder({required this.routes, required this.pageType, required this.targetFile, required this.includeQueryParametersNavigatorConfig, this.ignoreKeysByDefault = true});
+  RouteBuilder({
+    required this.routes,
+    required this.pageType,
+    required this.targetFile,
+    required this.includeQueryParametersNavigatorConfig,
+    this.ignoreKeysByDefault = true,
+    this.createMultipanelNavigation = false,
+  });
 
   Iterable<Method> generate() {
     final methodRoutes = routes.where((element) => element.generateMethod);
@@ -35,10 +43,10 @@ class RouteBuilder {
       }
     }
     return <Method>[]
-        .followedBy(_generatePageRoutes(pageRoutes))
+        .followedBy(_generatePageRoutes(pageRoutes, createMultipanelNavigation))
         .followedBy(_generateDialogRoutes(dialogRoutes))
         .followedBy(_generateBottomSheetRoutes(bottomSheetRoutes))
-        .followedBy(_generateGenericRoutes());
+        .followedBy(_generateGenericRoutes(createMultipanelNavigation));
   }
 
   Method _generateMethod({required RouteConfig route, required Code body, required String namePrefix, bool isLambda = true, bool isAsync = true}) {
@@ -74,7 +82,7 @@ class RouteBuilder {
     );
   }
 
-  String _generateQueryParameters(RouteConfig route, List<String> parametersInRouteName) {
+  String _generateQueryParameters(RouteConfig route, List<String> parametersInRouteName, bool createMultipanelNavigation) {
     final includeQueryParameters = route.includeQueryParameters ?? includeQueryParametersNavigatorConfig;
     if (includeQueryParameters == IncludeQueryParametersType.never) return '';
 
@@ -103,7 +111,7 @@ class RouteBuilder {
     return queryParameters;
   }
 
-  Iterable<Method> _generatePageRoutes(List<RouteConfig> routes) {
+  Iterable<Method> _generatePageRoutes(List<RouteConfig> routes, bool createMultipanelNavigation) {
     return routes.map((route) {
       if (route.navigationType == NavigationType.pushNotNamed) {
         return _generateBottomSheetOrDialogRoute(route: route, namePrefix: 'goTo', bodyCall: 'navigatorKey.currentState?.push', useNamedWidgetArugment: false, withPageType: true);
@@ -112,7 +120,7 @@ class RouteBuilder {
       var path = route.asRouteNameExpression;
       if (parametersInRouteName.isNotEmpty) path = route.callRouteNameExpression(path, parametersInRouteName);
 
-      var queryParameters = _generateQueryParameters(route, parametersInRouteName);
+      var queryParameters = _generateQueryParameters(route, parametersInRouteName, createMultipanelNavigation);
       final arguments = Reference(
         '${route.parameters.where((p) => !p.ignoreWithKeyCheck(ignoreKeysByDefault)).toList().asMap().map((_, parameterConfig) => MapEntry("'${parameterConfig.type.argumentName}'", parameterConfig.type.argumentName))}',
       );
@@ -137,17 +145,19 @@ class RouteBuilder {
         ],
         {'arguments': arguments},
       );
-      bodyCall = TypeReference((b) => b..symbol = '_navigateInMultiPanelOr').call([
-        Method(
-          (b) =>
-              b
-                ..lambda = true
-                ..modifier = MethodModifier.async
-                ..body = bodyCall.code,
-        ).closure,
-        path,
-        arguments,
-      ]);
+      if (createMultipanelNavigation) {
+        bodyCall = TypeReference((b) => b..symbol = '_navigateInMultiPanelOr').call([
+          Method(
+            (b) =>
+                b
+                  ..lambda = true
+                  ..modifier = MethodModifier.async
+                  ..body = bodyCall.code,
+          ).closure,
+          path,
+          arguments,
+        ]);
+      }
       Code body;
       if (route.returnType != null) {
         body = Block(
@@ -218,117 +228,120 @@ class RouteBuilder {
     return routes.map((route) => _generateBottomSheetOrDialogRoute(route: route, namePrefix: 'showSheet', bodyCall: 'showBottomSheet'));
   }
 
-  Iterable<Method> _generateGenericRoutes() => [
-    Method(
-      (b) =>
-          b
-            ..name = 'goBack'
-            ..lambda = true
-            ..returns = const Reference('void')
-            ..body = const Reference('_popMultiPanelOr').call([Method((b) => b..body = const Reference('navigatorKey.currentState?.pop').call([]).code).closure]).code,
-    ),
-    Method(
-      (b) =>
-          b
-            ..name = 'goBackWithResult'
-            ..lambda = true
-            ..types.add(const Reference('T'))
-            ..optionalParameters.add(
-              Parameter(
-                (b) =>
-                    b
-                      ..name = 'result'
-                      ..named = true
-                      ..type = const Reference('T?'),
-              ),
-            )
-            ..returns = const Reference('void')
-            ..body =
-                const Reference('_popMultiPanelOr').call([
-                  Method((b) => b..body = const Reference('navigatorKey.currentState?.pop').call([const Reference('result')]).code).closure,
-                  const Reference('result'),
-                ]).code,
-    ),
-    Method(
-      (b) =>
-          b
-            ..name = 'popUntil'
-            ..lambda = true
-            ..requiredParameters.add(
-              Parameter(
-                (b) =>
-                    b
-                      ..name = 'predicate'
-                      ..type = FunctionType(
-                        (b) =>
-                            b
-                              ..returnType = const Reference('bool')
-                              ..requiredParameters.add(const Reference('Route<dynamic>')),
-                      ),
-              ),
-            )
-            ..returns = const Reference('void')
-            ..body = const Reference('navigatorKey.currentState?.popUntil').call([const Reference('predicate')]).code,
-    ),
-    Method(
-      (b) =>
-          b
-            ..name = 'goBackTo'
-            ..lambda = true
-            ..requiredParameters.add(
-              Parameter(
-                (b) =>
-                    b
-                      ..name = 'routeName'
-                      ..type = const Reference('String'),
-              ),
-            )
-            ..returns = const Reference('void')
-            ..body = const Reference('popUntil').call([const Reference('(route) => route.settings.name?.split(\'?\').first == routeName')]).code,
-    ),
-    Method(
-      (b) =>
-          b
-            ..name = 'showCustomDialog'
-            ..lambda = true
-            ..modifier = MethodModifier.async
-            ..types.add(const Reference('T'))
-            ..optionalParameters.add(
-              Parameter(
-                (b) =>
-                    b
-                      ..name = 'widget'
-                      ..named = true
-                      ..type = const Reference('Widget?'),
-              ),
-            )
-            ..returns = const Reference('Future<T?>')
-            ..body =
-                const Reference(
-                  'showDialog<T>',
-                ).call([], {'context': const Reference('navigatorKey.currentContext!'), 'builder': const Reference('(_) => widget ?? const SizedBox.shrink()')}).code,
-    ),
-    Method(
-      (b) =>
-          b
-            ..name = 'showBottomSheet'
-            ..lambda = true
-            ..modifier = MethodModifier.async
-            ..types.add(const Reference('T'))
-            ..optionalParameters.add(
-              Parameter(
-                (b) =>
-                    b
-                      ..name = 'widget'
-                      ..named = true
-                      ..type = const Reference('Widget?'),
-              ),
-            )
-            ..returns = const Reference('Future<T?>')
-            ..body =
-                const Reference(
-                  'showModalBottomSheet<T>',
-                ).call([], {'context': const Reference('navigatorKey.currentContext!'), 'builder': const Reference('(_) => widget ?? const SizedBox.shrink()')}).code,
-    ),
-  ];
+  Iterable<Method> _generateGenericRoutes(bool createMultipanelNavigation) {
+    final goBack = const Reference('navigatorKey.currentState?.pop').call([]).code;
+    final goBackWithResult = const Reference('navigatorKey.currentState?.pop').call([const Reference('result')]).code;
+    return [
+      Method(
+        (b) =>
+            b
+              ..name = 'goBack'
+              ..lambda = true
+              ..returns = const Reference('void')
+              ..body = createMultipanelNavigation ? const Reference('_popMultiPanelOr').call([Method((b) => b..body = goBack).closure]).code : goBack,
+      ),
+      Method(
+        (b) =>
+            b
+              ..name = 'goBackWithResult'
+              ..lambda = true
+              ..types.add(const Reference('T'))
+              ..optionalParameters.add(
+                Parameter(
+                  (b) =>
+                      b
+                        ..name = 'result'
+                        ..named = true
+                        ..type = const Reference('T?'),
+                ),
+              )
+              ..returns = const Reference('void')
+              ..body =
+                  createMultipanelNavigation
+                      ? const Reference('_popMultiPanelOr').call([Method((b) => b..body = goBackWithResult).closure, const Reference('result')]).code
+                      : goBackWithResult,
+      ),
+      Method(
+        (b) =>
+            b
+              ..name = 'popUntil'
+              ..lambda = true
+              ..requiredParameters.add(
+                Parameter(
+                  (b) =>
+                      b
+                        ..name = 'predicate'
+                        ..type = FunctionType(
+                          (b) =>
+                              b
+                                ..returnType = const Reference('bool')
+                                ..requiredParameters.add(const Reference('Route<dynamic>')),
+                        ),
+                ),
+              )
+              ..returns = const Reference('void')
+              ..body = const Reference('navigatorKey.currentState?.popUntil').call([const Reference('predicate')]).code,
+      ),
+      Method(
+        (b) =>
+            b
+              ..name = 'goBackTo'
+              ..lambda = true
+              ..requiredParameters.add(
+                Parameter(
+                  (b) =>
+                      b
+                        ..name = 'routeName'
+                        ..type = const Reference('String'),
+                ),
+              )
+              ..returns = const Reference('void')
+              ..body = const Reference('popUntil').call([const Reference('(route) => route.settings.name?.split(\'?\').first == routeName')]).code,
+      ),
+      Method(
+        (b) =>
+            b
+              ..name = 'showCustomDialog'
+              ..lambda = true
+              ..modifier = MethodModifier.async
+              ..types.add(const Reference('T'))
+              ..optionalParameters.add(
+                Parameter(
+                  (b) =>
+                      b
+                        ..name = 'widget'
+                        ..named = true
+                        ..type = const Reference('Widget?'),
+                ),
+              )
+              ..returns = const Reference('Future<T?>')
+              ..body =
+                  const Reference(
+                    'showDialog<T>',
+                  ).call([], {'context': const Reference('navigatorKey.currentContext!'), 'builder': const Reference('(_) => widget ?? const SizedBox.shrink()')}).code,
+      ),
+      Method(
+        (b) =>
+            b
+              ..name = 'showBottomSheet'
+              ..lambda = true
+              ..modifier = MethodModifier.async
+              ..types.add(const Reference('T'))
+              ..optionalParameters.add(
+                Parameter(
+                  (b) =>
+                      b
+                        ..name = 'widget'
+                        ..named = true
+                        ..type = const Reference('Widget?'),
+                ),
+              )
+              ..returns = const Reference('Future<T?>')
+              ..body =
+                  const Reference(
+                    'showModalBottomSheet<T>',
+                  ).call([], {'context': const Reference('navigatorKey.currentContext!'), 'builder': const Reference('(_) => widget ?? const SizedBox.shrink()')}).code,
+      ),
+    ];
+  }
 }
