@@ -1,5 +1,5 @@
-import 'package:example/example.navigator.dart';
 import 'package:example/main.dart';
+import 'package:example/main_navigator.g.dart';
 import 'package:example/multi_panel/depth_1.dart';
 import 'package:example/multi_panel/parent_navigator_widget.dart';
 import 'package:flutter/material.dart';

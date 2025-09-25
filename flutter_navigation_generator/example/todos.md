@@ -12,10 +12,10 @@
 - [x] Add (basic) animations
 - [x] Add config to disable multipanel
 - [x] Convert to children routes
---Add multiple routes for same page when multiple parents--
-- [ ] Initialroute? Add routename on classes?
-- [/] Rework examples
-- [/] Add example
+--Add multiple routes for same page when multiple parents-- -> Doesn't seem to work well, is more complex and I'm unsure if the use case is worth it
+--Initialroute? Add routename on classes?-- -> You can just add goToChild when navigating to the parant. Otherwise we need to add systems for arguments that are not known for the parent (similar for auto routing all inbetween screens when navigating to a child, we don't have the arguments of the parent screens)
+- [x] Rework examples
+- [x] Add example
+- [ ] Add more animations?
 - [ ] Add tests
 - [ ] Add documentation (+ Describe children in multiple parents is not supported)
-- [ ] Add more animations?

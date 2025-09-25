@@ -1,4 +1,4 @@
-import 'package:example/example.navigator.dart';
+import 'package:example/main_navigator.g.dart';
 import 'package:flutter/material.dart';
 
 class ParentNavigatorWidget extends StatefulWidget {

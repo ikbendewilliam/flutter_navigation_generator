@@ -5,21 +5,26 @@
 // FlutterNavigatorGenerator
 // **************************************************************************
 
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, unused_import
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:example/custom_model.dart' as _i2;
-import 'package:example/main.dart' as _i3;
+import 'package:example/custom_model.dart' as _i1;
+import 'package:example/dialog_example.dart' as _i4;
+import 'package:example/main.dart' as _i2;
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart' as _i1;
+import 'package:flutter/material.dart' as _i3;
 import 'package:flutter/material.dart';
 import 'package:flutter_navigation_generator_animations/flutter_navigation_generator_animations.dart';
 import 'package:flutter_navigation_generator_annotations/flutter_navigation_generator_annotations.dart';
 
+import 'arguments_example.dart';
 import 'custom_model.dart';
+import 'dialog_example.dart';
+import 'guard_default_example.dart';
+import 'guard_example.dart';
 import 'main.dart';
 import 'multi_panel/depth_1.dart';
 import 'multi_panel/depth_2.dart';
@@ -103,6 +108,87 @@ mixin BaseNavigator {
     final settingsUri = Uri.parse(settings.name ?? '');
     final queryParameters = Map.from(settingsUri.queryParameters);
     switch (settingsUri.path) {
+      case RouteNames.exampleScreenWithRequiredArgument:
+        final exampleDefaultGuard = guards
+            .whereType<ExampleDefaultGuard>()
+            .first;
+        if (!exampleDefaultGuard.value) {
+          guardedRouteSettings = settings;
+          return onGenerateRoute(
+            RouteSettings(
+              arguments: settings.arguments,
+              name: exampleDefaultGuard.alternativeRoute,
+            ),
+          );
+        }
+        return NativeRouteAnimation<void>(
+          builder: (_) => ExampleScreenWithRequiredArgument(
+            data: queryParameters['data'] != null
+                ? (jsonDecode(
+                            utf8.decode(base64Decode(queryParameters['data']!)),
+                          )
+                          as List<dynamic>)
+                      .map(
+                        (e) => CustomModel.fromJson(e as Map<String, dynamic>),
+                      )
+                      .toList()
+                : arguments['data'] as List<CustomModel>,
+          ),
+          settings: settings,
+          fullscreenDialog: false,
+        );
+      case RouteNames.guardExampleHome:
+        final exampleDefaultGuard = guards
+            .whereType<ExampleDefaultGuard>()
+            .first;
+        if (!exampleDefaultGuard.value) {
+          guardedRouteSettings = settings;
+          return onGenerateRoute(
+            RouteSettings(
+              arguments: settings.arguments,
+              name: exampleDefaultGuard.alternativeRoute,
+            ),
+          );
+        }
+        return NativeRouteAnimation<void>(
+          builder: (_) => GuardExampleHome(),
+          settings: settings,
+          fullscreenDialog: false,
+        );
+      case RouteNames.errorNotLoggedIn:
+        final exampleDefaultGuard = guards
+            .whereType<ExampleDefaultGuard>()
+            .first;
+        if (!exampleDefaultGuard.value) {
+          guardedRouteSettings = settings;
+          return onGenerateRoute(
+            RouteSettings(
+              arguments: settings.arguments,
+              name: exampleDefaultGuard.alternativeRoute,
+            ),
+          );
+        }
+        return NativeRouteAnimation<void>(
+          builder: (_) => ErrorNotLoggedIn(),
+          settings: settings,
+          fullscreenDialog: false,
+        );
+      case RouteNames.loggedInPage:
+        final loginGuard = guards.whereType<LoginGuard>().first;
+        if (!loginGuard.value) {
+          guardedRouteSettings = settings;
+          return onGenerateRoute(
+            RouteSettings(
+              arguments: settings.arguments,
+              name: loginGuard.alternativeRoute,
+            ),
+          );
+        }
+        return NativeRouteAnimation<void>(
+          builder: (_) => LoggedInPage(),
+          settings: settings,
+          fullscreenDialog: false,
+        );
       case RouteNames.parentPage:
         final exampleDefaultGuard = guards
             .whereType<ExampleDefaultGuard>()
@@ -201,7 +287,7 @@ mixin BaseNavigator {
           settings: settings,
           fullscreenDialog: false,
         );
-      case RouteNames.exampleScreenWithRequiredArgument:
+      case RouteNames.allTypesExample:
         final exampleDefaultGuard = guards
             .whereType<ExampleDefaultGuard>()
             .first;
@@ -215,88 +301,7 @@ mixin BaseNavigator {
           );
         }
         return NativeRouteAnimation<void>(
-          builder: (_) => ExampleScreenWithRequiredArgument(
-            data: queryParameters['data'] != null
-                ? (jsonDecode(
-                            utf8.decode(base64Decode(queryParameters['data']!)),
-                          )
-                          as List<dynamic>)
-                      .map(
-                        (e) => CustomModel.fromJson(e as Map<String, dynamic>),
-                      )
-                      .toList()
-                : arguments['data'] as List<CustomModel>,
-          ),
-          settings: settings,
-          fullscreenDialog: false,
-        );
-      case RouteNames.r404:
-        final exampleDefaultGuard = guards
-            .whereType<ExampleDefaultGuard>()
-            .first;
-        if (!exampleDefaultGuard.value) {
-          guardedRouteSettings = settings;
-          return onGenerateRoute(
-            RouteSettings(
-              arguments: settings.arguments,
-              name: exampleDefaultGuard.alternativeRoute,
-            ),
-          );
-        }
-        return NativeRouteAnimation<void>(
-          builder: (_) => Error404(),
-          settings: settings,
-          fullscreenDialog: false,
-        );
-      case RouteNames.errorNotLoggedIn:
-        final exampleDefaultGuard = guards
-            .whereType<ExampleDefaultGuard>()
-            .first;
-        if (!exampleDefaultGuard.value) {
-          guardedRouteSettings = settings;
-          return onGenerateRoute(
-            RouteSettings(
-              arguments: settings.arguments,
-              name: exampleDefaultGuard.alternativeRoute,
-            ),
-          );
-        }
-        return NativeRouteAnimation<void>(
-          builder: (_) => ErrorNotLoggedIn(),
-          settings: settings,
-          fullscreenDialog: false,
-        );
-      case RouteNames.loggedInPage:
-        final loginGuard = guards.whereType<LoginGuard>().first;
-        if (!loginGuard.value) {
-          guardedRouteSettings = settings;
-          return onGenerateRoute(
-            RouteSettings(
-              arguments: settings.arguments,
-              name: loginGuard.alternativeRoute,
-            ),
-          );
-        }
-        return NativeRouteAnimation<void>(
-          builder: (_) => LoggedInPage(),
-          settings: settings,
-          fullscreenDialog: false,
-        );
-      case RouteNames.fieldValueTests:
-        final exampleDefaultGuard = guards
-            .whereType<ExampleDefaultGuard>()
-            .first;
-        if (!exampleDefaultGuard.value) {
-          guardedRouteSettings = settings;
-          return onGenerateRoute(
-            RouteSettings(
-              arguments: settings.arguments,
-              name: exampleDefaultGuard.alternativeRoute,
-            ),
-          );
-        }
-        return NativeRouteAnimation<void>(
-          builder: (_) => FieldValueTests(
+          builder: (_) => AllTypesExample(
             nonNullableString:
                 queryParameters['nonNullableString'] ??
                 arguments['nonNullableString'] as String,
@@ -340,6 +345,11 @@ mixin BaseNavigator {
                     ),
                   )
                 : arguments['nonNullableCustomModel'] as CustomModel,
+            nonNullableEnum: queryParameters['nonNullableEnum'] != null
+                ? ExampleEnum.values[int.parse(
+                    queryParameters['nonNullableEnum']!,
+                  )]
+                : arguments['nonNullableEnum'] as ExampleEnum,
             nullableString:
                 queryParameters['nullableString'] ??
                 arguments['nullableString'] as String?,
@@ -352,6 +362,11 @@ mixin BaseNavigator {
             nullableDouble: queryParameters['nullableDouble'] != null
                 ? double.parse(queryParameters['nullableDouble']!)
                 : arguments['nullableDouble'] as double?,
+            nullableEnum: queryParameters['nullableEnum'] != null
+                ? ExampleEnum.values[int.parse(
+                    queryParameters['nullableEnum']!,
+                  )]
+                : arguments['nullableEnum'] as ExampleEnum?,
             nullableList: queryParameters['nullableList'] != null
                 ? (jsonDecode(
                             utf8.decode(
@@ -399,6 +414,14 @@ mixin BaseNavigator {
                   )
                 : arguments['nonNullableDoubleWithDefaultValue'] as double? ??
                       3.14,
+            nonNullableEnumWithDefaultValue:
+                queryParameters['nonNullableEnumWithDefaultValue'] != null
+                ? ExampleEnum.values[int.parse(
+                    queryParameters['nonNullableEnumWithDefaultValue']!,
+                  )]
+                : arguments['nonNullableEnumWithDefaultValue']
+                          as ExampleEnum? ??
+                      ExampleEnum.first,
             nonNullableListWithDefaultValue:
                 queryParameters['nonNullableListWithDefaultValue'] != null
                 ? (jsonDecode(
@@ -459,6 +482,24 @@ mixin BaseNavigator {
                           as CustomModel? ??
                       CustomModel.testDefault,
           ),
+          settings: settings,
+          fullscreenDialog: false,
+        );
+      case RouteNames.r404:
+        final exampleDefaultGuard = guards
+            .whereType<ExampleDefaultGuard>()
+            .first;
+        if (!exampleDefaultGuard.value) {
+          guardedRouteSettings = settings;
+          return onGenerateRoute(
+            RouteSettings(
+              arguments: settings.arguments,
+              name: exampleDefaultGuard.alternativeRoute,
+            ),
+          );
+        }
+        return NativeRouteAnimation<void>(
+          builder: (_) => Error404(),
           settings: settings,
           fullscreenDialog: false,
         );
@@ -770,6 +811,124 @@ mixin BaseNavigator {
   /// }
   /// ```
   bool canContinueNavigation() => guardedRouteSettings != null;
+  Future<void> customName({
+    required String id,
+    _i1.CustomModel? model,
+    String? name,
+    int? age,
+  }) async => _navigateInMultiPanelOr(
+    () async => navigatorKey.currentState?.pushNamed<dynamic>(
+      Uri(
+        path: RouteNames.homeIdNameNonExistingNameNumber1(id: id, name: name),
+        queryParameters: kIsWeb
+            ? ({
+                'model': model == null
+                    ? null
+                    : base64Encode(utf8.encode(jsonEncode(model))),
+                'age': age?.toString(),
+              }..removeWhere((_, v) => v == null))
+            : null,
+      ).toString(),
+      arguments: {'id': id, 'model': model, 'name': name, 'age': age},
+    ),
+    RouteNames.homeIdNameNonExistingNameNumber1(id: id, name: name),
+    {'id': id, 'model': model, 'name': name, 'age': age},
+  );
+  Future<void> goToRouteNameWithArguments2({
+    required String id,
+    required _i2.ExampleEnum exampleEnum,
+    required _i2.ExampleEnum exampleEnum2,
+    String? name,
+    int? age,
+    _i2.ExampleEnum? exampleEnum3,
+    List<_i2.ExampleEnum>? exampleEnums4,
+    Map<String, _i2.ExampleEnum>? exampleEnumsMap5,
+  }) async => _navigateInMultiPanelOr(
+    () async => navigatorKey.currentState?.pushNamed<dynamic>(
+      Uri(
+        path: RouteNames.homeIdExampleExampleEnumAge(
+          id: id,
+          exampleEnum: exampleEnum.index.toString(),
+          age: age?.toString(),
+        ),
+        queryParameters: kIsWeb
+            ? ({
+                'exampleEnum2': exampleEnum2.index.toString(),
+                'name': name,
+                'exampleEnum3': exampleEnum3?.index.toString(),
+                'exampleEnums4': base64Encode(
+                  utf8.encode(
+                    jsonEncode(exampleEnums4?.map((e) => e.index).toList()),
+                  ),
+                ),
+                'exampleEnumsMap5': base64Encode(
+                  utf8.encode(
+                    jsonEncode(
+                      exampleEnumsMap5?.map((k, v) => MapEntry(k, v.index)),
+                    ),
+                  ),
+                ),
+              }..removeWhere((_, v) => v == null))
+            : null,
+      ).toString(),
+      arguments: {
+        'id': id,
+        'exampleEnum': exampleEnum,
+        'exampleEnum2': exampleEnum2,
+        'name': name,
+        'age': age,
+        'exampleEnum3': exampleEnum3,
+        'exampleEnums4': exampleEnums4,
+        'exampleEnumsMap5': exampleEnumsMap5,
+      },
+    ),
+    RouteNames.homeIdExampleExampleEnumAge(
+      id: id,
+      exampleEnum: exampleEnum.index.toString(),
+      age: age?.toString(),
+    ),
+    {
+      'id': id,
+      'exampleEnum': exampleEnum,
+      'exampleEnum2': exampleEnum2,
+      'name': name,
+      'age': age,
+      'exampleEnum3': exampleEnum3,
+      'exampleEnums4': exampleEnums4,
+      'exampleEnumsMap5': exampleEnumsMap5,
+    },
+  );
+  Future<void> goToExampleScreenWithRequiredArgument({
+    required List<_i1.CustomModel> data,
+  }) async => _navigateInMultiPanelOr(
+    () async => navigatorKey.currentState?.pushNamed<dynamic>(
+      Uri(
+        path: RouteNames.exampleScreenWithRequiredArgument,
+        queryParameters: kIsWeb
+            ? {'data': base64Encode(utf8.encode(jsonEncode(data)))}
+            : null,
+      ).toString(),
+      arguments: {'data': data},
+    ),
+    RouteNames.exampleScreenWithRequiredArgument,
+    {'data': data},
+  );
+  Future<void> goToGuardExampleHome() async => _navigateInMultiPanelOr(
+    () async => navigatorKey.currentState?.pushNamed<dynamic>(
+      RouteNames.guardExampleHome,
+      arguments: {},
+    ),
+    RouteNames.guardExampleHome,
+    {},
+  );
+  Future<void> goToLoggedInPage() async => _navigateInMultiPanelOr(
+    () async => navigatorKey.currentState?.pushNamed<dynamic>(
+      RouteNames.loggedInPage,
+      arguments: {},
+    ),
+    RouteNames.loggedInPage,
+    {},
+  );
   Future<String?> goToDepth3PageBreakfast({
     required int week,
     required int day,
@@ -855,7 +1014,7 @@ mixin BaseNavigator {
     RouteNames.depth0Page,
     {},
   );
-  Future<void> goToMyHomePage({String? title, _i1.Key? key}) async =>
+  Future<void> goToMyHomePage({String? title, _i3.Key? key}) async =>
       _navigateInMultiPanelOr(
         () async => navigatorKey.currentState?.pushNamed<dynamic>(
           Uri(
@@ -874,7 +1033,7 @@ mixin BaseNavigator {
         RouteNames.myHomePage,
         {'title': title, 'key': key},
       );
-  void goToHomePageWithPathParameter({String? title, _i1.Key? key}) =>
+  void goToHomePageWithPathParameter({String? title, _i3.Key? key}) =>
       _navigateInMultiPanelOr(
         () async => navigatorKey.currentState?.pushNamedAndRemoveUntil<dynamic>(
           Uri(
@@ -918,149 +1077,42 @@ mixin BaseNavigator {
     return (result as bool?);
   }
 
-  Future<void> customName({
-    required String id,
-    _i2.CustomModel? model,
-    String? name,
-    int? age,
-  }) async => _navigateInMultiPanelOr(
-    () async => navigatorKey.currentState?.pushNamed<dynamic>(
-      Uri(
-        path: RouteNames.homeIdNameNonExistingNameNumber1(id: id, name: name),
-        queryParameters: kIsWeb
-            ? ({
-                'model': model == null
-                    ? null
-                    : base64Encode(utf8.encode(jsonEncode(model))),
-                'age': age?.toString(),
-              }..removeWhere((_, v) => v == null))
-            : null,
-      ).toString(),
-      arguments: {'id': id, 'model': model, 'name': name, 'age': age},
-    ),
-    RouteNames.homeIdNameNonExistingNameNumber1(id: id, name: name),
-    {'id': id, 'model': model, 'name': name, 'age': age},
-  );
-  Future<void> goToRouteNameWithArguments2({
-    required String id,
-    required _i3.ExampleEnum exampleEnum,
-    required _i3.ExampleEnum exampleEnum2,
-    String? name,
-    int? age,
-    _i3.ExampleEnum? exampleEnum3,
-    List<_i3.ExampleEnum>? exampleEnums4,
-    Map<String, _i3.ExampleEnum>? exampleEnumsMap5,
-  }) async => _navigateInMultiPanelOr(
-    () async => navigatorKey.currentState?.pushNamed<dynamic>(
-      Uri(
-        path: RouteNames.homeIdExampleExampleEnumAge(
-          id: id,
-          exampleEnum: exampleEnum.index.toString(),
-          age: age?.toString(),
-        ),
-        queryParameters: kIsWeb
-            ? ({
-                'exampleEnum2': exampleEnum2.index.toString(),
-                'name': name,
-                'exampleEnum3': exampleEnum3?.index.toString(),
-                'exampleEnums4': base64Encode(
-                  utf8.encode(
-                    jsonEncode(exampleEnums4?.map((e) => e.index).toList()),
-                  ),
-                ),
-                'exampleEnumsMap5': base64Encode(
-                  utf8.encode(
-                    jsonEncode(
-                      exampleEnumsMap5?.map((k, v) => MapEntry(k, v.index)),
-                    ),
-                  ),
-                ),
-              }..removeWhere((_, v) => v == null))
-            : null,
-      ).toString(),
-      arguments: {
-        'id': id,
-        'exampleEnum': exampleEnum,
-        'exampleEnum2': exampleEnum2,
-        'name': name,
-        'age': age,
-        'exampleEnum3': exampleEnum3,
-        'exampleEnums4': exampleEnums4,
-        'exampleEnumsMap5': exampleEnumsMap5,
-      },
-    ),
-    RouteNames.homeIdExampleExampleEnumAge(
-      id: id,
-      exampleEnum: exampleEnum.index.toString(),
-      age: age?.toString(),
-    ),
-    {
-      'id': id,
-      'exampleEnum': exampleEnum,
-      'exampleEnum2': exampleEnum2,
-      'name': name,
-      'age': age,
-      'exampleEnum3': exampleEnum3,
-      'exampleEnums4': exampleEnums4,
-      'exampleEnumsMap5': exampleEnumsMap5,
-    },
-  );
-  Future<void> goToExampleScreenWithRequiredArgument({
-    required List<_i2.CustomModel> data,
-  }) async => _navigateInMultiPanelOr(
-    () async => navigatorKey.currentState?.pushNamed<dynamic>(
-      Uri(
-        path: RouteNames.exampleScreenWithRequiredArgument,
-        queryParameters: kIsWeb
-            ? {'data': base64Encode(utf8.encode(jsonEncode(data)))}
-            : null,
-      ).toString(),
-      arguments: {'data': data},
-    ),
-    RouteNames.exampleScreenWithRequiredArgument,
-    {'data': data},
-  );
-  Future<void> goToLoggedInPage() async => _navigateInMultiPanelOr(
-    () async => navigatorKey.currentState?.pushNamed<dynamic>(
-      RouteNames.loggedInPage,
-      arguments: {},
-    ),
-    RouteNames.loggedInPage,
-    {},
-  );
-  Future<void> goToFieldValueTests({
+  Future<void> goToAllTypesExample({
     required String nonNullableString,
     required int nonNullableInt,
     required bool nonNullableBool,
     required double nonNullableDouble,
     required List<String> nonNullableList,
     required Map<String, String> nonNullableMap,
-    required _i2.CustomModel nonNullableCustomModel,
+    required _i1.CustomModel nonNullableCustomModel,
+    required _i2.ExampleEnum nonNullableEnum,
     String? nullableString,
     int? nullableInt,
     bool? nullableBool,
     double? nullableDouble,
+    _i2.ExampleEnum? nullableEnum,
     List<String>? nullableList,
     Map<String, String>? nullableMap,
-    _i2.CustomModel? nullableCustomModel,
+    _i1.CustomModel? nullableCustomModel,
     String nonNullableStringWithDefaultValue = 'default',
     int nonNullableIntWithDefaultValue = 42,
     bool nonNullableBoolWithDefaultValue = true,
     double nonNullableDoubleWithDefaultValue = 3.14,
+    _i2.ExampleEnum nonNullableEnumWithDefaultValue = ExampleEnum.first,
     List<String> nonNullableListWithDefaultValue = const ['default'],
     Map<String, String> nonNullableMapWithDefaultValue = const {
       'default': 'default',
     },
-    _i2.CustomModel nonNullableCustomModelWithDefaultValue = const CustomModel(
+    _i1.CustomModel nonNullableCustomModelWithDefaultValue = const CustomModel(
       'default',
       0,
     ),
-    _i2.CustomModel nonNullableCustomModelWithDefaultValue2 =
+    _i1.CustomModel nonNullableCustomModelWithDefaultValue2 =
         CustomModel.testDefault,
   }) async => _navigateInMultiPanelOr(
     () async => navigatorKey.currentState?.pushNamed<dynamic>(
       Uri(
-        path: RouteNames.fieldValueTests,
+        path: RouteNames.allTypesExample,
         queryParameters: kIsWeb
             ? ({
                 'nonNullableString': nonNullableString,
@@ -1076,10 +1128,12 @@ mixin BaseNavigator {
                 'nonNullableCustomModel': base64Encode(
                   utf8.encode(jsonEncode(nonNullableCustomModel)),
                 ),
+                'nonNullableEnum': nonNullableEnum.index.toString(),
                 'nullableString': nullableString,
                 'nullableInt': nullableInt?.toString(),
                 'nullableBool': nullableBool?.toString(),
                 'nullableDouble': nullableDouble?.toString(),
+                'nullableEnum': nullableEnum?.index.toString(),
                 'nullableList': base64Encode(
                   utf8.encode(jsonEncode(nullableList)),
                 ),
@@ -1099,6 +1153,8 @@ mixin BaseNavigator {
                     nonNullableBoolWithDefaultValue.toString(),
                 'nonNullableDoubleWithDefaultValue':
                     nonNullableDoubleWithDefaultValue.toString(),
+                'nonNullableEnumWithDefaultValue':
+                    nonNullableEnumWithDefaultValue.index.toString(),
                 'nonNullableListWithDefaultValue': base64Encode(
                   utf8.encode(jsonEncode(nonNullableListWithDefaultValue)),
                 ),
@@ -1126,10 +1182,12 @@ mixin BaseNavigator {
         'nonNullableList': nonNullableList,
         'nonNullableMap': nonNullableMap,
         'nonNullableCustomModel': nonNullableCustomModel,
+        'nonNullableEnum': nonNullableEnum,
         'nullableString': nullableString,
         'nullableInt': nullableInt,
         'nullableBool': nullableBool,
         'nullableDouble': nullableDouble,
+        'nullableEnum': nullableEnum,
         'nullableList': nullableList,
         'nullableMap': nullableMap,
         'nullableCustomModel': nullableCustomModel,
@@ -1137,6 +1195,7 @@ mixin BaseNavigator {
         'nonNullableIntWithDefaultValue': nonNullableIntWithDefaultValue,
         'nonNullableBoolWithDefaultValue': nonNullableBoolWithDefaultValue,
         'nonNullableDoubleWithDefaultValue': nonNullableDoubleWithDefaultValue,
+        'nonNullableEnumWithDefaultValue': nonNullableEnumWithDefaultValue,
         'nonNullableListWithDefaultValue': nonNullableListWithDefaultValue,
         'nonNullableMapWithDefaultValue': nonNullableMapWithDefaultValue,
         'nonNullableCustomModelWithDefaultValue':
@@ -1145,7 +1204,7 @@ mixin BaseNavigator {
             nonNullableCustomModelWithDefaultValue2,
       },
     ),
-    RouteNames.fieldValueTests,
+    RouteNames.allTypesExample,
     {
       'nonNullableString': nonNullableString,
       'nonNullableInt': nonNullableInt,
@@ -1154,10 +1213,12 @@ mixin BaseNavigator {
       'nonNullableList': nonNullableList,
       'nonNullableMap': nonNullableMap,
       'nonNullableCustomModel': nonNullableCustomModel,
+      'nonNullableEnum': nonNullableEnum,
       'nullableString': nullableString,
       'nullableInt': nullableInt,
       'nullableBool': nullableBool,
       'nullableDouble': nullableDouble,
+      'nullableEnum': nullableEnum,
       'nullableList': nullableList,
       'nullableMap': nullableMap,
       'nullableCustomModel': nullableCustomModel,
@@ -1165,6 +1226,7 @@ mixin BaseNavigator {
       'nonNullableIntWithDefaultValue': nonNullableIntWithDefaultValue,
       'nonNullableBoolWithDefaultValue': nonNullableBoolWithDefaultValue,
       'nonNullableDoubleWithDefaultValue': nonNullableDoubleWithDefaultValue,
+      'nonNullableEnumWithDefaultValue': nonNullableEnumWithDefaultValue,
       'nonNullableListWithDefaultValue': nonNullableListWithDefaultValue,
       'nonNullableMapWithDefaultValue': nonNullableMapWithDefaultValue,
       'nonNullableCustomModelWithDefaultValue':
@@ -1174,11 +1236,11 @@ mixin BaseNavigator {
     },
   );
   Future<void> showDialogExampleDialog({required String text}) async =>
-      showCustomDialog<dynamic>(widget: _i3.ExampleDialog(text: text));
+      showCustomDialog<dynamic>(widget: _i4.ExampleDialog(text: text));
   Future<void> showSheetRecursiveNavigationBottomSheet({
     int layers = 1,
   }) async => showBottomSheet<dynamic>(
-    widget: _i3.RecursiveNavigationBottomSheet(layers: layers),
+    widget: _i4.RecursiveNavigationBottomSheet(layers: layers),
   );
   void goBack() => _popMultiPanelOr(() => navigatorKey.currentState?.pop());
   void goBackWithResult<T>({T? result}) =>
@@ -1312,6 +1374,19 @@ class MultiPanelNavigatorState extends State<MultiPanelNavigator>
 }
 
 class RouteNames {
+  /// /example-screen-with-required-argument
+  static const exampleScreenWithRequiredArgument =
+      '/example-screen-with-required-argument';
+
+  /// /guard-example-home
+  static const guardExampleHome = '/guard-example-home';
+
+  /// /error-not-logged-in
+  static const errorNotLoggedIn = '/error-not-logged-in';
+
+  /// /logged-in
+  static const loggedInPage = '/logged-in';
+
   /// /parent
   static const parentPage = '/parent';
 
@@ -1327,21 +1402,25 @@ class RouteNames {
   /// /second
   static const secondPage = '/second';
 
-  /// /example-screen-with-required-argument
-  static const exampleScreenWithRequiredArgument =
-      '/example-screen-with-required-argument';
+  /// /all-types-example
+  static const allTypesExample = '/all-types-example';
 
   /// /404
   static const r404 = '/404';
 
-  /// /error-not-logged-in
-  static const errorNotLoggedIn = '/error-not-logged-in';
+  /// /home/:id/:name/:nonExistingName/number1/
+  static String homeIdNameNonExistingNameNumber1({
+    required String id,
+    String? name,
+    String? nonExistingName,
+  }) => '/home/$id/$name/$nonExistingName/number1/';
 
-  /// /logged-in
-  static const loggedInPage = '/logged-in';
-
-  /// /field-value-tests
-  static const fieldValueTests = '/field-value-tests';
+  /// /home/:id/example/:exampleEnum/:age
+  static String homeIdExampleExampleEnumAge({
+    required String id,
+    required String exampleEnum,
+    String? age,
+  }) => '/home/$id/example/$exampleEnum/$age';
 
   /// /parent/depth0/week/:week/day/:day/depth3-page-breakfast
   static String depth3PageBreakfast({
@@ -1363,18 +1442,4 @@ class RouteNames {
 
   /// /parent/depth0/week/:week
   static String weekWeek({required String week}) => '/parent/depth0/week/$week';
-
-  /// /home/:id/:name/:nonExistingName/number1/
-  static String homeIdNameNonExistingNameNumber1({
-    required String id,
-    String? name,
-    String? nonExistingName,
-  }) => '/home/$id/$name/$nonExistingName/number1/';
-
-  /// /home/:id/example/:exampleEnum/:age
-  static String homeIdExampleExampleEnumAge({
-    required String id,
-    required String exampleEnum,
-    String? age,
-  }) => '/home/$id/example/$exampleEnum/$age';
 }
