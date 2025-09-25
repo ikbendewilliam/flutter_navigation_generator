@@ -1,3 +1,10 @@
+## 2.3.0 (2025-09-25)
+
+- Added `children` property to `FlutterRoute` to define child routes and create multi-panel navigators
+- Added `generateMultiPanelNavigator` to `FlutterNavigator` to generate a multi-panel navigator
+- Added `MultiPanelNavigator` to show multiple routes on the same screen
+- Prefix routeName with parent screens routeName
+
 ## 2.2.0 (2025-09-07)
 - Updated dependencies for flutter ^3.29
 

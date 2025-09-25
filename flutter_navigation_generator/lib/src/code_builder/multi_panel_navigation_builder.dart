@@ -254,53 +254,71 @@ return false;'''),
                 ),
               ),
       ),
-      Class(
-        (b) =>
-            b
-              ..name = 'MultiPanelNavigator'
-              ..extend = refer('StatefulWidget')
-              ..fields.addAll([
-                _field(refer(navigatorMixinName), 'navigator'),
-                _field(refer('String'), 'parentRoute'),
-                _field(refer('int'), 'panels'),
-                _field(const Reference('Widget Function(List<Widget?> screens)'), 'builder'),
-              ])
-              ..constructors.add(
-                Constructor(
-                  (c) =>
-                      c
-                        ..optionalParameters.addAll([
-                          _parameter('navigator'),
-                          _parameter('parentRoute'),
-                          _parameter('panels'),
-                          _parameter('builder'),
-                          Parameter(
-                            (b) =>
-                                b
-                                  ..toSuper = true
-                                  ..name = 'key',
-                          ),
-                        ])
-                        ..constant = true,
-                ),
-              )
-              ..methods.add(
-                Method(
-                  (b) =>
-                      b
-                        ..annotations.add(const Reference('override'))
-                        ..name = 'createState'
-                        ..returns = TypeReference(
-                          (t) =>
-                              t
-                                ..symbol = 'State'
-                                ..types.add(refer('MultiPanelNavigator')),
-                        )
-                        ..lambda = true
-                        ..body = const Code('MultiPanelNavigatorState()'),
-                ),
-              ),
-      ),
+      Class((b) {
+        final multipanelNavigatorDocumentation = [
+          '/// Use this widget to implement multi panels',
+          '/// on a screen. You will need to implement your',
+          '/// own builder, see GitHub for an example',
+          '/// https://github.com/ikbendewilliam/flutter_navigation_generator/tree/main/flutter_navigation_generator/example/lib/multi_panel',
+          '/// One of the most basic implementations is as follows:',
+          '/// ```dart',
+          '/// builder: (screens) => Row(',
+          '/// children: screens',
+          '///     .map(',
+          '///       (e) => Expanded(',
+          '///         child: e ?? const SizedBox(),',
+          '///       ),',
+          '///     )',
+          '///     .toList(),',
+          '/// ```',
+        ];
+        b
+          ..name = 'MultiPanelNavigator'
+          ..extend = refer('StatefulWidget')
+          ..docs.addAll(multipanelNavigatorDocumentation)
+          ..fields.addAll([
+            _field(refer(navigatorMixinName), 'navigator'),
+            _field(refer('String'), 'parentRoute'),
+            _field(refer('int'), 'panels'),
+            _field(const Reference('Widget Function(List<Widget?> screens)'), 'builder'),
+          ])
+          ..constructors.add(
+            Constructor(
+              (c) =>
+                  c
+                    ..docs.addAll(multipanelNavigatorDocumentation)
+                    ..optionalParameters.addAll([
+                      _parameter('navigator'),
+                      _parameter('parentRoute'),
+                      _parameter('panels'),
+                      _parameter('builder'),
+                      Parameter(
+                        (b) =>
+                            b
+                              ..toSuper = true
+                              ..name = 'key',
+                      ),
+                    ])
+                    ..constant = true,
+            ),
+          )
+          ..methods.add(
+            Method(
+              (b) =>
+                  b
+                    ..annotations.add(const Reference('override'))
+                    ..name = 'createState'
+                    ..returns = TypeReference(
+                      (t) =>
+                          t
+                            ..symbol = 'State'
+                            ..types.add(refer('MultiPanelNavigator')),
+                    )
+                    ..lambda = true
+                    ..body = const Code('MultiPanelNavigatorState()'),
+            ),
+          );
+      }),
       Class(
         (b) =>
             b

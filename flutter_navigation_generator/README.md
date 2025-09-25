@@ -8,9 +8,12 @@ Generates a navigator class with:
 
 - All routes (@flutterRoute, @flutterDialog or @flutterBottomSheet)
 - Type safe navigation methods
-- Navigate by GlobalKey so you can create mutliple navigators for nested navigation and don't require a context
-- Flutter Navigation (no third party dependencies)
-- Web support with automatic encoding and decoding of route arguments
+- Navigate by GlobalKey so you can create mutliple navigators for nested navigation and don't require context
+- Flutter Navigation: no third party dependencies, you are in control!
+- Web support with automatic encoding and decoding of route arguments (and parameters as part of the url)
+- Guards to prevent navigation (e.g. login guard) (and the ability to continue navigation after the guard)
+- Generate routenames based on child/parent-screens
+- Multi panel navigation (see multiple routes on a single screen, based on child/parent-screens)
 
 ## Getting Started
 
@@ -72,7 +75,7 @@ myNavigator.goToSecondPage();
 - `defaultGuards`: Adds these guards to all routes where no guards are specified. Useful for adding e.g. login guards without having to add them to every route. Guards must extend [NavigatorGuard]. Note: Navigation can be continued by calling `navigator.continueNavigation()`. See the continueNavigation() method in the Navigator for more information
 - `includeQueryParameters`: Whether to include query parameters in the route. Default: `IncludeQueryParametersType.onlyOnWeb`, valid options are: `always`, `never`, `onlyOnWeb` Note that parameters are always provided as arguments too
 - `ignoreKeysByDefault`: By default the Key? key argument is ignored in the goTo method. Set this to true to include it.
-
+- `generateMultiPanelNavigator`: Whether to generate a multi panel navigator. Defaults depending if you define children screens.
 
 ### FlutterRoute
 
@@ -86,6 +89,7 @@ myNavigator.goToSecondPage();
 - `pageType`: The type of the generated pages, must extend [PageRoute]. Default: `MaterialPageRoute`
 - `guards`: A list of guards to use for this route. Guards are used to prevent navigation, they can be used to check if the user is logged in. Guards must extend [NavigatorGuard]. Note: Navigation can be continued by calling `navigator.continueNavigation()`. See the continueNavigation() method in the Navigator for more information
 - `includeQueryParameters`: Whether to include query parameters in the route. Default: `IncludeQueryParametersType.onlyOnWeb`, valid options are: `always`, `never`, `onlyOnWeb` Note that parameters are always provided as arguments too
+- `children`: A list of child routes. Used to generate nested routes and multi panel navigation. Child routes will have the parent route as prefix in the route name. For example: a child route with routeName `details` of a parent route with routeName `events` will have the routeName `events/details`. Note: Defining the same child under different parents is not supported atm.
 
 - `@flutterRouteConstructor`: The constructor to use for the route. Defaults to unnamed constructor. This can be any constructor or static method
 - `@FlutterRouteConstructor(routeName)`: routeName specifies for which FlutterRoute this constructor is used
@@ -152,6 +156,7 @@ class Help extends StatelessWidget {
 ## Nested navigators
 
 To use nested Navigators, simply create a new instance of the navigator. This will create a new GlobalKey for the navigator. Use this key in a Navigator widget and you can navigate to the pages in the nested navigator.
+Also see [Multi panel navigation](#multi-panel-navigation) for another method of "nested" navigation.
 
 ```dart
 // In your Dependency Injection:
@@ -168,6 +173,35 @@ Navigator(
 ...
 
 myNestedNavigator.goToPageWithinNestedNavigation();
+```
+
+## Multi panel navigation
+
+Multi panel navigation allows you to show multiple screens at the same time, based on parent/child relationships. This is useful for larger screens, like tablets and desktops. And showing nested lists or overview/detail views in a single screen.
+
+Popping/pushing to the panels is done based on the relationship, meaning if you have child P > C & C2 where C2 and C are children of P, if you have C2 and navigate to C, C2 is popped and C is shown. If you navigate to P, both C and C2 are popped and P is shown. If you have P and navigate to C, C is added to the panels so both P and C are shown.
+
+To use multi panel navigation, define children routes. Then use the `MultiPanelNavigator` widget to show the panels. You must provide a builder for the layout of the panels.
+
+Simple implementation:
+```dart
+@override
+Widget build(BuildContext context) {
+  return MultiPanelNavigator(
+    parentRoute: RouteNames.parentPage,
+    panels: 3,
+    navigator: mainNavigator,
+    builder: (screens) => Row(
+      children: screens
+          .map(
+            (e) => Expanded(
+              child: e ?? const SizedBox(),
+            ),
+          )
+          .toList(),
+    ),
+);
+}
 ```
 
 ## Deep linking to any page

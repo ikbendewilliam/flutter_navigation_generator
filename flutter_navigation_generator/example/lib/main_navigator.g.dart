@@ -1288,7 +1288,37 @@ extension I<T> on Iterable<T> {
   }
 }
 
+/// Use this widget to implement multi panels
+/// on a screen. You will need to implement your
+/// own builder, see GitHub for an example
+/// https://github.com/ikbendewilliam/flutter_navigation_generator/tree/main/flutter_navigation_generator/example/lib/multi_panel
+/// One of the most basic implementations is as follows:
+/// ```dart
+/// builder: (screens) => Row(
+/// children: screens
+///     .map(
+///       (e) => Expanded(
+///         child: e ?? const SizedBox(),
+///       ),
+///     )
+///     .toList(),
+/// ```
 class MultiPanelNavigator extends StatefulWidget {
+  /// Use this widget to implement multi panels
+  /// on a screen. You will need to implement your
+  /// own builder, see GitHub for an example
+  /// https://github.com/ikbendewilliam/flutter_navigation_generator/tree/main/flutter_navigation_generator/example/lib/multi_panel
+  /// One of the most basic implementations is as follows:
+  /// ```dart
+  /// builder: (screens) => Row(
+  /// children: screens
+  ///     .map(
+  ///       (e) => Expanded(
+  ///         child: e ?? const SizedBox(),
+  ///       ),
+  ///     )
+  ///     .toList(),
+  /// ```
   const MultiPanelNavigator({
     required this.navigator,
     required this.parentRoute,
