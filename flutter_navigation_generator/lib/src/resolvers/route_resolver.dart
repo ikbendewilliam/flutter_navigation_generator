@@ -9,123 +9,61 @@ import 'package:flutter_navigation_generator/src/utils/case_utils.dart';
 import 'package:flutter_navigation_generator_annotations/flutter_navigation_generator_annotations.dart';
 import 'package:source_gen/source_gen.dart';
 
-const TypeChecker _flutterRouteAnnotationChecker = TypeChecker.typeNamed(
-  FlutterRoute,
-);
-const TypeChecker _constructorAnnotationChecker = TypeChecker.typeNamed(
-  FlutterRouteConstructor,
-);
+const TypeChecker _flutterRouteAnnotationChecker = TypeChecker.typeNamed(FlutterRoute);
+const TypeChecker _constructorAnnotationChecker = TypeChecker.typeNamed(FlutterRouteConstructor);
 
 class RouteResolver {
   final ImportableTypeResolverImpl _typeResolver;
   final RouteFieldResolver _routeFieldResolver;
 
-  RouteResolver(List<LibraryElement2> libs)
-    : _typeResolver = ImportableTypeResolverImpl(libs),
-      _routeFieldResolver = RouteFieldResolver(libs);
+  RouteResolver(List<LibraryElement2> libs) : _typeResolver = ImportableTypeResolverImpl(libs), _routeFieldResolver = RouteFieldResolver(libs);
 
   List<RouteConfig> resolve(ClassElement2 classElement) {
-    final flutterRouteAnnotations = _flutterRouteAnnotationChecker
-        .annotationsOf(classElement, throwOnUnresolved: false);
-    return flutterRouteAnnotations
-        .map((annotation) => _resolveRoute(classElement, annotation))
-        .toList();
+    final flutterRouteAnnotations = _flutterRouteAnnotationChecker.annotationsOf(classElement, throwOnUnresolved: false);
+    return flutterRouteAnnotations.map((annotation) => _resolveRoute(classElement, annotation)).toList();
   }
 
-  ExecutableElement2 _resolveConstructorMethod(
-    ClassElement2 classElement,
-    String routeName,
-  ) {
-    final possibleFactories = <ExecutableElement2>[
-      ...classElement.methods2.where((method) => method.isStatic),
-      ...classElement.constructors2,
-    ];
+  ExecutableElement2 _resolveConstructorMethod(ClassElement2 classElement, String routeName) {
+    final possibleFactories = <ExecutableElement2>[...classElement.methods2.where((method) => method.isStatic), ...classElement.constructors2];
 
     final possibleFactoriesWithAnnotations = possibleFactories.asMap().map(
-      (key, value) => MapEntry(
-        value,
-        _constructorAnnotationChecker
-            .annotationsOf(value)
-            .map(ConstantReader.new),
-      ),
+      (key, value) => MapEntry(value, _constructorAnnotationChecker.annotationsOf(value).map(ConstantReader.new)),
     );
 
     ExecutableElement2? constructor;
     constructor =
-        possibleFactoriesWithAnnotations.entries
-            .firstWhereOrNull(
-              (element) => element.value.any(
-                (annotation) =>
-                    annotation.peek('routeName')?.stringValue == routeName,
-              ),
-            )
-            ?.key;
+        possibleFactoriesWithAnnotations.entries.firstWhereOrNull((element) => element.value.any((annotation) => annotation.peek('routeName')?.stringValue == routeName))?.key;
     constructor ??=
-        possibleFactoriesWithAnnotations.entries
-            .firstWhereOrNull(
-              (element) => element.value.any(
-                (annotation) =>
-                    annotation.peek('routeName')?.stringValue == null,
-              ),
-            )
-            ?.key;
+        possibleFactoriesWithAnnotations.entries.firstWhereOrNull((element) => element.value.any((annotation) => annotation.peek('routeName')?.stringValue == null))?.key;
     return constructor ?? classElement.constructors2.first;
   }
 
-  RouteConfig _resolveRoute(
-    ClassElement2 classElement,
-    DartObject flutterRouteAnnotation,
-  ) {
+  RouteConfig _resolveRoute(ClassElement2 classElement, DartObject flutterRouteAnnotation) {
     final flutterRoute = ConstantReader(flutterRouteAnnotation);
 
     final routeNameValue = flutterRoute.peek('routeName')?.stringValue;
-    final routeName =
-        routeNameValue ?? CaseUtil(classElement.displayName).kebabCase;
+    final routeName = routeNameValue ?? CaseUtil(classElement.displayName).kebabCase;
     final methodNameValue = flutterRoute.peek('methodName')?.stringValue;
-    final methodName =
-        methodNameValue ?? CaseUtil(classElement.displayName).upperCamelCase;
+    final methodName = methodNameValue ?? CaseUtil(classElement.displayName).upperCamelCase;
     final returnType = flutterRoute.peek('returnType')?.typeValue;
     final pageType = flutterRoute.peek('pageType')?.typeValue;
-    final guards =
-        flutterRoute
-            .peek('guards')
-            ?.listValue
-            .map((e) => e.toTypeValue())
-            .nonNulls
-            .map(_typeResolver.resolveType)
-            .toList();
-    final navigationType = NavigationType.values.firstWhere(
-      (element) =>
-          element.index ==
-          flutterRoute.peek('navigationType')?.peek('index')?.intValue,
-    );
-    final includeQueryParametersIndex =
-        flutterRoute.peek('includeQueryParameters')?.peek('index')?.intValue;
-    final includeQueryParameters =
-        includeQueryParametersIndex == null
-            ? null
-            : IncludeQueryParametersType.values[includeQueryParametersIndex];
+    final children = flutterRoute.peek('children')?.listValue.map((e) => e.toTypeValue()).nonNulls.map(_typeResolver.resolveType).toList();
+    final guards = flutterRoute.peek('guards')?.listValue.map((e) => e.toTypeValue()).nonNulls.map(_typeResolver.resolveType).toList();
+    final navigationType = NavigationType.values.firstWhere((element) => element.index == flutterRoute.peek('navigationType')?.peek('index')?.intValue);
+    final includeQueryParametersIndex = flutterRoute.peek('includeQueryParameters')?.peek('index')?.intValue;
+    final includeQueryParameters = includeQueryParametersIndex == null ? null : IncludeQueryParametersType.values[includeQueryParametersIndex];
     final constructor = _resolveConstructorMethod(classElement, routeName);
 
     ImportableType? importableReturnType;
     if (returnType != null) {
-      importableReturnType = _typeResolver.resolveType(
-        returnType,
-        forceNullable: true,
-      );
+      importableReturnType = _typeResolver.resolveType(returnType, forceNullable: true);
     }
     ImportableType? importablePageType;
     if (pageType != null) {
-      importablePageType = _typeResolver.resolveType(
-        pageType,
-        forceNullable: true,
-      );
+      importablePageType = _typeResolver.resolveType(pageType, forceNullable: true);
     }
 
-    final parameters = _routeFieldResolver.resolveFieldsMethod(
-      constructor,
-      classElement,
-    );
+    final parameters = _routeFieldResolver.resolveFieldsMethod(constructor, classElement);
 
     return RouteConfig(
       routeWidget: _typeResolver.resolveType(classElement.thisType),
@@ -135,17 +73,14 @@ class RouteResolver {
       guards: guards,
       routeName: routeName,
       methodName: methodName,
+      children: children,
       pageType: importablePageType,
       routeNameIsDefinedByAnnotation: routeNameValue != null,
       methodNameIsDefinedByAnnotation: methodNameValue != null,
       navigationType: navigationType,
-      isFullscreenDialog:
-          flutterRoute.peek('isFullscreenDialog')?.boolValue ?? false,
+      isFullscreenDialog: flutterRoute.peek('isFullscreenDialog')?.boolValue ?? false,
       generateMethod: flutterRoute.peek('generateMethod')?.boolValue ?? true,
-      generatePageRoute:
-          (flutterRoute.peek('generatePageRoute')?.boolValue ?? true) &&
-          navigationType != NavigationType.dialog &&
-          navigationType != NavigationType.bottomSheet,
+      generatePageRoute: (flutterRoute.peek('generatePageRoute')?.boolValue ?? true) && navigationType != NavigationType.dialog && navigationType != NavigationType.bottomSheet,
       includeQueryParameters: includeQueryParameters,
     );
   }

@@ -9,6 +9,6 @@ builders:
   flutter_navigator_builder:
     import: "package:flutter_navigation_generator/builder.dart"
     builder_factories: ["flutterNavigatorBuilder"]
-    build_extensions: { ".dart": [".navigator.dart"] }
+    build_extensions: { ".dart": [".g.dart"] }
     auto_apply: dependents
     build_to: source

@@ -1,3 +1,8 @@
+## 2.2.0 (2025-09-25)
+
+- Added `children` property to `FlutterRoute` to define child routes and create multi-panel navigators
+- Added `generateMultiPanelNavigator` to `FlutterNavigator` to generate a multi-panel navigator
+
 ## 2.1.0 (2024-12-31)
 
 - Added `@FlutterRouteField` annotation to specify fields with the following options:

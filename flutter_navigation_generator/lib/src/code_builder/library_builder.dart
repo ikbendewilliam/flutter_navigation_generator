@@ -1,5 +1,6 @@
 import 'package:code_builder/code_builder.dart';
 import 'package:flutter_navigation_generator/src/code_builder/import_builder.dart';
+import 'package:flutter_navigation_generator/src/code_builder/multi_panel_navigation_builder.dart';
 import 'package:flutter_navigation_generator/src/code_builder/navigator_builder.dart';
 import 'package:flutter_navigation_generator/src/code_builder/route_names_builder.dart';
 import 'package:flutter_navigation_generator/src/models/importable_type.dart';
@@ -15,6 +16,7 @@ class LibraryGenerator {
   final List<String> removeSuffixes;
   final List<ImportableType> defaultGuards;
   final bool ignoreKeysByDefault;
+  final bool createMultipanelNavigation;
   final IncludeQueryParametersType includeQueryParametersNavigatorConfig;
 
   LibraryGenerator({
@@ -27,24 +29,26 @@ class LibraryGenerator {
     this.removeSuffixes = const [],
     this.defaultGuards = const [],
     this.ignoreKeysByDefault = true,
+    this.createMultipanelNavigation = true,
   });
 
   Library generate() {
+    final multiPanelNavigationBuilder = MultiPanelNavigationBuilder(createMultipanelNavigation: createMultipanelNavigation);
     return Library(
       (b) =>
           b
-            ..ignoreForFile.addAll(['prefer_const_constructors'])
-            ..directives.addAll(
-              ImportBuilder(
+            ..ignoreForFile.addAll(['prefer_const_constructors', 'unused_import'])
+            ..directives.addAll([
+              ...ImportBuilder(
                 routes: routes,
                 pageType: pageType,
                 targetFile: targetFile,
                 defaultGuards: defaultGuards,
                 ignoreKeysByDefault: ignoreKeysByDefault,
-                includeQueryParametersNavigatorConfig:
-                    includeQueryParametersNavigatorConfig,
+                includeQueryParametersNavigatorConfig: includeQueryParametersNavigatorConfig,
               ).generate(),
-            )
+              ...multiPanelNavigationBuilder.generateImports(),
+            ])
             ..body.addAll([
               NavigatorBuilder(
                 className: className,
@@ -54,13 +58,12 @@ class LibraryGenerator {
                 unknownRoute: unknownRoute,
                 defaultGuards: defaultGuards,
                 ignoreKeysByDefault: ignoreKeysByDefault,
-                includeQueryParametersNavigatorConfig:
-                    includeQueryParametersNavigatorConfig,
-              ).generate(),
-              RouteNamesBuilder(
-                routes: routes,
+                includeQueryParametersNavigatorConfig: includeQueryParametersNavigatorConfig,
+                multiPanelNavigationBuilder: multiPanelNavigationBuilder,
                 removeSuffixes: removeSuffixes,
               ).generate(),
+              ...multiPanelNavigationBuilder.generateClasses(className),
+              RouteNamesBuilder(routes: routes, removeSuffixes: removeSuffixes).generate(),
             ]),
     );
   }

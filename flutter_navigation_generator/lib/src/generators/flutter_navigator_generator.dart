@@ -10,57 +10,24 @@ import 'package:flutter_navigation_generator_annotations/flutter_navigation_gene
 import 'package:glob/glob.dart';
 import 'package:source_gen/source_gen.dart';
 
-class FlutterNavigatorGenerator
-    extends GeneratorForAnnotation<FlutterNavigator> {
+class FlutterNavigatorGenerator extends GeneratorForAnnotation<FlutterNavigator> {
   static const _navigatorClassNameDefault = 'BaseNavigator';
 
   @override
-  dynamic generateForAnnotatedElement(
-    Element2 element,
-    ConstantReader annotation,
-    BuildStep buildStep,
-  ) async {
-    final typeResolver = ImportableTypeResolverImpl(
-      await buildStep.resolver.libraries.toList(),
-    );
+  dynamic generateForAnnotatedElement(Element2 element, ConstantReader annotation, BuildStep buildStep) async {
+    final typeResolver = ImportableTypeResolverImpl(await buildStep.resolver.libraries.toList());
     final configFiles = Glob("**.navigator.json");
-    final navigatorClassName =
-        annotation.peek('navigatorClassName')?.stringValue;
+    final navigatorClassName = annotation.peek('navigatorClassName')?.stringValue;
     final pageTypeAsDartType = annotation.peek('pageType')?.typeValue;
     final unknownRouteAsDartType = annotation.peek('unknownRoute')?.typeValue;
-    final ignoreKeysByDefault =
-        annotation.peek('ignoreKeysByDefault')?.boolValue ?? true;
-    final removeSuffixes =
-        annotation
-            .peek('removeSuffixes')
-            ?.listValue
-            .map((e) => e.toStringValue())
-            .whereType<String>()
-            .toList() ??
-        [];
-    final defaultGuards =
-        annotation
-            .peek('defaultGuards')
-            ?.listValue
-            .map((e) => e.toTypeValue())
-            .nonNulls
-            .map(typeResolver.resolveType)
-            .toList() ??
-        [];
-    final pageType =
-        pageTypeAsDartType == null
-            ? null
-            : typeResolver.resolveType(pageTypeAsDartType);
-    final unknownRoute =
-        unknownRouteAsDartType == null
-            ? null
-            : typeResolver.resolveType(unknownRouteAsDartType);
+    final ignoreKeysByDefault = annotation.peek('ignoreKeysByDefault')?.boolValue ?? true;
+    var generateMultiPanelNavigator = annotation.peek('generateMultiPanelNavigator')?.boolValue;
+    final removeSuffixes = annotation.peek('removeSuffixes')?.listValue.map((e) => e.toStringValue()).whereType<String>().toList() ?? [];
+    final defaultGuards = annotation.peek('defaultGuards')?.listValue.map((e) => e.toTypeValue()).nonNulls.map(typeResolver.resolveType).toList() ?? [];
+    final pageType = pageTypeAsDartType == null ? null : typeResolver.resolveType(pageTypeAsDartType);
+    final unknownRoute = unknownRouteAsDartType == null ? null : typeResolver.resolveType(unknownRouteAsDartType);
     final includeQueryParametersNavigatorConfig =
-        IncludeQueryParametersType.values[annotation
-                .peek('includeQueryParameters')
-                ?.peek('index')
-                ?.intValue ??
-            IncludeQueryParametersType.onlyOnWeb.index];
+        IncludeQueryParametersType.values[annotation.peek('includeQueryParameters')?.peek('index')?.intValue ?? IncludeQueryParametersType.onlyOnWeb.index];
     final jsonData = <Map>[];
 
     await for (final id in buildStep.findAssets(configFiles)) {
@@ -82,17 +49,13 @@ class FlutterNavigatorGenerator
       removeSuffixes: removeSuffixes,
       defaultGuards: defaultGuards,
       ignoreKeysByDefault: ignoreKeysByDefault,
-      includeQueryParametersNavigatorConfig:
-          includeQueryParametersNavigatorConfig,
+      includeQueryParametersNavigatorConfig: includeQueryParametersNavigatorConfig,
+      createMultipanelNavigation: generateMultiPanelNavigator ?? routes.any((e) => e.children != null),
     );
 
     final generatedLib = generator.generate();
 
-    final emitter = DartEmitter(
-      allocator: Allocator.simplePrefixing(),
-      orderDirectives: true,
-      useNullSafetySyntax: true,
-    );
+    final emitter = DartEmitter(allocator: Allocator.simplePrefixing(), orderDirectives: true, useNullSafetySyntax: true);
 
     return generatedLib.accept(emitter).toString();
   }

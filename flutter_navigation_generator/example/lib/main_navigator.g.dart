@@ -1,0 +1,1475 @@
+// dart format width=80
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+// **************************************************************************
+// FlutterNavigatorGenerator
+// **************************************************************************
+
+// ignore_for_file: prefer_const_constructors, unused_import
+
+// ignore_for_file: no_leading_underscores_for_library_prefixes
+import 'dart:async';
+import 'dart:convert';
+
+import 'package:example/custom_model.dart' as _i1;
+import 'package:example/dialog_example.dart' as _i4;
+import 'package:example/main.dart' as _i2;
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart' as _i3;
+import 'package:flutter/material.dart';
+import 'package:flutter_navigation_generator_animations/flutter_navigation_generator_animations.dart';
+import 'package:flutter_navigation_generator_annotations/flutter_navigation_generator_annotations.dart';
+
+import 'arguments_example.dart';
+import 'custom_model.dart';
+import 'dialog_example.dart';
+import 'guard_default_example.dart';
+import 'guard_example.dart';
+import 'main.dart';
+import 'multi_panel/depth_1.dart';
+import 'multi_panel/depth_2.dart';
+import 'multi_panel/depth_3.dart';
+import 'multi_panel/parent.dart';
+
+mixin BaseNavigator {
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
+  final Map<MultiPanelListener, String> multiPanels = {};
+
+  final Set<NavigatorGuard> guards = <NavigatorGuard>{
+    ExampleDefaultGuard(),
+    LoginGuard(),
+  };
+
+  RouteSettings? guardedRouteSettings;
+
+  /// Registers a panel. When navigating to a route that matches
+  /// a child route of [screen], the [listener] will be notified
+  /// to add the panel and navigation in the main navigator will be prevented.
+  ///
+  /// Make sure to call [removePanel] when the panel is disposed.
+  void registerMultiPanel({
+    required String screen,
+    required MultiPanelListener listener,
+  }) {
+    multiPanels[listener] = screen;
+  }
+
+  /// Removes a panel. Call this when the panel is disposed.
+  void removePanel(MultiPanelListener listener) {
+    multiPanels.remove(listener);
+  }
+
+  /// Internal method to execute navigation
+  /// either inside a multipanel or regular.
+  dynamic _navigateInMultiPanelOr(
+    dynamic Function() action,
+    String routeName,
+    Object? arguments,
+  ) {
+    for (final multiPanel in multiPanels.entries) {
+      if (routeName == multiPanel.value ||
+          routeName.startsWith('${multiPanel.value}/') == true) {
+        final route = onGenerateRoute(
+          RouteSettings(name: routeName, arguments: arguments),
+        );
+        if (route is! PageRouteBuilder) continue;
+        final completer = Completer<dynamic>();
+        multiPanel.key.addPanel(
+          route.pageBuilder(
+            navigatorKey.currentContext!,
+            const AlwaysStoppedAnimation(1),
+            const AlwaysStoppedAnimation(1),
+          ),
+          routeName,
+          (result) => completer.complete(result),
+        );
+        return completer.future;
+      }
+    }
+    return action();
+  }
+
+  /// Internal method to execute popping navigation
+  /// either inside a multipanel or regular.
+  void _popMultiPanelOr(dynamic Function() action, [dynamic result]) {
+    for (final multiPanel in multiPanels.keys) {
+      if (multiPanel.removePanel(result)) {
+        return;
+      }
+    }
+    action();
+  }
+
+  Route<dynamic>? onGenerateRoute(RouteSettings settings) {
+    final arguments = settings.arguments is Map
+        ? (settings.arguments as Map).cast<String, dynamic>()
+        : <String, dynamic>{};
+    final settingsUri = Uri.parse(settings.name ?? '');
+    final queryParameters = Map.from(settingsUri.queryParameters);
+    switch (settingsUri.path) {
+      case RouteNames.exampleScreenWithRequiredArgument:
+        final exampleDefaultGuard = guards
+            .whereType<ExampleDefaultGuard>()
+            .first;
+        if (!exampleDefaultGuard.value) {
+          guardedRouteSettings = settings;
+          return onGenerateRoute(
+            RouteSettings(
+              arguments: settings.arguments,
+              name: exampleDefaultGuard.alternativeRoute,
+            ),
+          );
+        }
+        return NativeRouteAnimation<void>(
+          builder: (_) => ExampleScreenWithRequiredArgument(
+            data: queryParameters['data'] != null
+                ? (jsonDecode(
+                            utf8.decode(base64Decode(queryParameters['data']!)),
+                          )
+                          as List<dynamic>)
+                      .map(
+                        (e) => CustomModel.fromJson(e as Map<String, dynamic>),
+                      )
+                      .toList()
+                : arguments['data'] as List<CustomModel>,
+          ),
+          settings: settings,
+          fullscreenDialog: false,
+        );
+      case RouteNames.guardExampleHome:
+        final exampleDefaultGuard = guards
+            .whereType<ExampleDefaultGuard>()
+            .first;
+        if (!exampleDefaultGuard.value) {
+          guardedRouteSettings = settings;
+          return onGenerateRoute(
+            RouteSettings(
+              arguments: settings.arguments,
+              name: exampleDefaultGuard.alternativeRoute,
+            ),
+          );
+        }
+        return NativeRouteAnimation<void>(
+          builder: (_) => GuardExampleHome(),
+          settings: settings,
+          fullscreenDialog: false,
+        );
+      case RouteNames.errorNotLoggedIn:
+        final exampleDefaultGuard = guards
+            .whereType<ExampleDefaultGuard>()
+            .first;
+        if (!exampleDefaultGuard.value) {
+          guardedRouteSettings = settings;
+          return onGenerateRoute(
+            RouteSettings(
+              arguments: settings.arguments,
+              name: exampleDefaultGuard.alternativeRoute,
+            ),
+          );
+        }
+        return NativeRouteAnimation<void>(
+          builder: (_) => ErrorNotLoggedIn(),
+          settings: settings,
+          fullscreenDialog: false,
+        );
+      case RouteNames.loggedInPage:
+        final loginGuard = guards.whereType<LoginGuard>().first;
+        if (!loginGuard.value) {
+          guardedRouteSettings = settings;
+          return onGenerateRoute(
+            RouteSettings(
+              arguments: settings.arguments,
+              name: loginGuard.alternativeRoute,
+            ),
+          );
+        }
+        return NativeRouteAnimation<void>(
+          builder: (_) => LoggedInPage(),
+          settings: settings,
+          fullscreenDialog: false,
+        );
+      case RouteNames.parentPage:
+        final exampleDefaultGuard = guards
+            .whereType<ExampleDefaultGuard>()
+            .first;
+        if (!exampleDefaultGuard.value) {
+          guardedRouteSettings = settings;
+          return onGenerateRoute(
+            RouteSettings(
+              arguments: settings.arguments,
+              name: exampleDefaultGuard.alternativeRoute,
+            ),
+          );
+        }
+        return NativeRouteAnimation<void>(
+          builder: (_) => ParentPage(),
+          settings: settings,
+          fullscreenDialog: false,
+        );
+      case RouteNames.depth0Page:
+        final exampleDefaultGuard = guards
+            .whereType<ExampleDefaultGuard>()
+            .first;
+        if (!exampleDefaultGuard.value) {
+          guardedRouteSettings = settings;
+          return onGenerateRoute(
+            RouteSettings(
+              arguments: settings.arguments,
+              name: exampleDefaultGuard.alternativeRoute,
+            ),
+          );
+        }
+        return NativeRouteAnimation<void>(
+          builder: (_) => Depth0Page(),
+          settings: settings,
+          fullscreenDialog: false,
+        );
+      case RouteNames.myHomePage:
+        final exampleDefaultGuard = guards
+            .whereType<ExampleDefaultGuard>()
+            .first;
+        if (!exampleDefaultGuard.value) {
+          guardedRouteSettings = settings;
+          return onGenerateRoute(
+            RouteSettings(
+              arguments: settings.arguments,
+              name: exampleDefaultGuard.alternativeRoute,
+            ),
+          );
+        }
+        return NativeRouteAnimation<void>(
+          builder: (_) => MyHomePage(
+            title:
+                queryParameters['page_title'] ?? arguments['title'] as String?,
+            key: arguments['key'] as Key?,
+          ),
+          settings: settings,
+          fullscreenDialog: false,
+        );
+      case RouteNames.myHomePagePopAll:
+        final exampleDefaultGuard = guards
+            .whereType<ExampleDefaultGuard>()
+            .first;
+        if (!exampleDefaultGuard.value) {
+          guardedRouteSettings = settings;
+          return onGenerateRoute(
+            RouteSettings(
+              arguments: settings.arguments,
+              name: exampleDefaultGuard.alternativeRoute,
+            ),
+          );
+        }
+        return NativeRouteAnimation<void>(
+          builder: (_) => MyHomePage(
+            title:
+                queryParameters['page_title'] ?? arguments['title'] as String?,
+            key: arguments['key'] as Key?,
+          ),
+          settings: settings,
+          fullscreenDialog: false,
+        );
+      case RouteNames.secondPage:
+        final exampleDefaultGuard = guards
+            .whereType<ExampleDefaultGuard>()
+            .first;
+        if (!exampleDefaultGuard.value) {
+          guardedRouteSettings = settings;
+          return onGenerateRoute(
+            RouteSettings(
+              arguments: settings.arguments,
+              name: exampleDefaultGuard.alternativeRoute,
+            ),
+          );
+        }
+        return FadeInRouteAnimation<bool>(
+          builder: (_) => SecondPage(),
+          settings: settings,
+          fullscreenDialog: false,
+        );
+      case RouteNames.allTypesExample:
+        final exampleDefaultGuard = guards
+            .whereType<ExampleDefaultGuard>()
+            .first;
+        if (!exampleDefaultGuard.value) {
+          guardedRouteSettings = settings;
+          return onGenerateRoute(
+            RouteSettings(
+              arguments: settings.arguments,
+              name: exampleDefaultGuard.alternativeRoute,
+            ),
+          );
+        }
+        return NativeRouteAnimation<void>(
+          builder: (_) => AllTypesExample(
+            nonNullableString:
+                queryParameters['nonNullableString'] ??
+                arguments['nonNullableString'] as String,
+            nonNullableInt: queryParameters['nonNullableInt'] != null
+                ? int.parse(queryParameters['nonNullableInt']!)
+                : arguments['nonNullableInt'] as int,
+            nonNullableBool: queryParameters['nonNullableBool'] != null
+                ? queryParameters['nonNullableBool']! == 'true'
+                : arguments['nonNullableBool'] as bool,
+            nonNullableDouble: queryParameters['nonNullableDouble'] != null
+                ? double.parse(queryParameters['nonNullableDouble']!)
+                : arguments['nonNullableDouble'] as double,
+            nonNullableList: queryParameters['nonNullableList'] != null
+                ? (jsonDecode(
+                            utf8.decode(
+                              base64Decode(queryParameters['nonNullableList']!),
+                            ),
+                          )
+                          as List<dynamic>)
+                      .map((e) => e as String)
+                      .toList()
+                : arguments['nonNullableList'] as List<String>,
+            nonNullableMap: queryParameters['nonNullableMap'] != null
+                ? Map<String, String>.from(
+                    jsonDecode(
+                      utf8.decode(
+                        base64Decode(queryParameters['nonNullableMap']!),
+                      ),
+                    ),
+                  )
+                : arguments['nonNullableMap'] as Map<String, String>,
+            nonNullableCustomModel:
+                queryParameters['nonNullableCustomModel'] != null
+                ? CustomModel.fromJson(
+                    jsonDecode(
+                      utf8.decode(
+                        base64Decode(
+                          queryParameters['nonNullableCustomModel']!,
+                        ),
+                      ),
+                    ),
+                  )
+                : arguments['nonNullableCustomModel'] as CustomModel,
+            nonNullableEnum: queryParameters['nonNullableEnum'] != null
+                ? ExampleEnum.values[int.parse(
+                    queryParameters['nonNullableEnum']!,
+                  )]
+                : arguments['nonNullableEnum'] as ExampleEnum,
+            nullableString:
+                queryParameters['nullableString'] ??
+                arguments['nullableString'] as String?,
+            nullableInt: queryParameters['nullableInt'] != null
+                ? int.parse(queryParameters['nullableInt']!)
+                : arguments['nullableInt'] as int?,
+            nullableBool: queryParameters['nullableBool'] != null
+                ? queryParameters['nullableBool']! == 'true'
+                : arguments['nullableBool'] as bool?,
+            nullableDouble: queryParameters['nullableDouble'] != null
+                ? double.parse(queryParameters['nullableDouble']!)
+                : arguments['nullableDouble'] as double?,
+            nullableEnum: queryParameters['nullableEnum'] != null
+                ? ExampleEnum.values[int.parse(
+                    queryParameters['nullableEnum']!,
+                  )]
+                : arguments['nullableEnum'] as ExampleEnum?,
+            nullableList: queryParameters['nullableList'] != null
+                ? (jsonDecode(
+                            utf8.decode(
+                              base64Decode(queryParameters['nullableList']!),
+                            ),
+                          )
+                          as List<dynamic>)
+                      .map((e) => e as String)
+                      .toList()
+                : arguments['nullableList'] as List<String>?,
+            nullableMap: queryParameters['nullableMap'] != null
+                ? Map<String, String>.from(
+                    jsonDecode(
+                      utf8.decode(
+                        base64Decode(queryParameters['nullableMap']!),
+                      ),
+                    ),
+                  )
+                : arguments['nullableMap'] as Map<String, String>?,
+            nullableCustomModel: queryParameters['nullableCustomModel'] != null
+                ? CustomModel.fromJson(
+                    jsonDecode(
+                      utf8.decode(
+                        base64Decode(queryParameters['nullableCustomModel']!),
+                      ),
+                    ),
+                  )
+                : arguments['nullableCustomModel'] as CustomModel?,
+            nonNullableStringWithDefaultValue:
+                queryParameters['nonNullableStringWithDefaultValue'] ??
+                arguments['nonNullableStringWithDefaultValue'] as String? ??
+                'default',
+            nonNullableIntWithDefaultValue:
+                queryParameters['nonNullableIntWithDefaultValue'] != null
+                ? int.parse(queryParameters['nonNullableIntWithDefaultValue']!)
+                : arguments['nonNullableIntWithDefaultValue'] as int? ?? 42,
+            nonNullableBoolWithDefaultValue:
+                queryParameters['nonNullableBoolWithDefaultValue'] != null
+                ? queryParameters['nonNullableBoolWithDefaultValue']! == 'true'
+                : arguments['nonNullableBoolWithDefaultValue'] as bool? ?? true,
+            nonNullableDoubleWithDefaultValue:
+                queryParameters['nonNullableDoubleWithDefaultValue'] != null
+                ? double.parse(
+                    queryParameters['nonNullableDoubleWithDefaultValue']!,
+                  )
+                : arguments['nonNullableDoubleWithDefaultValue'] as double? ??
+                      3.14,
+            nonNullableEnumWithDefaultValue:
+                queryParameters['nonNullableEnumWithDefaultValue'] != null
+                ? ExampleEnum.values[int.parse(
+                    queryParameters['nonNullableEnumWithDefaultValue']!,
+                  )]
+                : arguments['nonNullableEnumWithDefaultValue']
+                          as ExampleEnum? ??
+                      ExampleEnum.first,
+            nonNullableListWithDefaultValue:
+                queryParameters['nonNullableListWithDefaultValue'] != null
+                ? (jsonDecode(
+                            utf8.decode(
+                              base64Decode(
+                                queryParameters['nonNullableListWithDefaultValue']!,
+                              ),
+                            ),
+                          )
+                          as List<dynamic>)
+                      .map((e) => e as String)
+                      .toList()
+                : arguments['nonNullableListWithDefaultValue']
+                          as List<String>? ??
+                      const ['default'],
+            nonNullableMapWithDefaultValue:
+                queryParameters['nonNullableMapWithDefaultValue'] != null
+                ? Map<String, String>.from(
+                    jsonDecode(
+                      utf8.decode(
+                        base64Decode(
+                          queryParameters['nonNullableMapWithDefaultValue']!,
+                        ),
+                      ),
+                    ),
+                  )
+                : arguments['nonNullableMapWithDefaultValue']
+                          as Map<String, String>? ??
+                      const {'default': 'default'},
+            nonNullableCustomModelWithDefaultValue:
+                queryParameters['nonNullableCustomModelWithDefaultValue'] !=
+                    null
+                ? CustomModel.fromJson(
+                    jsonDecode(
+                      utf8.decode(
+                        base64Decode(
+                          queryParameters['nonNullableCustomModelWithDefaultValue']!,
+                        ),
+                      ),
+                    ),
+                  )
+                : arguments['nonNullableCustomModelWithDefaultValue']
+                          as CustomModel? ??
+                      const CustomModel('default', 0),
+            nonNullableCustomModelWithDefaultValue2:
+                queryParameters['nonNullableCustomModelWithDefaultValue2'] !=
+                    null
+                ? CustomModel.fromJson(
+                    jsonDecode(
+                      utf8.decode(
+                        base64Decode(
+                          queryParameters['nonNullableCustomModelWithDefaultValue2']!,
+                        ),
+                      ),
+                    ),
+                  )
+                : arguments['nonNullableCustomModelWithDefaultValue2']
+                          as CustomModel? ??
+                      CustomModel.testDefault,
+          ),
+          settings: settings,
+          fullscreenDialog: false,
+        );
+      case RouteNames.r404:
+        final exampleDefaultGuard = guards
+            .whereType<ExampleDefaultGuard>()
+            .first;
+        if (!exampleDefaultGuard.value) {
+          guardedRouteSettings = settings;
+          return onGenerateRoute(
+            RouteSettings(
+              arguments: settings.arguments,
+              name: exampleDefaultGuard.alternativeRoute,
+            ),
+          );
+        }
+        return NativeRouteAnimation<void>(
+          builder: (_) => Error404(),
+          settings: settings,
+          fullscreenDialog: false,
+        );
+    }
+    final pathSegments = settingsUri.pathSegments;
+    if (pathSegments.length == 7) {
+      if (pathSegments[0] == 'parent' &&
+          pathSegments[1] == 'depth0' &&
+          pathSegments[2] == 'week' &&
+          pathSegments[4] == 'day' &&
+          pathSegments[6] == 'depth3-page-breakfast') {
+        queryParameters['week'] = pathSegments[3];
+        queryParameters['day'] = pathSegments[5];
+        final exampleDefaultGuard = guards
+            .whereType<ExampleDefaultGuard>()
+            .first;
+        if (!exampleDefaultGuard.value) {
+          guardedRouteSettings = settings;
+          return onGenerateRoute(
+            RouteSettings(
+              arguments: settings.arguments,
+              name: exampleDefaultGuard.alternativeRoute,
+            ),
+          );
+        }
+        return NativeRouteAnimation<String>(
+          builder: (_) => Depth3PageBreakfast(
+            week: queryParameters['week'] != null
+                ? int.parse(queryParameters['week']!)
+                : arguments['week'] as int,
+            day: queryParameters['day'] != null
+                ? int.parse(queryParameters['day']!)
+                : arguments['day'] as int,
+          ),
+          settings: settings,
+          fullscreenDialog: false,
+        );
+      }
+      if (pathSegments[0] == 'parent' &&
+          pathSegments[1] == 'depth0' &&
+          pathSegments[2] == 'week' &&
+          pathSegments[4] == 'day' &&
+          pathSegments[6] == 'depth3-page-lunch') {
+        queryParameters['week'] = pathSegments[3];
+        queryParameters['day'] = pathSegments[5];
+        final exampleDefaultGuard = guards
+            .whereType<ExampleDefaultGuard>()
+            .first;
+        if (!exampleDefaultGuard.value) {
+          guardedRouteSettings = settings;
+          return onGenerateRoute(
+            RouteSettings(
+              arguments: settings.arguments,
+              name: exampleDefaultGuard.alternativeRoute,
+            ),
+          );
+        }
+        return NativeRouteAnimation<String>(
+          builder: (_) => Depth3PageLunch(
+            week: queryParameters['week'] != null
+                ? int.parse(queryParameters['week']!)
+                : arguments['week'] as int,
+            day: queryParameters['day'] != null
+                ? int.parse(queryParameters['day']!)
+                : arguments['day'] as int,
+          ),
+          settings: settings,
+          fullscreenDialog: false,
+        );
+      }
+      if (pathSegments[0] == 'parent' &&
+          pathSegments[1] == 'depth0' &&
+          pathSegments[2] == 'week' &&
+          pathSegments[4] == 'day' &&
+          pathSegments[6] == 'depth3-page-dinner') {
+        queryParameters['week'] = pathSegments[3];
+        queryParameters['day'] = pathSegments[5];
+        final exampleDefaultGuard = guards
+            .whereType<ExampleDefaultGuard>()
+            .first;
+        if (!exampleDefaultGuard.value) {
+          guardedRouteSettings = settings;
+          return onGenerateRoute(
+            RouteSettings(
+              arguments: settings.arguments,
+              name: exampleDefaultGuard.alternativeRoute,
+            ),
+          );
+        }
+        return NativeRouteAnimation<String>(
+          builder: (_) => Depth3PageDinner(
+            week: queryParameters['week'] != null
+                ? int.parse(queryParameters['week']!)
+                : arguments['week'] as int,
+            day: queryParameters['day'] != null
+                ? int.parse(queryParameters['day']!)
+                : arguments['day'] as int,
+          ),
+          settings: settings,
+          fullscreenDialog: false,
+        );
+      }
+    }
+    if (pathSegments.length == 6) {
+      if (pathSegments[0] == 'parent' &&
+          pathSegments[1] == 'depth0' &&
+          pathSegments[2] == 'week' &&
+          pathSegments[4] == 'day') {
+        queryParameters['week'] = pathSegments[3];
+        queryParameters['day'] = pathSegments[5];
+        final exampleDefaultGuard = guards
+            .whereType<ExampleDefaultGuard>()
+            .first;
+        if (!exampleDefaultGuard.value) {
+          guardedRouteSettings = settings;
+          return onGenerateRoute(
+            RouteSettings(
+              arguments: settings.arguments,
+              name: exampleDefaultGuard.alternativeRoute,
+            ),
+          );
+        }
+        return NativeRouteAnimation<void>(
+          builder: (_) => Depth2Page(
+            day: queryParameters['day'] != null
+                ? int.parse(queryParameters['day']!)
+                : arguments['day'] as int,
+            week: queryParameters['week'] != null
+                ? int.parse(queryParameters['week']!)
+                : arguments['week'] as int,
+          ),
+          settings: settings,
+          fullscreenDialog: false,
+        );
+      }
+      if (pathSegments[0] == 'home' &&
+          pathSegments[4] == 'number1' &&
+          pathSegments[5] == '') {
+        queryParameters['id'] = pathSegments[1];
+        queryParameters['name'] = pathSegments[2];
+        queryParameters['nonExistingName'] = pathSegments[3];
+        final exampleDefaultGuard = guards
+            .whereType<ExampleDefaultGuard>()
+            .first;
+        if (!exampleDefaultGuard.value) {
+          guardedRouteSettings = settings;
+          return onGenerateRoute(
+            RouteSettings(
+              arguments: settings.arguments,
+              name: exampleDefaultGuard.alternativeRoute,
+            ),
+          );
+        }
+        return NativeRouteAnimation<void>(
+          builder: (_) => RouteNameWithArguments(
+            id: queryParameters['id'] ?? arguments['id'] as String,
+            model: queryParameters['model'] != null
+                ? CustomModel.fromJson(
+                    jsonDecode(
+                      utf8.decode(base64Decode(queryParameters['model']!)),
+                    ),
+                  )
+                : arguments['model'] as CustomModel?,
+            name: queryParameters['name'] ?? arguments['name'] as String?,
+            age: queryParameters['age'] != null
+                ? int.parse(queryParameters['age']!)
+                : arguments['age'] as int?,
+          ),
+          settings: settings,
+          fullscreenDialog: false,
+        );
+      }
+    }
+    if (pathSegments.length == 5) {
+      if (pathSegments[0] == 'home' && pathSegments[2] == 'example') {
+        queryParameters['id'] = pathSegments[1];
+        queryParameters['exampleEnum'] = pathSegments[3];
+        queryParameters['age'] = pathSegments[4];
+        final exampleDefaultGuard = guards
+            .whereType<ExampleDefaultGuard>()
+            .first;
+        if (!exampleDefaultGuard.value) {
+          guardedRouteSettings = settings;
+          return onGenerateRoute(
+            RouteSettings(
+              arguments: settings.arguments,
+              name: exampleDefaultGuard.alternativeRoute,
+            ),
+          );
+        }
+        return NativeRouteAnimation<void>(
+          builder: (_) => RouteNameWithArguments2(
+            id: queryParameters['id'] ?? arguments['id'] as String,
+            exampleEnum: queryParameters['exampleEnum'] != null
+                ? ExampleEnum.values[int.parse(queryParameters['exampleEnum']!)]
+                : arguments['exampleEnum'] as ExampleEnum,
+            exampleEnum2: queryParameters['exampleEnum2'] != null
+                ? ExampleEnum.values[int.parse(
+                    queryParameters['exampleEnum2']!,
+                  )]
+                : arguments['exampleEnum2'] as ExampleEnum,
+            name: queryParameters['name'] ?? arguments['name'] as String?,
+            age: queryParameters['age'] != null
+                ? int.parse(queryParameters['age']!)
+                : arguments['age'] as int?,
+            exampleEnum3: queryParameters['exampleEnum3'] != null
+                ? ExampleEnum.values[int.parse(
+                    queryParameters['exampleEnum3']!,
+                  )]
+                : arguments['exampleEnum3'] as ExampleEnum?,
+            exampleEnums4: queryParameters['exampleEnums4'] != null
+                ? (jsonDecode(
+                            utf8.decode(
+                              base64Decode(queryParameters['exampleEnums4']!),
+                            ),
+                          )
+                          as List<dynamic>)
+                      .map((e) => ExampleEnum.values[e])
+                      .toList()
+                : arguments['exampleEnums4'] as List<ExampleEnum>?,
+            exampleEnumsMap5: queryParameters['exampleEnumsMap5'] != null
+                ? Map<String, ExampleEnum>.from(
+                    jsonDecode(
+                      utf8.decode(
+                        base64Decode(queryParameters['exampleEnumsMap5']!),
+                      ),
+                    ).map((k, v) => MapEntry(k, ExampleEnum.values[v])),
+                  )
+                : arguments['exampleEnumsMap5'] as Map<String, ExampleEnum>?,
+          ),
+          settings: settings,
+          fullscreenDialog: false,
+        );
+      }
+    }
+    if (pathSegments.length == 4) {
+      if (pathSegments[0] == 'parent' &&
+          pathSegments[1] == 'depth0' &&
+          pathSegments[2] == 'week') {
+        queryParameters['week'] = pathSegments[3];
+        final exampleDefaultGuard = guards
+            .whereType<ExampleDefaultGuard>()
+            .first;
+        if (!exampleDefaultGuard.value) {
+          guardedRouteSettings = settings;
+          return onGenerateRoute(
+            RouteSettings(
+              arguments: settings.arguments,
+              name: exampleDefaultGuard.alternativeRoute,
+            ),
+          );
+        }
+        return NativeRouteAnimation<void>(
+          builder: (_) => Depth1Page(
+            week: queryParameters['week'] != null
+                ? int.parse(queryParameters['week']!)
+                : arguments['week'] as int,
+          ),
+          settings: settings,
+          fullscreenDialog: false,
+        );
+      }
+    }
+    return NativeRouteAnimation<void>(
+      builder: (_) => Error404(),
+      settings: settings,
+      fullscreenDialog: false,
+    );
+  }
+
+  /// Update a specific guard, useful for events (for example after login/logout)
+  Future<void> updateGuard<T extends NavigatorGuard>() =>
+      guards.whereType<T>().first.updateValue();
+
+  /// Update all guards, useful for web apps. Add to main file so it's called when navigating manually
+  Future<void> updateGuards() =>
+      Future.wait(guards.map((e) => e.updateValue()));
+
+  /// Continues navigation. A guard will reroute navigation to a page. Call this method to continue navigation after the guard has rerouted
+  ///
+  /// Example:
+  /// ```dart
+  /// Future<void> login(details) async {
+  ///  ...do login
+  ///  await navigator.updateGuard<LoginGuard>();
+  ///  if (navigator.canContinueNavigation) return navigator.continueNavigation();
+  ///  return navigator.goToHome();
+  /// }
+  /// ```
+  Future<void> continueNavigation() async {
+    final settings = guardedRouteSettings;
+    if (settings == null) return;
+    guardedRouteSettings = null;
+    return navigatorKey.currentState?.pushReplacementNamed<void, dynamic>(
+      settings.name!,
+      arguments: settings.arguments,
+    );
+  }
+
+  /// Whether we can continues navigation. A guard will reroute navigation to a page. Call this method to continue navigation after the guard has rerouted
+  ///
+  /// Example:
+  /// ```dart
+  /// Future<void> login(details) async {
+  ///  ...do login
+  ///  await navigator.updateGuard<LoginGuard>();
+  ///  if (navigator.canContinueNavigation) return navigator.continueNavigation();
+  ///  return navigator.goToHome();
+  /// }
+  /// ```
+  bool canContinueNavigation() => guardedRouteSettings != null;
+  Future<void> customName({
+    required String id,
+    _i1.CustomModel? model,
+    String? name,
+    int? age,
+  }) async => _navigateInMultiPanelOr(
+    () async => navigatorKey.currentState?.pushNamed<dynamic>(
+      Uri(
+        path: RouteNames.homeIdNameNonExistingNameNumber1(id: id, name: name),
+        queryParameters: kIsWeb
+            ? ({
+                'model': model == null
+                    ? null
+                    : base64Encode(utf8.encode(jsonEncode(model))),
+                'age': age?.toString(),
+              }..removeWhere((_, v) => v == null))
+            : null,
+      ).toString(),
+      arguments: {'id': id, 'model': model, 'name': name, 'age': age},
+    ),
+    RouteNames.homeIdNameNonExistingNameNumber1(id: id, name: name),
+    {'id': id, 'model': model, 'name': name, 'age': age},
+  );
+  Future<void> goToRouteNameWithArguments2({
+    required String id,
+    required _i2.ExampleEnum exampleEnum,
+    required _i2.ExampleEnum exampleEnum2,
+    String? name,
+    int? age,
+    _i2.ExampleEnum? exampleEnum3,
+    List<_i2.ExampleEnum>? exampleEnums4,
+    Map<String, _i2.ExampleEnum>? exampleEnumsMap5,
+  }) async => _navigateInMultiPanelOr(
+    () async => navigatorKey.currentState?.pushNamed<dynamic>(
+      Uri(
+        path: RouteNames.homeIdExampleExampleEnumAge(
+          id: id,
+          exampleEnum: exampleEnum.index.toString(),
+          age: age?.toString(),
+        ),
+        queryParameters: kIsWeb
+            ? ({
+                'exampleEnum2': exampleEnum2.index.toString(),
+                'name': name,
+                'exampleEnum3': exampleEnum3?.index.toString(),
+                'exampleEnums4': base64Encode(
+                  utf8.encode(
+                    jsonEncode(exampleEnums4?.map((e) => e.index).toList()),
+                  ),
+                ),
+                'exampleEnumsMap5': base64Encode(
+                  utf8.encode(
+                    jsonEncode(
+                      exampleEnumsMap5?.map((k, v) => MapEntry(k, v.index)),
+                    ),
+                  ),
+                ),
+              }..removeWhere((_, v) => v == null))
+            : null,
+      ).toString(),
+      arguments: {
+        'id': id,
+        'exampleEnum': exampleEnum,
+        'exampleEnum2': exampleEnum2,
+        'name': name,
+        'age': age,
+        'exampleEnum3': exampleEnum3,
+        'exampleEnums4': exampleEnums4,
+        'exampleEnumsMap5': exampleEnumsMap5,
+      },
+    ),
+    RouteNames.homeIdExampleExampleEnumAge(
+      id: id,
+      exampleEnum: exampleEnum.index.toString(),
+      age: age?.toString(),
+    ),
+    {
+      'id': id,
+      'exampleEnum': exampleEnum,
+      'exampleEnum2': exampleEnum2,
+      'name': name,
+      'age': age,
+      'exampleEnum3': exampleEnum3,
+      'exampleEnums4': exampleEnums4,
+      'exampleEnumsMap5': exampleEnumsMap5,
+    },
+  );
+  Future<void> goToExampleScreenWithRequiredArgument({
+    required List<_i1.CustomModel> data,
+  }) async => _navigateInMultiPanelOr(
+    () async => navigatorKey.currentState?.pushNamed<dynamic>(
+      Uri(
+        path: RouteNames.exampleScreenWithRequiredArgument,
+        queryParameters: kIsWeb
+            ? {'data': base64Encode(utf8.encode(jsonEncode(data)))}
+            : null,
+      ).toString(),
+      arguments: {'data': data},
+    ),
+    RouteNames.exampleScreenWithRequiredArgument,
+    {'data': data},
+  );
+  Future<void> goToGuardExampleHome() async => _navigateInMultiPanelOr(
+    () async => navigatorKey.currentState?.pushNamed<dynamic>(
+      RouteNames.guardExampleHome,
+      arguments: {},
+    ),
+    RouteNames.guardExampleHome,
+    {},
+  );
+  Future<void> goToLoggedInPage() async => _navigateInMultiPanelOr(
+    () async => navigatorKey.currentState?.pushNamed<dynamic>(
+      RouteNames.loggedInPage,
+      arguments: {},
+    ),
+    RouteNames.loggedInPage,
+    {},
+  );
+  Future<String?> goToDepth3PageBreakfast({
+    required int week,
+    required int day,
+  }) async {
+    final dynamic result = await _navigateInMultiPanelOr(
+      () async => navigatorKey.currentState?.pushNamed<dynamic>(
+        RouteNames.depth3PageBreakfast(
+          week: week.toString(),
+          day: day.toString(),
+        ),
+        arguments: {'week': week, 'day': day},
+      ),
+      RouteNames.depth3PageBreakfast(
+        week: week.toString(),
+        day: day.toString(),
+      ),
+      {'week': week, 'day': day},
+    );
+    return (result as String?);
+  }
+
+  Future<String?> goToDepth3PageLunch({
+    required int week,
+    required int day,
+  }) async {
+    final dynamic result = await _navigateInMultiPanelOr(
+      () async => navigatorKey.currentState?.pushNamed<dynamic>(
+        RouteNames.depth3PageLunch(week: week.toString(), day: day.toString()),
+        arguments: {'week': week, 'day': day},
+      ),
+      RouteNames.depth3PageLunch(week: week.toString(), day: day.toString()),
+      {'week': week, 'day': day},
+    );
+    return (result as String?);
+  }
+
+  Future<String?> goToDepth3PageDinner({
+    required int week,
+    required int day,
+  }) async {
+    final dynamic result = await _navigateInMultiPanelOr(
+      () async => navigatorKey.currentState?.pushNamed<dynamic>(
+        RouteNames.depth3PageDinner(week: week.toString(), day: day.toString()),
+        arguments: {'week': week, 'day': day},
+      ),
+      RouteNames.depth3PageDinner(week: week.toString(), day: day.toString()),
+      {'week': week, 'day': day},
+    );
+    return (result as String?);
+  }
+
+  Future<void> goToDepth2Page({required int day, required int week}) async =>
+      _navigateInMultiPanelOr(
+        () async => navigatorKey.currentState?.pushNamed<dynamic>(
+          RouteNames.dayDay(week: week.toString(), day: day.toString()),
+          arguments: {'day': day, 'week': week},
+        ),
+        RouteNames.dayDay(week: week.toString(), day: day.toString()),
+        {'day': day, 'week': week},
+      );
+  Future<void> goToDepth1Page({required int week}) async =>
+      _navigateInMultiPanelOr(
+        () async => navigatorKey.currentState?.pushNamed<dynamic>(
+          RouteNames.weekWeek(week: week.toString()),
+          arguments: {'week': week},
+        ),
+        RouteNames.weekWeek(week: week.toString()),
+        {'week': week},
+      );
+  Future<void> goToParentPage() async => _navigateInMultiPanelOr(
+    () async => navigatorKey.currentState?.pushNamed<dynamic>(
+      RouteNames.parentPage,
+      arguments: {},
+    ),
+    RouteNames.parentPage,
+    {},
+  );
+  Future<void> goToDepth0Page() async => _navigateInMultiPanelOr(
+    () async => navigatorKey.currentState?.pushNamed<dynamic>(
+      RouteNames.depth0Page,
+      arguments: {},
+    ),
+    RouteNames.depth0Page,
+    {},
+  );
+  Future<void> goToMyHomePage({String? title, _i3.Key? key}) async =>
+      _navigateInMultiPanelOr(
+        () async => navigatorKey.currentState?.pushNamed<dynamic>(
+          Uri(
+            path: RouteNames.myHomePage,
+            queryParameters: kIsWeb
+                ? ({
+                    'page_title': title,
+                    'key': key == null
+                        ? null
+                        : base64Encode(utf8.encode(jsonEncode(key))),
+                  }..removeWhere((_, v) => v == null))
+                : null,
+          ).toString(),
+          arguments: {'title': title, 'key': key},
+        ),
+        RouteNames.myHomePage,
+        {'title': title, 'key': key},
+      );
+  void goToHomePageWithPathParameter({String? title, _i3.Key? key}) =>
+      _navigateInMultiPanelOr(
+        () async => navigatorKey.currentState?.pushNamedAndRemoveUntil<dynamic>(
+          Uri(
+            path: RouteNames.myHomePagePopAll,
+            queryParameters: kIsWeb
+                ? ({
+                    'page_title': title,
+                    'key': key == null
+                        ? null
+                        : base64Encode(utf8.encode(jsonEncode(key))),
+                  }..removeWhere((_, v) => v == null))
+                : null,
+          ).toString(),
+          (_) => false,
+          arguments: {'title': title, 'key': key},
+        ),
+        RouteNames.myHomePagePopAll,
+        {'title': title, 'key': key},
+      );
+  Future<bool?> goToSecondPage() async {
+    final dynamic result = await _navigateInMultiPanelOr(
+      () async => navigatorKey.currentState?.pushNamed<dynamic>(
+        RouteNames.secondPage,
+        arguments: {},
+      ),
+      RouteNames.secondPage,
+      {},
+    );
+    return (result as bool?);
+  }
+
+  Future<bool?> popAndGoToSecondPage() async {
+    final dynamic result = await _navigateInMultiPanelOr(
+      () async => navigatorKey.currentState?.popAndPushNamed<dynamic, dynamic>(
+        RouteNames.secondPage,
+        arguments: {},
+      ),
+      RouteNames.secondPage,
+      {},
+    );
+    return (result as bool?);
+  }
+
+  Future<void> goToAllTypesExample({
+    required String nonNullableString,
+    required int nonNullableInt,
+    required bool nonNullableBool,
+    required double nonNullableDouble,
+    required List<String> nonNullableList,
+    required Map<String, String> nonNullableMap,
+    required _i1.CustomModel nonNullableCustomModel,
+    required _i2.ExampleEnum nonNullableEnum,
+    String? nullableString,
+    int? nullableInt,
+    bool? nullableBool,
+    double? nullableDouble,
+    _i2.ExampleEnum? nullableEnum,
+    List<String>? nullableList,
+    Map<String, String>? nullableMap,
+    _i1.CustomModel? nullableCustomModel,
+    String nonNullableStringWithDefaultValue = 'default',
+    int nonNullableIntWithDefaultValue = 42,
+    bool nonNullableBoolWithDefaultValue = true,
+    double nonNullableDoubleWithDefaultValue = 3.14,
+    _i2.ExampleEnum nonNullableEnumWithDefaultValue = ExampleEnum.first,
+    List<String> nonNullableListWithDefaultValue = const ['default'],
+    Map<String, String> nonNullableMapWithDefaultValue = const {
+      'default': 'default',
+    },
+    _i1.CustomModel nonNullableCustomModelWithDefaultValue = const CustomModel(
+      'default',
+      0,
+    ),
+    _i1.CustomModel nonNullableCustomModelWithDefaultValue2 =
+        CustomModel.testDefault,
+  }) async => _navigateInMultiPanelOr(
+    () async => navigatorKey.currentState?.pushNamed<dynamic>(
+      Uri(
+        path: RouteNames.allTypesExample,
+        queryParameters: kIsWeb
+            ? ({
+                'nonNullableString': nonNullableString,
+                'nonNullableInt': nonNullableInt.toString(),
+                'nonNullableBool': nonNullableBool.toString(),
+                'nonNullableDouble': nonNullableDouble.toString(),
+                'nonNullableList': base64Encode(
+                  utf8.encode(jsonEncode(nonNullableList)),
+                ),
+                'nonNullableMap': base64Encode(
+                  utf8.encode(jsonEncode(nonNullableMap)),
+                ),
+                'nonNullableCustomModel': base64Encode(
+                  utf8.encode(jsonEncode(nonNullableCustomModel)),
+                ),
+                'nonNullableEnum': nonNullableEnum.index.toString(),
+                'nullableString': nullableString,
+                'nullableInt': nullableInt?.toString(),
+                'nullableBool': nullableBool?.toString(),
+                'nullableDouble': nullableDouble?.toString(),
+                'nullableEnum': nullableEnum?.index.toString(),
+                'nullableList': base64Encode(
+                  utf8.encode(jsonEncode(nullableList)),
+                ),
+                'nullableMap': base64Encode(
+                  utf8.encode(jsonEncode(nullableMap)),
+                ),
+                'nullableCustomModel': nullableCustomModel == null
+                    ? null
+                    : base64Encode(
+                        utf8.encode(jsonEncode(nullableCustomModel)),
+                      ),
+                'nonNullableStringWithDefaultValue':
+                    nonNullableStringWithDefaultValue,
+                'nonNullableIntWithDefaultValue': nonNullableIntWithDefaultValue
+                    .toString(),
+                'nonNullableBoolWithDefaultValue':
+                    nonNullableBoolWithDefaultValue.toString(),
+                'nonNullableDoubleWithDefaultValue':
+                    nonNullableDoubleWithDefaultValue.toString(),
+                'nonNullableEnumWithDefaultValue':
+                    nonNullableEnumWithDefaultValue.index.toString(),
+                'nonNullableListWithDefaultValue': base64Encode(
+                  utf8.encode(jsonEncode(nonNullableListWithDefaultValue)),
+                ),
+                'nonNullableMapWithDefaultValue': base64Encode(
+                  utf8.encode(jsonEncode(nonNullableMapWithDefaultValue)),
+                ),
+                'nonNullableCustomModelWithDefaultValue': base64Encode(
+                  utf8.encode(
+                    jsonEncode(nonNullableCustomModelWithDefaultValue),
+                  ),
+                ),
+                'nonNullableCustomModelWithDefaultValue2': base64Encode(
+                  utf8.encode(
+                    jsonEncode(nonNullableCustomModelWithDefaultValue2),
+                  ),
+                ),
+              }..removeWhere((_, v) => v == null))
+            : null,
+      ).toString(),
+      arguments: {
+        'nonNullableString': nonNullableString,
+        'nonNullableInt': nonNullableInt,
+        'nonNullableBool': nonNullableBool,
+        'nonNullableDouble': nonNullableDouble,
+        'nonNullableList': nonNullableList,
+        'nonNullableMap': nonNullableMap,
+        'nonNullableCustomModel': nonNullableCustomModel,
+        'nonNullableEnum': nonNullableEnum,
+        'nullableString': nullableString,
+        'nullableInt': nullableInt,
+        'nullableBool': nullableBool,
+        'nullableDouble': nullableDouble,
+        'nullableEnum': nullableEnum,
+        'nullableList': nullableList,
+        'nullableMap': nullableMap,
+        'nullableCustomModel': nullableCustomModel,
+        'nonNullableStringWithDefaultValue': nonNullableStringWithDefaultValue,
+        'nonNullableIntWithDefaultValue': nonNullableIntWithDefaultValue,
+        'nonNullableBoolWithDefaultValue': nonNullableBoolWithDefaultValue,
+        'nonNullableDoubleWithDefaultValue': nonNullableDoubleWithDefaultValue,
+        'nonNullableEnumWithDefaultValue': nonNullableEnumWithDefaultValue,
+        'nonNullableListWithDefaultValue': nonNullableListWithDefaultValue,
+        'nonNullableMapWithDefaultValue': nonNullableMapWithDefaultValue,
+        'nonNullableCustomModelWithDefaultValue':
+            nonNullableCustomModelWithDefaultValue,
+        'nonNullableCustomModelWithDefaultValue2':
+            nonNullableCustomModelWithDefaultValue2,
+      },
+    ),
+    RouteNames.allTypesExample,
+    {
+      'nonNullableString': nonNullableString,
+      'nonNullableInt': nonNullableInt,
+      'nonNullableBool': nonNullableBool,
+      'nonNullableDouble': nonNullableDouble,
+      'nonNullableList': nonNullableList,
+      'nonNullableMap': nonNullableMap,
+      'nonNullableCustomModel': nonNullableCustomModel,
+      'nonNullableEnum': nonNullableEnum,
+      'nullableString': nullableString,
+      'nullableInt': nullableInt,
+      'nullableBool': nullableBool,
+      'nullableDouble': nullableDouble,
+      'nullableEnum': nullableEnum,
+      'nullableList': nullableList,
+      'nullableMap': nullableMap,
+      'nullableCustomModel': nullableCustomModel,
+      'nonNullableStringWithDefaultValue': nonNullableStringWithDefaultValue,
+      'nonNullableIntWithDefaultValue': nonNullableIntWithDefaultValue,
+      'nonNullableBoolWithDefaultValue': nonNullableBoolWithDefaultValue,
+      'nonNullableDoubleWithDefaultValue': nonNullableDoubleWithDefaultValue,
+      'nonNullableEnumWithDefaultValue': nonNullableEnumWithDefaultValue,
+      'nonNullableListWithDefaultValue': nonNullableListWithDefaultValue,
+      'nonNullableMapWithDefaultValue': nonNullableMapWithDefaultValue,
+      'nonNullableCustomModelWithDefaultValue':
+          nonNullableCustomModelWithDefaultValue,
+      'nonNullableCustomModelWithDefaultValue2':
+          nonNullableCustomModelWithDefaultValue2,
+    },
+  );
+  Future<void> showDialogExampleDialog({required String text}) async =>
+      showCustomDialog<dynamic>(widget: _i4.ExampleDialog(text: text));
+  Future<void> showSheetRecursiveNavigationBottomSheet({
+    int layers = 1,
+  }) async => showBottomSheet<dynamic>(
+    widget: _i4.RecursiveNavigationBottomSheet(layers: layers),
+  );
+  void goBack() => _popMultiPanelOr(() => navigatorKey.currentState?.pop());
+  void goBackWithResult<T>({T? result}) =>
+      _popMultiPanelOr(() => navigatorKey.currentState?.pop(result), result);
+  void popUntil(bool Function(Route<dynamic>) predicate) =>
+      navigatorKey.currentState?.popUntil(predicate);
+  void goBackTo(String routeName) =>
+      popUntil((route) => route.settings.name?.split('?').first == routeName);
+  Future<T?> showCustomDialog<T>({Widget? widget}) async => showDialog<T>(
+    context: navigatorKey.currentContext!,
+    builder: (_) => widget ?? const SizedBox.shrink(),
+  );
+  Future<T?> showBottomSheet<T>({Widget? widget}) async =>
+      showModalBottomSheet<T>(
+        context: navigatorKey.currentContext!,
+        builder: (_) => widget ?? const SizedBox.shrink(),
+      );
+}
+mixin MultiPanelListener {
+  void addPanel(Widget route, String routeName, ValueChanged onPop);
+  bool removePanel(dynamic result);
+}
+
+class _MultiPanelItem {
+  _MultiPanelItem({
+    required this.route,
+    required this.routeName,
+    required this.onPop,
+  });
+
+  final Widget route;
+
+  final String routeName;
+
+  final void Function(dynamic) onPop;
+}
+
+extension I<T> on Iterable<T> {
+  bool startsWith(Iterable<T> other) {
+    for (final (i, element) in indexed) {
+      if (i >= other.length) return true;
+      if (element != other.elementAt(i)) return false;
+    }
+    return false;
+  }
+}
+
+/// Use this widget to implement multi panels
+/// on a screen. You will need to implement your
+/// own builder, see GitHub for an example
+/// https://github.com/ikbendewilliam/flutter_navigation_generator/tree/main/flutter_navigation_generator/example/lib/multi_panel
+/// One of the most basic implementations is as follows:
+/// ```dart
+/// builder: (screens) => Row(
+/// children: screens
+///     .map(
+///       (e) => Expanded(
+///         child: e ?? const SizedBox(),
+///       ),
+///     )
+///     .toList(),
+/// ```
+class MultiPanelNavigator extends StatefulWidget {
+  /// Use this widget to implement multi panels
+  /// on a screen. You will need to implement your
+  /// own builder, see GitHub for an example
+  /// https://github.com/ikbendewilliam/flutter_navigation_generator/tree/main/flutter_navigation_generator/example/lib/multi_panel
+  /// One of the most basic implementations is as follows:
+  /// ```dart
+  /// builder: (screens) => Row(
+  /// children: screens
+  ///     .map(
+  ///       (e) => Expanded(
+  ///         child: e ?? const SizedBox(),
+  ///       ),
+  ///     )
+  ///     .toList(),
+  /// ```
+  const MultiPanelNavigator({
+    required this.navigator,
+    required this.parentRoute,
+    required this.panels,
+    required this.builder,
+    super.key,
+  });
+
+  final BaseNavigator navigator;
+
+  final String parentRoute;
+
+  final int panels;
+
+  final Widget Function(List<Widget?> screens) builder;
+
+  @override
+  State<MultiPanelNavigator> createState() => MultiPanelNavigatorState();
+}
+
+class MultiPanelNavigatorState extends State<MultiPanelNavigator>
+    with MultiPanelListener {
+  final List<_MultiPanelItem> _navigationStack = <_MultiPanelItem>[];
+
+  @override
+  void initState() {
+    super.initState();
+    widget.navigator.registerMultiPanel(
+      screen: widget.parentRoute,
+      listener: this,
+    );
+  }
+
+  @override
+  void dispose() {
+    widget.navigator.removePanel(this);
+    super.dispose();
+  }
+
+  @override
+  void addPanel(Widget route, String routeName, ValueChanged onPop) {
+    final splittedRouteName = routeName.split('/');
+    final firstDifferentIndex = _navigationStack.indexWhere((r) {
+      return !splittedRouteName.startsWith(r.routeName.split('/'));
+    });
+    if (firstDifferentIndex != -1) {
+      _navigationStack.removeRange(
+        firstDifferentIndex,
+        _navigationStack.length,
+      );
+    }
+    _navigationStack.add(
+      _MultiPanelItem(route: route, routeName: routeName, onPop: onPop),
+    );
+    setState(() {});
+  }
+
+  @override
+  bool removePanel(dynamic result) {
+    if (_navigationStack.isEmpty) return false;
+    final screen = _navigationStack.removeLast();
+    screen.onPop(result);
+    if (_navigationStack.isEmpty) return false;
+    setState(() {});
+    return true;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final renderStack =
+        _navigationStack.length <= widget.panels
+              ? _navigationStack.cast<_MultiPanelItem?>().toList()
+              : _navigationStack
+                    .cast<_MultiPanelItem?>()
+                    .skip(_navigationStack.length - widget.panels)
+                    .toList()
+          ..addAll([
+            for (var i = 0; i < widget.panels - _navigationStack.length; i++)
+              null,
+          ]);
+    return widget.builder(renderStack.map<Widget?>((e) => e?.route).toList());
+  }
+}
+
+class RouteNames {
+  /// /example-screen-with-required-argument
+  static const exampleScreenWithRequiredArgument =
+      '/example-screen-with-required-argument';
+
+  /// /guard-example-home
+  static const guardExampleHome = '/guard-example-home';
+
+  /// /error-not-logged-in
+  static const errorNotLoggedIn = '/error-not-logged-in';
+
+  /// /logged-in
+  static const loggedInPage = '/logged-in';
+
+  /// /parent
+  static const parentPage = '/parent';
+
+  /// /parent/depth0
+  static const depth0Page = '/parent/depth0';
+
+  /// /
+  static const myHomePage = '/';
+
+  /// /my-home-page-pop-all/
+  static const myHomePagePopAll = '/my-home-page-pop-all/';
+
+  /// /second
+  static const secondPage = '/second';
+
+  /// /all-types-example
+  static const allTypesExample = '/all-types-example';
+
+  /// /404
+  static const r404 = '/404';
+
+  /// /home/:id/:name/:nonExistingName/number1/
+  static String homeIdNameNonExistingNameNumber1({
+    required String id,
+    String? name,
+    String? nonExistingName,
+  }) => '/home/$id/$name/$nonExistingName/number1/';
+
+  /// /home/:id/example/:exampleEnum/:age
+  static String homeIdExampleExampleEnumAge({
+    required String id,
+    required String exampleEnum,
+    String? age,
+  }) => '/home/$id/example/$exampleEnum/$age';
+
+  /// /parent/depth0/week/:week/day/:day/depth3-page-breakfast
+  static String depth3PageBreakfast({
+    required String week,
+    required String day,
+  }) => '/parent/depth0/week/$week/day/$day/depth3-page-breakfast';
+
+  /// /parent/depth0/week/:week/day/:day/depth3-page-lunch
+  static String depth3PageLunch({required String week, required String day}) =>
+      '/parent/depth0/week/$week/day/$day/depth3-page-lunch';
+
+  /// /parent/depth0/week/:week/day/:day/depth3-page-dinner
+  static String depth3PageDinner({required String week, required String day}) =>
+      '/parent/depth0/week/$week/day/$day/depth3-page-dinner';
+
+  /// /parent/depth0/week/:week/day/:day
+  static String dayDay({required String week, required String day}) =>
+      '/parent/depth0/week/$week/day/$day';
+
+  /// /parent/depth0/week/:week
+  static String weekWeek({required String week}) => '/parent/depth0/week/$week';
+}

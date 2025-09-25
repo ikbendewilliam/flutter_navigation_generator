@@ -1,7 +1,9 @@
 import 'dart:convert';
 
+import 'package:collection/collection.dart';
 import 'package:flutter_navigation_generator/src/models/importable_type.dart';
 import 'package:flutter_navigation_generator/src/models/route_field_config.dart';
+import 'package:flutter_navigation_generator/src/utils/case_utils.dart';
 import 'package:flutter_navigation_generator_annotations/flutter_navigation_generator_annotations.dart';
 
 class RouteConfig {
@@ -14,6 +16,7 @@ class RouteConfig {
   final String methodName;
   final String constructorName;
   final ImportableType routeWidget;
+  final List<ImportableType>? children;
   final ImportableType? returnType;
   final ImportableType? pageType;
   final NavigationType navigationType;
@@ -22,7 +25,14 @@ class RouteConfig {
   final Map<String, dynamic> defaultValues;
   final IncludeQueryParametersType? includeQueryParameters;
 
-  bool get routeNameContainsParameters => routeName.contains(':');
+  String fullRouteName(Iterable<RouteConfig> routes, List<String> removeSuffixes) {
+    final parents = routes.where((element) => element.children?.any((r) => r.className == routeWidget.className) ?? false);
+    final parentScreenRouteName = parents.firstOrNull?.fullRouteName(routes, removeSuffixes);
+    var routeNameSuffixless = routeNameIsDefinedByAnnotation ? routeName : CaseUtil(routeName, removeSuffixes: removeSuffixes).textWithoutSuffix;
+    routeNameSuffixless = routeNameSuffixless.startsWith('/') ? routeNameSuffixless : '/$routeNameSuffixless';
+    if (parentScreenRouteName == null) return routeNameSuffixless;
+    return "${parentScreenRouteName.startsWith('/') ? '' : '/'}$parentScreenRouteName$routeNameSuffixless";
+  }
 
   RouteConfig({
     required this.routeWidget,
@@ -35,6 +45,7 @@ class RouteConfig {
     this.generateMethod = true,
     this.routeNameIsDefinedByAnnotation = false,
     this.methodNameIsDefinedByAnnotation = false,
+    this.children,
     this.returnType,
     this.navigationType = NavigationType.push,
     this.parameters = const [],
@@ -53,6 +64,7 @@ class RouteConfig {
       'methodName': methodName,
       'routeNameIsDefinedByAnnotation': routeNameIsDefinedByAnnotation,
       'methodNameIsDefinedByAnnotation': methodNameIsDefinedByAnnotation,
+      'children': children?.map((x) => x.toMap()).toList(),
       'returnType': returnType?.toMap(),
       'pageType': pageType?.toMap(),
       'routeWidget': routeWidget.toMap(),
@@ -72,49 +84,33 @@ class RouteConfig {
       constructorName: map['constructorName'] ?? '',
       routeName: map['routeName'] ?? '',
       methodName: map['methodName'] ?? '',
-      routeNameIsDefinedByAnnotation:
-          map['routeNameIsDefinedByAnnotation'] ?? '',
-      methodNameIsDefinedByAnnotation:
-          map['methodNameIsDefinedByAnnotation'] ?? '',
+      routeNameIsDefinedByAnnotation: map['routeNameIsDefinedByAnnotation'] ?? '',
+      methodNameIsDefinedByAnnotation: map['methodNameIsDefinedByAnnotation'] ?? '',
       routeWidget: ImportableType.fromMap(map['routeWidget']),
-      returnType:
-          map['returnType'] != null
-              ? ImportableType.fromMap(map['returnType'])
-              : null,
-      pageType:
-          map['pageType'] != null
-              ? ImportableType.fromMap(map['pageType'])
-              : null,
+      children: map['children'] == null ? null : List<ImportableType>.from(map['children'].map((dynamic x) => ImportableType.fromMap(x as Map<String, dynamic>)) as Iterable),
+      returnType: map['returnType'] != null ? ImportableType.fromMap(map['returnType']) : null,
+      pageType: map['pageType'] != null ? ImportableType.fromMap(map['pageType']) : null,
       navigationType: NavigationType.values[map['navigationType']],
-      parameters: List<RouteFieldConfig>.from(
-        map['parameters']?.map(
-              (dynamic x) =>
-                  RouteFieldConfig.fromMap(x as Map<String, dynamic>),
-            )
-            as Iterable,
-      ),
-      guards:
-          map['guards'] == null
-              ? null
-              : List<ImportableType>.from(
-                map['guards'].map(
-                      (dynamic x) =>
-                          ImportableType.fromMap(x as Map<String, dynamic>),
-                    )
-                    as Iterable,
-              ),
-      defaultValues:
-          map['defaultValues'] as Map<String, dynamic>? ?? <String, dynamic>{},
-      includeQueryParameters:
-          map['includeQueryParameters'] == null
-              ? null
-              : IncludeQueryParametersType
-                  .values[map['includeQueryParameters']],
+      parameters: List<RouteFieldConfig>.from(map['parameters']?.map((dynamic x) => RouteFieldConfig.fromMap(x as Map<String, dynamic>)) as Iterable),
+      guards: map['guards'] == null ? null : List<ImportableType>.from(map['guards'].map((dynamic x) => ImportableType.fromMap(x as Map<String, dynamic>)) as Iterable),
+      defaultValues: map['defaultValues'] as Map<String, dynamic>? ?? <String, dynamic>{},
+      includeQueryParameters: map['includeQueryParameters'] == null ? null : IncludeQueryParametersType.values[map['includeQueryParameters']],
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory RouteConfig.fromJson(String source) =>
-      RouteConfig.fromMap(json.decode(source));
+  factory RouteConfig.fromJson(String source) => RouteConfig.fromMap(json.decode(source));
+}
+
+extension ImportableTypeExtension on ImportableType {
+  String fullRouteName(Iterable<RouteConfig> typesConfig, List<String> removeSuffixes) {
+    final config = typesConfig.firstWhereOrNull((element) => element.routeWidget.className == className);
+    if (config == null) return '';
+    final parents = typesConfig.where((element) => element.children?.any((r) => r.className == className) ?? false);
+    final routeName = config.routeNameIsDefinedByAnnotation ? config.routeName : CaseUtil(config.routeName, removeSuffixes: removeSuffixes).textWithoutSuffix;
+    if (parents.isEmpty) return routeName;
+    final divider = routeName.startsWith('/') ? '' : '/';
+    return '${parents.first.fullRouteName(typesConfig, removeSuffixes)}$divider$routeName';
+  }
 }
