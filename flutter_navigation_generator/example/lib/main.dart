@@ -148,7 +148,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             ElevatedButton(
               onPressed: () => mainNavigator.goToParentPage(),
-              child: const Text("Miller columns example"),
+              child: const Text("Multi panels example"),
             ),
             ElevatedButton(
               onPressed: () => mainNavigator.showDialogExampleDialog(

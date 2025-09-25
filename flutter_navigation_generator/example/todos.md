@@ -11,11 +11,11 @@
 - [x] Return correct value
 - [x] Add (basic) animations
 - [x] Add config to disable multipanel
-- [ ] Convert to childPackages
-- [ ] Add multiple routes for same page when multiple parants
+- [x] Convert to children routes
+--Add multiple routes for same page when multiple parents--
 - [ ] Initialroute? Add routename on classes?
 - [/] Rework examples
 - [/] Add example
 - [ ] Add tests
-- [ ] Add documentation
+- [ ] Add documentation (+ Describe children in multiple parents is not supported)
 - [ ] Add more animations?

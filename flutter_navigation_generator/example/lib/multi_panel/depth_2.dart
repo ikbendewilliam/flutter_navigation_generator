@@ -1,12 +1,16 @@
 import 'package:example/main.dart' show mainNavigator;
-import 'package:example/multi_panel/depth_1.dart';
+import 'package:example/multi_panel/depth_3.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_navigation_generator_annotations/flutter_navigation_generator_annotations.dart';
 import 'package:intl/intl.dart';
 
 @FlutterRoute(
-  parentScreen: Depth1Page,
   routeName: 'day/:day',
+  children: [
+    Depth3PageBreakfast,
+    Depth3PageLunch,
+    Depth3PageDinner,
+  ],
 )
 class Depth2Page extends StatefulWidget {
   final int day;

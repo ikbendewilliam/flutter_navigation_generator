@@ -1,11 +1,9 @@
 import 'package:example/main.dart';
-import 'package:example/multi_panel/depth_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_navigation_generator_annotations/flutter_navigation_generator_annotations.dart';
 import 'package:intl/intl.dart';
 
 @FlutterRoute(
-  parentScreen: Depth2Page,
   returnType: String,
 )
 class Depth3PageBreakfast extends StatelessWidget {
@@ -35,7 +33,6 @@ class Depth3PageBreakfast extends StatelessWidget {
 }
 
 @FlutterRoute(
-  parentScreen: Depth2Page,
   returnType: String,
 )
 class Depth3PageLunch extends StatelessWidget {
@@ -65,7 +62,6 @@ class Depth3PageLunch extends StatelessWidget {
 }
 
 @FlutterRoute(
-  parentScreen: Depth2Page,
   returnType: String,
 )
 class Depth3PageDinner extends StatelessWidget {

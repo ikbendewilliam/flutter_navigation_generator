@@ -50,7 +50,7 @@ class FlutterNavigatorGenerator extends GeneratorForAnnotation<FlutterNavigator>
       defaultGuards: defaultGuards,
       ignoreKeysByDefault: ignoreKeysByDefault,
       includeQueryParametersNavigatorConfig: includeQueryParametersNavigatorConfig,
-      createMultipanelNavigation: generateMultiPanelNavigator ?? routes.any((e) => e.parentScreen != null),
+      createMultipanelNavigation: generateMultiPanelNavigator ?? routes.any((e) => e.children != null),
     );
 
     final generatedLib = generator.generate();

@@ -47,7 +47,7 @@ class RouteResolver {
     final methodName = methodNameValue ?? CaseUtil(classElement.displayName).upperCamelCase;
     final returnType = flutterRoute.peek('returnType')?.typeValue;
     final pageType = flutterRoute.peek('pageType')?.typeValue;
-    final parentScreen = flutterRoute.peek('parentScreen')?.typeValue;
+    final children = flutterRoute.peek('children')?.listValue.map((e) => e.toTypeValue()).nonNulls.map(_typeResolver.resolveType).toList();
     final guards = flutterRoute.peek('guards')?.listValue.map((e) => e.toTypeValue()).nonNulls.map(_typeResolver.resolveType).toList();
     final navigationType = NavigationType.values.firstWhere((element) => element.index == flutterRoute.peek('navigationType')?.peek('index')?.intValue);
     final includeQueryParametersIndex = flutterRoute.peek('includeQueryParameters')?.peek('index')?.intValue;
@@ -62,10 +62,6 @@ class RouteResolver {
     if (pageType != null) {
       importablePageType = _typeResolver.resolveType(pageType, forceNullable: true);
     }
-    ImportableType? importableParentScreen;
-    if (parentScreen != null) {
-      importableParentScreen = _typeResolver.resolveType(parentScreen, forceNullable: true);
-    }
 
     final parameters = _routeFieldResolver.resolveFieldsMethod(constructor, classElement);
 
@@ -77,7 +73,7 @@ class RouteResolver {
       guards: guards,
       routeName: routeName,
       methodName: methodName,
-      parentScreen: importableParentScreen,
+      children: children,
       pageType: importablePageType,
       routeNameIsDefinedByAnnotation: routeNameValue != null,
       methodNameIsDefinedByAnnotation: methodNameValue != null,

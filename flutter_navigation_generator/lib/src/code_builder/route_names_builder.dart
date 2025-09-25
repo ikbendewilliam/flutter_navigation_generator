@@ -1,8 +1,8 @@
 import 'package:code_builder/code_builder.dart';
 import 'package:collection/collection.dart';
+import 'package:flutter_navigation_generator/src/extensions/route_config_extension.dart';
 import 'package:flutter_navigation_generator/src/models/route_config.dart';
 import 'package:flutter_navigation_generator/src/utils/case_utils.dart';
-import 'package:flutter_navigation_generator/src/utils/route_config_extension.dart';
 import 'package:flutter_navigation_generator/src/utils/utils.dart';
 import 'package:flutter_navigation_generator_annotations/flutter_navigation_generator_annotations.dart';
 
@@ -20,13 +20,14 @@ class RouteNamesBuilder {
         pageRoutes.remove(pageRoute);
       }
     }
-    final pageRoutesWithParameters = <RouteConfig>[];
-    final pageRoutesWithoutParameters = <RouteConfig>[];
+    final pageRoutesWithParameters = <String, RouteConfig>{};
+    final pageRoutesWithoutParameters = <String, RouteConfig>{};
     for (final pageRoute in pageRoutes) {
-      if (pageRoute.routeNameContainsParameters(routes)) {
-        pageRoutesWithParameters.add(pageRoute);
+      final route = pageRoute.fullRouteName(pageRoutes, removeSuffixes);
+      if (route.parametersFromRouteName.isNotEmpty) {
+        pageRoutesWithParameters.addAll({route: pageRoute});
       } else {
-        pageRoutesWithoutParameters.add(pageRoute);
+        pageRoutesWithoutParameters.addAll({route: pageRoute});
       }
     }
     return Class(
@@ -34,12 +35,12 @@ class RouteNamesBuilder {
           b
             ..name = 'RouteNames'
             ..fields.addAll(
-              pageRoutesWithoutParameters.map((pageRoute) {
-                final url = pageRoute.fullRouteName(routes, removeSuffixes);
+              pageRoutesWithoutParameters.entries.map((entry) {
+                final url = entry.key;
                 return Field(
                   (b) =>
                       b
-                        ..name = pageRoute.asRouteName
+                        ..name = entry.value.asRouteName
                         ..static = true
                         ..docs.add('/// $url')
                         ..modifier = FieldModifier.constant
@@ -48,8 +49,9 @@ class RouteNamesBuilder {
               }),
             )
             ..methods.addAll(
-              pageRoutesWithParameters.map((pageRoute) {
-                final url = pageRoute.fullRouteName(routes, removeSuffixes);
+              pageRoutesWithParameters.entries.map((entry) {
+                final url = entry.key;
+                final pageRoute = entry.value;
                 final parameters =
                     url.parametersFromRouteName.map((parameter) {
                       final argument = pageRoute.parameters.firstWhereOrNull((element) => element.type.name == parameter);

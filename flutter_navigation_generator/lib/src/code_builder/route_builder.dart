@@ -1,10 +1,10 @@
 import 'package:code_builder/code_builder.dart';
 import 'package:flutter_navigation_generator/src/extensions/navigation_type_extension.dart';
+import 'package:flutter_navigation_generator/src/extensions/route_config_extension.dart';
 import 'package:flutter_navigation_generator/src/models/importable_type.dart';
 import 'package:flutter_navigation_generator/src/models/route_config.dart';
 import 'package:flutter_navigation_generator/src/utils/case_utils.dart';
 import 'package:flutter_navigation_generator/src/utils/importable_type_string_converter.dart';
-import 'package:flutter_navigation_generator/src/utils/route_config_extension.dart';
 import 'package:flutter_navigation_generator/src/utils/utils.dart';
 import 'package:flutter_navigation_generator_annotations/flutter_navigation_generator_annotations.dart';
 

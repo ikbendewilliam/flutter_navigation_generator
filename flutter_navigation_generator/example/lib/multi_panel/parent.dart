@@ -1,9 +1,15 @@
+import 'package:example/example.navigator.dart';
 import 'package:example/main.dart';
+import 'package:example/multi_panel/depth_1.dart';
 import 'package:example/multi_panel/parent_navigator_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_navigation_generator_annotations/flutter_navigation_generator_annotations.dart';
 
-@flutterRoute
+@FlutterRoute(
+  children: [
+    Depth0Page,
+  ],
+)
 class ParentPage extends StatefulWidget {
   const ParentPage({super.key});
 
@@ -29,7 +35,7 @@ class _ParentPageState extends State<ParentPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('parent page'),
+        title: const Text('Parent page'),
         leading: IconButton(onPressed: () => mainNavigator.goBack(), icon: const Icon(Icons.arrow_back)),
       ),
       body: Column(
@@ -57,6 +63,7 @@ class _ParentPageState extends State<ParentPage> {
             child: ParentNavigatorWidget(
               panels: _panels,
               navigator: mainNavigator,
+              parentRoute: RouteNames.parentPage,
             ),
           ),
         ],
@@ -66,7 +73,9 @@ class _ParentPageState extends State<ParentPage> {
 }
 
 @FlutterRoute(
-  parentScreen: ParentPage,
+  children: [
+    Depth1Page,
+  ],
 )
 class Depth0Page extends StatelessWidget {
   const Depth0Page({super.key});
@@ -81,7 +90,7 @@ class Depth0Page extends StatelessWidget {
               children: [
                 const Text(
                   '''Welcome to an example of a multipanel navigation.
-The goal is to have multiple panels that work with parentScreens to know whether to add a screen and/or push one away, or to replace one or more screens.
+The goal is to have multiple panels that work with child screens to know whether to add a screen and/or push one away, or to replace one or more screens.
 To make the use case clearer The example shows a menu screen where you can select a week, then select a day, then select breakfast/lunch/dinner and finally see the details for that meal.''',
                 ),
                 ListTile(
@@ -115,6 +124,10 @@ To make the use case clearer The example shows a menu screen where you can selec
                     title: Text('Week $week'),
                   ),
                 ],
+                ElevatedButton(
+                  onPressed: mainNavigator.goBack,
+                  child: const Text('Pop a screen'),
+                ),
               ],
             ),
           ),

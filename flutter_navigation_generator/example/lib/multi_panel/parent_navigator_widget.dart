@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 class ParentNavigatorWidget extends StatefulWidget {
   final int panels;
   final BaseNavigator navigator;
+  final String parentRoute;
 
   const ParentNavigatorWidget({
-    Key? key,
     required this.panels,
     required this.navigator,
-  }) : super(key: key);
+    required this.parentRoute,
+    super.key,
+  });
 
   @override
   State<ParentNavigatorWidget> createState() => _ParentNavigatorWidgetState();
@@ -42,7 +44,7 @@ class _ParentNavigatorWidgetState extends State<ParentNavigatorWidget> {
   @override
   Widget build(BuildContext context) {
     return MultiPanelNavigator(
-      parentRoute: RouteNames.parentPage,
+      parentRoute: widget.parentRoute,
       panels: widget.panels,
       navigator: widget.navigator,
       builder: (screens) {

@@ -1,11 +1,11 @@
 import 'package:example/main.dart';
-import 'package:example/multi_panel/parent.dart';
+import 'package:example/multi_panel/depth_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_navigation_generator_annotations/flutter_navigation_generator_annotations.dart';
 import 'package:intl/intl.dart';
 
 @FlutterRoute(
-  parentScreen: Depth0Page,
+  children: [Depth2Page],
   routeName: 'week/:week',
 )
 class Depth1Page extends StatefulWidget {
