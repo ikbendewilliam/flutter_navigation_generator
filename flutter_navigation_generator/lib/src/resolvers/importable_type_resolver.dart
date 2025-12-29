@@ -1,11 +1,12 @@
-import 'package:analyzer/dart/element/element2.dart';
+
+import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:flutter_navigation_generator/src/models/importable_type.dart';
 import 'package:path/path.dart' as p;
 
 abstract class ImportableTypeResolver {
-  String? resolveImport(Element2 element);
+  String? resolveImport(Element element);
 
   ImportableType resolveType(
     DartType type, {
@@ -16,7 +17,7 @@ abstract class ImportableTypeResolver {
 
   ImportableType resolveFunctionType(
     FunctionType function, [
-    ExecutableElement2? executableElement,
+    ExecutableElement executableElement,
   ]);
 
   static String? relative(String? path, Uri? to) {
@@ -54,14 +55,14 @@ abstract class ImportableTypeResolver {
 }
 
 class ImportableTypeResolverImpl extends ImportableTypeResolver {
-  final List<LibraryElement2> libs;
+  final List<LibraryElement> libs;
 
   ImportableTypeResolverImpl(this.libs);
 
   @override
-  String? resolveImport(Element2? element) {
+  String? resolveImport(Element? element) {
     // return early if source is null or element is a core type
-    if (element?.library2 == null || _isCoreDartType(element)) {
+    if (element?.library == null || _isCoreDartType(element)) {
       return null;
     }
 
@@ -74,26 +75,26 @@ class ImportableTypeResolverImpl extends ImportableTypeResolver {
     return null;
   }
 
-  bool _isCoreDartType(Element2? element) =>
-      element?.library2?.isDartCore ?? false;
+  bool _isCoreDartType(Element? element) =>
+      element?.library?.isDartCore ?? false;
 
   @override
   ImportableType resolveFunctionType(
     FunctionType function, [
-    ExecutableElement2? executableElement,
+    ExecutableElement? executableElement,
   ]) {
     final functionElement =
-        executableElement ?? function.element ?? function.alias?.element2;
+        executableElement ?? function.element ?? function.alias?.element;
     if (functionElement == null) {
       throw 'Can not resolve function type \nTry using an alias e.g typedef MyFunction = ${function.getDisplayString()};';
     }
     final displayName = functionElement.displayName;
     var functionName = displayName;
 
-    Element2 elementToImport = functionElement;
-    var enclosingElement = functionElement.enclosingElement2;
+    Element elementToImport = functionElement;
+    var enclosingElement = functionElement.enclosingElement;
 
-    if (enclosingElement != null && enclosingElement is ClassElement2) {
+    if (enclosingElement != null && enclosingElement is ClassElement) {
       functionName = '${enclosingElement.displayName}.$displayName';
       elementToImport = enclosingElement;
     }
@@ -102,7 +103,7 @@ class ImportableTypeResolverImpl extends ImportableTypeResolver {
       className: functionName,
       import: resolveImport(elementToImport),
       isNullable: function.nullabilitySuffix == NullabilitySuffix.question,
-      isEnum: enclosingElement is EnumElement2,
+      isEnum: enclosingElement is EnumElement,
     );
   }
 
@@ -110,18 +111,18 @@ class ImportableTypeResolverImpl extends ImportableTypeResolver {
     final importableTypes = <ImportableType>[];
     if (typeToCheck is ParameterizedType) {
       for (DartType type in typeToCheck.typeArguments) {
-        if (type.element3 is TypeParameterElement2) {
+        if (type.element is TypeParameterElement) {
           importableTypes.add(const ImportableType(className: 'dynamic'));
         } else {
           importableTypes.add(
             ImportableType(
               className:
-                  type.element3?.displayName.replaceAll('?', '') ??
+                  type.element?.displayName.replaceAll('?', '') ??
                   type.getDisplayString().replaceAll('?', ''),
-              import: resolveImport(type.element3),
+              import: resolveImport(type.element),
               isNullable: type.nullabilitySuffix == NullabilitySuffix.question,
               typeArguments: _resolveTypeArguments(type),
-              isEnum: type.element3 is EnumElement2,
+              isEnum: type.element is EnumElement,
             ),
           );
         }
@@ -139,15 +140,15 @@ class ImportableTypeResolverImpl extends ImportableTypeResolver {
   }) {
     return ImportableType(
       className:
-          type.element3?.displayName ??
+          type.element?.displayName ??
           type.getDisplayString().replaceAll('?', ''),
       name: name,
       isNullable:
           forceNullable || type.nullabilitySuffix == NullabilitySuffix.question,
-      import: resolveImport(type.element3),
+      import: resolveImport(type.element),
       isRequired: isRequired,
       typeArguments: _resolveTypeArguments(type),
-      isEnum: type.element3 is EnumElement2,
+      isEnum: type.element is EnumElement,
     );
   }
 }

@@ -1,5 +1,5 @@
 import 'package:analyzer/dart/constant/value.dart';
-import 'package:analyzer/dart/element/element2.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter_navigation_generator/src/models/importable_type.dart';
 import 'package:flutter_navigation_generator/src/models/route_config.dart';
@@ -20,11 +20,11 @@ class RouteResolver {
   final ImportableTypeResolverImpl _typeResolver;
   final RouteFieldResolver _routeFieldResolver;
 
-  RouteResolver(List<LibraryElement2> libs)
+  RouteResolver(List<LibraryElement> libs)
     : _typeResolver = ImportableTypeResolverImpl(libs),
       _routeFieldResolver = RouteFieldResolver(libs);
 
-  List<RouteConfig> resolve(ClassElement2 classElement) {
+  List<RouteConfig> resolve(ClassElement classElement) {
     final flutterRouteAnnotations = _flutterRouteAnnotationChecker
         .annotationsOf(classElement, throwOnUnresolved: false);
     return flutterRouteAnnotations
@@ -32,13 +32,13 @@ class RouteResolver {
         .toList();
   }
 
-  ExecutableElement2 _resolveConstructorMethod(
-    ClassElement2 classElement,
+  ExecutableElement _resolveConstructorMethod(
+    ClassElement classElement,
     String routeName,
   ) {
-    final possibleFactories = <ExecutableElement2>[
-      ...classElement.methods2.where((method) => method.isStatic),
-      ...classElement.constructors2,
+    final possibleFactories = <ExecutableElement>[
+      ...classElement.methods.where((method) => method.isStatic),
+      ...classElement.constructors,
     ];
 
     final possibleFactoriesWithAnnotations = possibleFactories.asMap().map(
@@ -50,7 +50,7 @@ class RouteResolver {
       ),
     );
 
-    ExecutableElement2? constructor;
+    ExecutableElement? constructor;
     constructor =
         possibleFactoriesWithAnnotations.entries
             .firstWhereOrNull(
@@ -69,11 +69,11 @@ class RouteResolver {
               ),
             )
             ?.key;
-    return constructor ?? classElement.constructors2.first;
+    return constructor ?? classElement.constructors.first;
   }
 
   RouteConfig _resolveRoute(
-    ClassElement2 classElement,
+    ClassElement classElement,
     DartObject flutterRouteAnnotation,
   ) {
     final flutterRoute = ConstantReader(flutterRouteAnnotation);

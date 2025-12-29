@@ -76,7 +76,7 @@ class FlutterNavigatorGenerator
     final generator = LibraryGenerator(
       routes: routes,
       className: navigatorClassName ?? _navigatorClassNameDefault,
-      targetFile: element.library2?.uri,
+      targetFile: element.library?.uri,
       pageType: pageType,
       unknownRoute: unknownRoute,
       removeSuffixes: removeSuffixes,

@@ -1,4 +1,4 @@
-library flutter_navigation_generator_annotations;
+library;
 
 export 'src/flutter_bottom_sheet_annotation.dart';
 export 'src/flutter_dialog_annotation.dart';

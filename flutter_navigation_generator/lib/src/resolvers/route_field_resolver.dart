@@ -1,4 +1,5 @@
-import 'package:analyzer/dart/element/element2.dart';
+
+import 'package:analyzer/dart/element/element.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter_navigation_generator/src/models/importable_type.dart';
 import 'package:flutter_navigation_generator/src/models/route_field_config.dart';
@@ -13,11 +14,11 @@ const TypeChecker _flutterRouteFieldAnnotationChecker = TypeChecker.typeNamed(
 class RouteFieldResolver {
   final ImportableTypeResolverImpl _typeResolver;
 
-  RouteFieldResolver(List<LibraryElement2> libs)
+  RouteFieldResolver(List<LibraryElement> libs)
     : _typeResolver = ImportableTypeResolverImpl(libs);
 
   List<_RawRouteFieldConfig> _resolveConstructorFields(
-    ExecutableElement2 constructor,
+    ExecutableElement constructor,
   ) {
     final constructorParameters = constructor.formalParameters;
 
@@ -52,10 +53,10 @@ class RouteFieldResolver {
   }
 
   List<RouteFieldConfig> resolveFieldsMethod(
-    ExecutableElement2 constructor,
-    ClassElement2 classElement,
+    ExecutableElement constructor,
+    ClassElement classElement,
   ) {
-    final fieldsWithAnnotation = classElement.fields2.asMap().map(
+    final fieldsWithAnnotation = classElement.fields.asMap().map(
       (key, value) => MapEntry(
         value.displayName,
         _flutterRouteFieldAnnotationChecker
