@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:analyzer/dart/element/element2.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
 import 'package:code_builder/code_builder.dart';
 import 'package:flutter_navigation_generator/src/code_builder/library_builder.dart';
@@ -16,7 +16,7 @@ class FlutterNavigatorGenerator
 
   @override
   dynamic generateForAnnotatedElement(
-    Element2 element,
+    Element element,
     ConstantReader annotation,
     BuildStep buildStep,
   ) async {
