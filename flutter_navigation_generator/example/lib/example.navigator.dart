@@ -558,6 +558,7 @@ mixin BaseNavigator {
   /// }
   /// ```
   bool canContinueNavigation() => guardedRouteSettings != null;
+
   Future<void> goToMyHomePage({String? title, _i1.Key? key}) async =>
       navigatorKey.currentState?.pushNamed<dynamic>(
         Uri(
@@ -575,6 +576,7 @@ mixin BaseNavigator {
         ).toString(),
         arguments: {'title': title, 'key': key},
       );
+
   void goToHomePageWithPathParameter({String? title, _i1.Key? key}) =>
       navigatorKey.currentState?.pushNamedAndRemoveUntil<dynamic>(
         Uri(
@@ -593,6 +595,7 @@ mixin BaseNavigator {
         (_) => false,
         arguments: {'title': title, 'key': key},
       );
+
   Future<bool?> goToSecondPage() async {
     final dynamic result = await navigatorKey.currentState?.pushNamed<dynamic>(
       RouteNames.secondPage,
@@ -631,6 +634,7 @@ mixin BaseNavigator {
     ).toString(),
     arguments: {'id': id, 'model': model, 'name': name, 'age': age},
   );
+
   Future<void> goToRouteNameWithArguments2({
     required String id,
     required _i3.ExampleEnum exampleEnum,
@@ -679,6 +683,7 @@ mixin BaseNavigator {
       'exampleEnumsMap5': exampleEnumsMap5,
     },
   );
+
   Future<void> goToExampleScreenWithRequiredArgument({
     required List<_i2.CustomModel> data,
   }) async => navigatorKey.currentState?.pushNamed<dynamic>(
@@ -689,8 +694,10 @@ mixin BaseNavigator {
     ).toString(),
     arguments: {'data': data},
   );
+
   Future<void> goToLoggedInPage() async => navigatorKey.currentState
       ?.pushNamed<dynamic>(RouteNames.loggedInPage, arguments: {});
+
   Future<void> goToFieldValueTests({
     required String nonNullableString,
     required int nonNullableInt,
@@ -809,27 +816,44 @@ mixin BaseNavigator {
           nonNullableCustomModelWithDefaultValue2,
     },
   );
+
   Future<void> showDialogExampleDialog({required String text}) async =>
-      showCustomDialog<dynamic>(widget: _i3.ExampleDialog(text: text));
+      showCustomDialog<dynamic>(
+        widget: _i3.ExampleDialog(text: text),
+        routeName: RouteNames.exampleDialog,
+      );
+
   Future<void> showSheetRecursiveNavigationBottomSheet({
     int layers = 1,
   }) async => showBottomSheet<dynamic>(
     widget: _i3.RecursiveNavigationBottomSheet(layers: layers),
+    routeName: RouteNames.recursiveNavigationBottomSheet,
   );
+
   void goBack() => navigatorKey.currentState?.pop();
+
   void goBackWithResult<T>({T? result}) =>
       navigatorKey.currentState?.pop(result);
+
   void popUntil(bool Function(Route<dynamic>) predicate) =>
       navigatorKey.currentState?.popUntil(predicate);
+
   void goBackTo(String routeName) =>
       popUntil((route) => route.settings.name?.split('?').first == routeName);
-  Future<T?> showCustomDialog<T>({Widget? widget}) async => showDialog<T>(
-    context: navigatorKey.currentContext!,
-    builder: (_) => widget ?? const SizedBox.shrink(),
-  );
-  Future<T?> showBottomSheet<T>({Widget? widget}) async =>
+
+  Future<T?> showCustomDialog<T>({Widget? widget, String? routeName}) async =>
+      showDialog<T>(
+        context: navigatorKey.currentContext!,
+        routeSettings:
+            routeName == null ? null : RouteSettings(name: routeName),
+        builder: (_) => widget ?? const SizedBox.shrink(),
+      );
+
+  Future<T?> showBottomSheet<T>({Widget? widget, String? routeName}) async =>
       showModalBottomSheet<T>(
         context: navigatorKey.currentContext!,
+        routeSettings:
+            routeName == null ? null : RouteSettings(name: routeName),
         builder: (_) => widget ?? const SizedBox.shrink(),
       );
 }
@@ -843,6 +867,13 @@ class RouteNames {
 
   /// /second
   static const secondPage = '/second';
+
+  /// /recursive-navigation-bottom-sheet
+  static const recursiveNavigationBottomSheet =
+      '/recursive-navigation-bottom-sheet';
+
+  /// /example-dialog
+  static const exampleDialog = '/example-dialog';
 
   /// /example-screen-with-required-argument
   static const exampleScreenWithRequiredArgument =
