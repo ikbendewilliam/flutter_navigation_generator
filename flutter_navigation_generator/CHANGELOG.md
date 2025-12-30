@@ -1,3 +1,9 @@
+## 2.2.1 (2025-12-30)
+- Updated dependencies
+- Analyzer to v9
+- Build to v4
+- Flutter Lints to v6
+
 ## 2.2.0 (2025-09-07)
 - Updated dependencies for flutter ^3.29
 
