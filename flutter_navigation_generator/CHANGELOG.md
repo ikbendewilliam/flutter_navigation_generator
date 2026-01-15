@@ -1,3 +1,6 @@
+## 2.2.2 (2025-12-29)
+- Analyzer dependency updated to ^8.0.0
+
 ## 2.2.1 (2025-12-29)
 - Added support for routename in dialogs and sheets
 

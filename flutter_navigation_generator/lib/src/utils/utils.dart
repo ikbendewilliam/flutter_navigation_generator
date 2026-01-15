@@ -1,4 +1,4 @@
-import 'package:analyzer/dart/element/element2.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:code_builder/code_builder.dart';
 import 'package:flutter_navigation_generator/src/models/importable_type.dart';
 import 'package:flutter_navigation_generator/src/resolvers/importable_type_resolver.dart';
@@ -28,11 +28,11 @@ void throwSourceError(String message) {
   throw ("\n${pre.padRight(72, '-')}\n$message\n${''.padRight(72, '-')} \n");
 }
 
-void throwError(String message, {Element2? element}) {
+void throwError(String message, {Element? element}) {
   throw InvalidGenerationSourceError(message, element: element);
 }
 
-void throwIf(bool condition, String message, {Element2? element}) {
+void throwIf(bool condition, String message, {Element? element}) {
   if (condition) {
     throw InvalidGenerationSourceError(message, element: element);
   }
