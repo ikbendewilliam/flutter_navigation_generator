@@ -313,7 +313,12 @@ class RouteBuilder {
               )
               .call(
                 useNamedWidgetArugment ? [] : [argument],
-                useNamedWidgetArugment ? {'widget': argument} : {},
+                useNamedWidgetArugment
+                    ? {
+                      'widget': argument,
+                      'routeName': Reference('RouteNames.${route.asRouteName}'),
+                    }
+                    : {},
               )
               .code,
     );
@@ -424,7 +429,7 @@ class RouteBuilder {
             ..lambda = true
             ..modifier = MethodModifier.async
             ..types.add(const Reference('T'))
-            ..optionalParameters.add(
+            ..optionalParameters.addAll([
               Parameter(
                 (b) =>
                     b
@@ -432,11 +437,21 @@ class RouteBuilder {
                       ..named = true
                       ..type = const Reference('Widget?'),
               ),
-            )
+              Parameter(
+                (b) =>
+                    b
+                      ..name = 'routeName'
+                      ..named = true
+                      ..type = const Reference('String?'),
+              ),
+            ])
             ..returns = const Reference('Future<T?>')
             ..body =
                 const Reference('showDialog<T>').call([], {
                   'context': const Reference('navigatorKey.currentContext!'),
+                  'routeSettings': const Reference(
+                    'routeName == null ? null : RouteSettings(name: routeName)',
+                  ),
                   'builder': const Reference(
                     '(_) => widget ?? const SizedBox.shrink()',
                   ),
@@ -449,7 +464,7 @@ class RouteBuilder {
             ..lambda = true
             ..modifier = MethodModifier.async
             ..types.add(const Reference('T'))
-            ..optionalParameters.add(
+            ..optionalParameters.addAll([
               Parameter(
                 (b) =>
                     b
@@ -457,11 +472,21 @@ class RouteBuilder {
                       ..named = true
                       ..type = const Reference('Widget?'),
               ),
-            )
+              Parameter(
+                (b) =>
+                    b
+                      ..name = 'routeName'
+                      ..named = true
+                      ..type = const Reference('String?'),
+              ),
+            ])
             ..returns = const Reference('Future<T?>')
             ..body =
                 const Reference('showModalBottomSheet<T>').call([], {
                   'context': const Reference('navigatorKey.currentContext!'),
+                  'routeSettings': const Reference(
+                    'routeName == null ? null : RouteSettings(name: routeName)',
+                  ),
                   'builder': const Reference(
                     '(_) => widget ?? const SizedBox.shrink()',
                   ),

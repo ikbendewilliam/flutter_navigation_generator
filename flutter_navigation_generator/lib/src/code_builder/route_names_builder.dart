@@ -4,7 +4,6 @@ import 'package:flutter_navigation_generator/src/models/route_config.dart';
 import 'package:flutter_navigation_generator/src/utils/case_utils.dart';
 import 'package:flutter_navigation_generator/src/utils/route_config_extension.dart';
 import 'package:flutter_navigation_generator/src/utils/utils.dart';
-import 'package:flutter_navigation_generator_annotations/flutter_navigation_generator_annotations.dart';
 
 class RouteNamesBuilder {
   final Set<RouteConfig> routes;
@@ -13,14 +12,7 @@ class RouteNamesBuilder {
   RouteNamesBuilder({required this.routes, required this.removeSuffixes});
 
   Spec generate() {
-    final pageRoutes =
-        routes
-            .where(
-              (route) =>
-                  route.navigationType != NavigationType.dialog &&
-                  route.navigationType != NavigationType.bottomSheet,
-            )
-            .toList();
+    final pageRoutes = routes.toList();
     for (final pageRoute in pageRoutes.toList()) {
       final pageRoute2 = pageRoutes.firstWhere(
         (element) => element.routeName == pageRoute.routeName,

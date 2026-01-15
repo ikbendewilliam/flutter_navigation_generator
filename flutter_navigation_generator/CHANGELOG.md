@@ -1,3 +1,6 @@
+## 2.2.1 (2025-12-29)
+- Added support for routename in dialogs and sheets
+
 ## 2.2.0 (2025-09-07)
 - Updated dependencies for flutter ^3.29
 
