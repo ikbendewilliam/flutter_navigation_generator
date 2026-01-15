@@ -64,8 +64,9 @@ class OnGenerateRouteBuilder {
   }
 
   String? _getParameterValue(RouteFieldConfig parameterConfig) {
-    if (parameterConfig.ignoreWithKeyCheck(ignoreKeysByDefault) == true)
+    if (parameterConfig.ignoreWithKeyCheck(ignoreKeysByDefault) == true) {
       return null;
+    }
     final parameter = parameterConfig.type;
     final nullableSuffix = parameter.isNullable ? '?' : '';
     final defaultSuffix =
@@ -76,8 +77,9 @@ class OnGenerateRouteBuilder {
       parameter,
       'queryParameters[\'${parameterConfig.queryName}\']!',
     );
-    if (parameter.className == 'Key')
+    if (parameter.className == 'Key') {
       return "arguments['${parameter.argumentName}'] as ${parameter.className}$nullableSuffix$defaultSuffix";
+    }
     // Small notation in case of string/dynamic (using ??)
     if (parameter.className == 'String' || parameter.className == 'dynamic') {
       return "queryParameters['${parameterConfig.queryName}'] ?? arguments['${parameter.argumentName}'] as ${parameter.className}$nullableSuffix$defaultSuffix";
