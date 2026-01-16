@@ -1,1 +1,1 @@
-library flutter_navigation_generator;
+

@@ -37,9 +37,5 @@ class FlutterRouteField {
   /// ```
   final bool addToJson;
 
-  const FlutterRouteField({
-    this.queryName,
-    this.ignore,
-    this.addToJson = true,
-  });
+  const FlutterRouteField({this.queryName, this.ignore, this.addToJson = true});
 }

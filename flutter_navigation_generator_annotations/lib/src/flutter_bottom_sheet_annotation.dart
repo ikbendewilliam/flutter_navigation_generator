@@ -5,17 +5,13 @@ import 'package:flutter_navigation_generator_annotations/src/navigation_type.dar
 /// A method will be generated
 /// Similar to [FlutterRoute] with navigationType = NavigationType.bottomSheet
 class FlutterBottomSheet extends FlutterRoute {
-  const FlutterBottomSheet({
-    String? routeName,
-    Type? returnType,
-  }) : super(
-          routeName: routeName,
-          returnType: returnType,
-          isFullscreenDialog: false,
-          navigationType: NavigationType.bottomSheet,
-          generatePageRoute: false,
-          generateMethod: true,
-        );
+  const FlutterBottomSheet({super.routeName, super.returnType})
+    : super(
+        isFullscreenDialog: false,
+        navigationType: NavigationType.bottomSheet,
+        generatePageRoute: false,
+        generateMethod: true,
+      );
 }
 
 /// const instance of [FlutterBottomSheet]

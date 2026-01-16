@@ -8,9 +8,7 @@ class FlutterRouteConstructor {
   /// that don't have a constructor with a routeName set
   final String? routeName;
 
-  const FlutterRouteConstructor({
-    this.routeName,
-  });
+  const FlutterRouteConstructor({this.routeName});
 }
 
 /// const instance of [FlutterRouteConstructor]

@@ -1,3 +1,6 @@
+## 2.1.1 (2026-01-15)
+- Updated dependencies (flutter_lints)
+
 ## 2.1.0 (2024-12-31)
 
 - Added `@FlutterRouteField` annotation to specify fields with the following options:

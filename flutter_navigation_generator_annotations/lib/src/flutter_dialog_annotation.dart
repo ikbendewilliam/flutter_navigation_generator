@@ -5,17 +5,13 @@ import 'package:flutter_navigation_generator_annotations/src/navigation_type.dar
 /// A method will be generated
 /// Similar to [FlutterRoute] with navigationType = NavigationType.dialog
 class FlutterDialog extends FlutterRoute {
-  const FlutterDialog({
-    String? routeName,
-    Type? returnType,
-  }) : super(
-          routeName: routeName,
-          returnType: returnType,
-          isFullscreenDialog: true,
-          navigationType: NavigationType.dialog,
-          generatePageRoute: false,
-          generateMethod: true,
-        );
+  const FlutterDialog({super.routeName, super.returnType})
+    : super(
+        isFullscreenDialog: true,
+        navigationType: NavigationType.dialog,
+        generatePageRoute: false,
+        generateMethod: true,
+      );
 }
 
 /// const instance of [FlutterDialog]
