@@ -1,3 +1,6 @@
+## 2.2.5 (2026-04-22)
+- Analyzer dependency updated to 11.0.0
+
 ## 2.2.4 (2026-01-16)
 - Updated dependencies (analyzer 9, flutter 3.38)
 
